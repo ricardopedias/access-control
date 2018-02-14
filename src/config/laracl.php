@@ -12,10 +12,14 @@ return [
     // 'name'       => 'Permissões',
     // 'route'      => 'painel/permissions',
     // 'controller' => 'App\Http\Controllers\PermissionsController',
+    // 'view'       => 'permissions.edit',
+    // 'component'  => 'permissions.edit',
 
     'name'       => 'Permissões',
     'route'      => 'painel/permissions',
     'controller' => 'default',
+    'view'       => 'permissions.edit',
+    'component'  => 'default',
 
     'roles' => [
 

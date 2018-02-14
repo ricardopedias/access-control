@@ -2,6 +2,7 @@
 
 namespace Laracl\Http\Controllers;
 
+use Laracl\Models\AclRole;
 use Laracl\Models\AclPermission;
 use Illuminate\Http\Request;
 use Gate;
@@ -68,7 +69,6 @@ class PermissionsController extends Controller
         $permissions = [];
         foreach ($user_permissions as $item) {
             $permissions[$item->role->slug] = [
-                'label'  => $item->role->name,
                 'create' => $item->create,
                 'edit'   => $item->edit,
                 'show'   => $item->show,
@@ -86,9 +86,29 @@ class PermissionsController extends Controller
             }
         }
 
-        return view('permissions.edit')->with([
-            'model' => \App\User::find($id),
-            'roles' => $this->getRolesStructure(),
+        $config = config('laracl');
+
+        $component = isset($config['component']) && $config['component'] != 'default' 
+            ? $config['component']
+            : false;
+
+        if ($component != false) {
+            $view = 'laracl::component';
+        }
+        else {
+
+            $view = isset($config['view']) && $config['view'] != 'default' 
+                ? $config['view']
+                : "laracl::document";
+        }
+
+        //dd($view);
+          
+        return view($view)->with([
+            'component' => $component,
+            'title'     => config('laracl.name'),
+            'user'      => \App\User::find($id),
+            'roles'     => $this->getRolesStructure(),
         ]);
     }
 
@@ -101,11 +121,26 @@ class PermissionsController extends Controller
      */
     public function update(Request $form, $id)
     {
-        foreach ($form->roles as $route => $perms) {
+        foreach ($form->roles as $slug => $perms) {
 
-            $model = \App\Permissions::firstOrNew([
+            $role = AclRole::findBySlug($slug);
+
+            // Se a função nunca foi setada, 
+            // deve ser criada
+            if ($role == NULL) {
+
+                $info = config("laracl.roles.{$slug}");
+                $role = AclRole::create([
+                    'name' => $info['label'],
+                    'slug' => $slug,
+                    'system' => 'no',
+                ]);
+            }
+
+            // Aplica as permissões para o usuário
+            $model = AclPermission::firstOrNew([
                 'user_id' => $id,
-                'route'   => $route,
+                'role_id' => $role->id,
                 ]);
 
             $model->fill([
@@ -118,6 +153,6 @@ class PermissionsController extends Controller
             $model->save();
         }
 
-        return back();
+        return redirect()->route( config('laracl.routes.perms_edit'), $id);
     }
 }

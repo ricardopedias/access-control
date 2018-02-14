@@ -1,9 +1,4 @@
-        @php
-        $route_base = explode('/', config('laracl.route'));
-        $route_update = array_pop($route_base) . '.update';
-        @endphp
-
-        <form method="post" action="{{ route($route_update, $model->id) }}">
+        <form method="post" action="{{ route( config('laracl.routes.perms_update'), $user->id) }}">
 
             <div class="row mt-3">
 
@@ -15,19 +10,19 @@
                     {{-- https://laravel.com/docs/5.5/controllers#resource-controllers --}}
 
 
-                    <table class="table table-striped table-bordered table-header">
+                    <table class="table table-striped table-bordered">
 
                         <thead>
 
-                            <th class="no-order">Área da Loja</th>
+                            <th>Área da Loja</th>
 
-                            <th class="no-order">Criar</th>
+                            <th>Criar</th>
 
-                            <th class="no-order">Editar</th>
+                            <th>Editar</th>
 
-                            <th class="no-order">Ver</th>
+                            <th>Ver</th>
 
-                            <th class="no-order">Excluir</th>
+                            <th>Excluir</th>
 
                         </thead>
 
