@@ -9,7 +9,6 @@
                     {{ method_field('PUT') }} 
                     {{-- https://laravel.com/docs/5.5/controllers#resource-controllers --}}
 
-
                     <table class="table table-striped table-bordered">
 
                         <thead>

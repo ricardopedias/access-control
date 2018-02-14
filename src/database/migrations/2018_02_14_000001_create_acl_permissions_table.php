@@ -23,7 +23,7 @@ class CreateAclPermissionsTable extends Migration
             $table->enum('show', ['yes', 'no']);
             $table->enum('delete', ['yes', 'no']);
 
-            $table->primary('role_id');
+            $table->primary(['user_id', 'role_id']);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('role_id')->references('id')->on('acl_roles')->onDelete('cascade');
