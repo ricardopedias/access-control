@@ -1,0 +1,43 @@
+{
+    "name": "plexi/laracl",
+    "description": "Gerenciador de listas de acesso (Access Control List) com formulário de configuração de usuários",
+    "keywords": ["laravel"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ricardo Pereira",
+            "email": "rpdesignerfly@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laracl\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laracl\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Laracl\\ServiceProvider"
+            ],
+            "aliases": {
+                "Laracl": "Laracl\\Facade"
+            }
+        }
+    },
+    "require-dev": {
+        "illuminate/framework": "5.5.x"
+    }
+}
