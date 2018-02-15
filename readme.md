@@ -1,5 +1,11 @@
 # Laracl
 
+![PHP Version](https://img.shields.io/packagist/php-v/plexi/laracl.svg)
+![Laravel](https://img.shields.io/badge/laravel-5.6-red.svg?style=flat)
+![Packagist](https://img.shields.io/packagist/v/plexi/laracl.svg)
+![Downloads](https://img.shields.io/packagist/dm/plexi/laracl.svg)
+
+
 *By [Ricardo Pereira Dias &copy;](https://github.com/rpdesignerfly)*
 
 Laracl é um gerenciador de listas de acesso (Access Control List) para configurar o acesso das páginas dentro de um sistema.
