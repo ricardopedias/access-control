@@ -19,5 +19,5 @@ O pacote Laracl possui os seguintes requisitos:
 
 ## Composer
 
-Para instalar o pacote, use o [Composer](http://getcomposer.org/) executando o seguinte comando: `composer require plexi/Laracl`.
+Para instalar o pacote, use o [Composer](http://getcomposer.org/) executando o seguinte comando: `composer require plexi/laracl`.
 
