@@ -14,7 +14,7 @@ Através de um formulário, o administrador pode setar as permissões para cada 
 > **Atenção**:
 > Esta biblioteca está em fase de desenvolvimento. Use-a por sua conta e risco!
 
-Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly/laracl/releases), a [licença](license.md) e a [documentação](docs/00-Home.md).
+Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly/laracl/releases), a [licença](license.md) e a [documentação](https://rpdesignerfly.github.io/laracl).
 
 ### Características
 
