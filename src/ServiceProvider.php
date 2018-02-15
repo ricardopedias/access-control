@@ -14,7 +14,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        include('helpers.php');
+        \Laracl::loadHelpers();
         
         $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
@@ -22,10 +22,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         
         // Config
         // php artisan vendor:publish
-        $this->publishes([__DIR__.'/config/laracl.php' => config_path('laracl.php')]);
+        $this->publishes([__DIR__.'/config/laracl.php' => config_path('laracl.php')], 'laracl');
         
         // Views
-        // php artisan vendor:publish
+        // php artisan vendor:publish --provider="Laracl\ServiceProvider"
         //$this->publishes([__DIR__.'/resources/views' => resource_path('views/plexi/foundation')]);
         
         // Assets
@@ -37,42 +37,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         //$roles_list = \App::runningInConsole() == true ? [] : config('laracl.roles');
 
-        $roles_list = config('laracl.roles');
+        \Laracl::registerPolicies();
 
-        if ($roles_list === null) {
-            throw new \Exception("You need to add the 'roles' in the Laracl configuration", 1);
-        }
-
-        foreach ($roles_list as $role => $info) {
-
-            $label = $info['label'];
-            $allowed_permissions = explode(',', trim($info['permissions'], ',') );
-
-            foreach ($allowed_permissions as $permission) {
-
-                Gate::define("{$role}.{$permission}", function ($user, $callback = null) use ($role, $permission) {
-
-                    // Passou na verificação adicional?
-                    if ($callback != null && is_callable($callback) && $callback() !== true) {
-                        \Laracl::setCurrentPermissions($role, $permission, false);
-                        return false;
-                    }
-
-                    $user_permissions = \Laracl\Models\AclPermission::collectByUserRole($user->id, $role);
-
-                    // Existem permissões setadas?
-                    if ($user_permissions->count() == 0) {
-                        \Laracl::setCurrentPermissions($role, $permission, false);
-                        return false;
-                    }
-
-                    // create,edit,show ou delete == yes?
-                    $result = ($user_permissions->where($permission, 'yes')->count() > 0);
-                    \Laracl::setCurrentPermissions($role, $permission, $result);
-                    return $result;
-                });    
-            }
-        }
+        \Laracl::loadBladeDirectives();
     }
 
     /**

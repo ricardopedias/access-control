@@ -7,5 +7,5 @@ if (! function_exists('render_form_permissions')) {
         // return (old($key, null) == $active_value || $default == $active_value)
         //     ? 'checked' : '';
     }
-
 }
+
