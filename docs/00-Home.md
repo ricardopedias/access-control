@@ -1,12 +1,10 @@
-# Laravel Old Extended
+# Laracl
 
-Este é um pacote que provê helpers adicionais para o desenvolvimento de formulários com Laravel e Blade templates. 
-
-O objetivo é facilitar a criação de formulários forma elegante e concisa :)
+Laracl é um gerenciador de listas de acesso (Access Control List) para configurar o acesso das páginas dentro de um sistema.
 
 ### Características
 
-  * Feito para o Laravel 5.5 ou superior.
+  * Feito para o Laravel 5.6 ou superior.
   * Configuração automática.
   * Bem documentado &amp; e amigável para IDEs.
   * Bem testado e com máxima qualidade de código.

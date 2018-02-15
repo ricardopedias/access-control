@@ -2,7 +2,7 @@
 
 *By [Ricardo Pereira Dias &copy;](https://github.com/rpdesignerfly)*
 
-Laracl é um simples gerenciador de listas de acesso (Access Control List) para controlar o acesso a páginas de um sistema.
+Laracl é um gerenciador de listas de acesso (Access Control List) para configurar o acesso das páginas dentro de um sistema.
 Através de um formulário, o administrador pode setar as permissões para cada usuário específico.
 
 > **Atenção**:
@@ -12,9 +12,9 @@ Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly
 
 ### Características
 
-  * Feito para o Laravel 5.5 ou superior.
+  * Feito para o Laravel 5.6 ou superior.
   * Configuração automática.
-  * Bem documentado &amp; amigável para IDEs.
+  * Bem documentado &amp; e amigável para IDEs.
   * Bem testado e com máxima qualidade de código.
   * Feito com :heart: &amp; :coffee:.
 
