@@ -5,6 +5,10 @@
 Laracl é um simples gerenciador de listas de acesso (Access Control List) para controlar o acesso a páginas de um sistema.
 Através de um formulário, o administrador pode setar as permissões para cada usuário específico.
 
+<div style="background: orange; padding: 10px; border-radius: 5px; color: #330000">
+<b>Atenção:</b> Esta biblioteca está em desenvolvimento. Use-a por sua conta e risco.
+</div>
+
 Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly/laracl/releases), a [licença](license.md) e a [documentação](docs/00-Home.md).
 
 ### Características
