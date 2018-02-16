@@ -2,7 +2,7 @@
     @if ($status==false)
 
         <a href="javascript:void(0)" class="acl-submit btn btn-info disabled {{ $size != 'none' ? "btn-{$size}" : '' }}"
-           title="{{ $label }}">
+           title="Você não tem permissão para '{{ $label }}'">
             <i class="fa fa-save"></i>
             <span class="d-none d-lg-inline">{{ $label }}</span>
         </a>    
@@ -11,13 +11,21 @@
 
             // Neste momento o JQuery pode ainda não existir
             // por isso, executa ao terminar
-            window.onload = function(){
+
+            var acl_form_block = function(){
                 
                 // Desativa a submissão do formulário através da tecla 'Enter'
                 $('.acl-submit').closest("form").submit(function(){
                     return false;
                 });
             };
+
+            if (undefined === window.$) {
+                window.onload = acl_form_block;
+            }
+            else {
+                $(document).ready(acl_form_block);    
+            }
 
         </script>
 
