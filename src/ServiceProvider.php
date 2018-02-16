@@ -52,7 +52,30 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Adiciona as configurações padrões no namespace laracl
         $this->mergeConfigFrom(__DIR__.'/config/laracl.php', 'laracl');
         
+        $this->normalizeConfig();
+
         //$this->app->make('Plexi\Foundation\Http\Controllers\ExampleController');
-        
+    }
+
+    protected function normalizeConfig()
+    {
+        $config = config('laracl');
+
+        foreach ($config['routes'] as $slug => $nulled) {
+
+            // admin/users -> 'users'
+            $route_base = preg_replace('#.*/#', '', $config['routes'][$slug]);
+
+            $route_params = [
+                "laracl.routes.{$slug}.base"   => $config['routes'][$slug],
+                "laracl.routes.{$slug}.index"  => $route_base . ".index",
+                "laracl.routes.{$slug}.create" => $route_base . ".create",
+                "laracl.routes.{$slug}.store"  => $route_base . ".store",
+                "laracl.routes.{$slug}.edit"   => $route_base . ".edit",
+                "laracl.routes.{$slug}.update" => $route_base . ".update",
+                "laracl.routes.{$slug}.delete" => $route_base . ".delete",
+            ];
+            config($route_params);
+        }
     }
 }

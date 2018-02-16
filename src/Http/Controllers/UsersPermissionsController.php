@@ -2,13 +2,14 @@
 
 namespace Laracl\Http\Controllers;
 
+use Laracl\Models\AclUser;
 use Laracl\Models\AclRole;
-use Laracl\Models\AclPermission;
+use Laracl\Models\AclUserPermission;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
 
-class PermissionsController extends Controller
+class UsersPermissionsController extends Controller
 {
     private $routes = null; 
 
@@ -41,9 +42,9 @@ class PermissionsController extends Controller
 
             if ( !isset($this->routes[$route]['roles']) ) {
                 $this->routes[$route]['roles'] = [
+                    'show'   => null,
                     'create' => null,
                     'edit'   => null,
-                    'show'   => null,
                     'delete' => null,
                 ];
             }
@@ -64,14 +65,14 @@ class PermissionsController extends Controller
     public function edit($id)
     {
         // Permissoes do banco
-        $user_permissions = AclPermission::collectByUser($id);
+        $user_permissions = AclUserPermission::collectByUser($id);
 
         $permissions = [];
         foreach ($user_permissions as $item) {
             $permissions[$item->role->slug] = [
+                'show'   => $item->show,
                 'create' => $item->create,
                 'edit'   => $item->edit,
-                'show'   => $item->show,
                 'delete' => $item->delete,
             ];
         }
@@ -86,29 +87,16 @@ class PermissionsController extends Controller
             }
         }
 
-        $config = config('laracl');
+        $view = config('laracl.views.users-permissions.edit');
 
-        $component = isset($config['component']) && $config['component'] != 'default' 
-            ? $config['component']
-            : false;
-
-        if ($component != false) {
-            $view = 'laracl::component';
-        }
-        else {
-
-            $view = isset($config['view']) && $config['view'] != 'default' 
-                ? $config['view']
-                : "laracl::document";
-        }
-
-        //dd($view);
-          
         return view($view)->with([
-            'component' => $component,
-            'title'     => config('laracl.name'),
-            'user'      => \App\User::find($id),
-            'roles'     => $this->getRolesStructure(),
+            'title'        => config('laracl.name'),
+            'user'         => AclUser::find($id),
+            'roles'        => $this->getRolesStructure(),
+            'route_index'  => config('laracl.routes.users.index'),
+            'route_create' => config('laracl.routes.users.create'),
+            'route_update' => config('laracl.routes.users-permissions.update'),
+            'route_groups' => config('laracl.routes.groups.index'),
         ]);
     }
 
@@ -133,26 +121,26 @@ class PermissionsController extends Controller
                 $role = AclRole::create([
                     'name' => $info['label'],
                     'slug' => $slug,
-                    'system' => 'no',
                 ]);
             }
 
             // Aplica as permissões para o usuário
-            $model = AclPermission::firstOrNew([
+            $model = AclUserPermission::firstOrNew([
                 'user_id' => $id,
                 'role_id' => $role->id,
                 ]);
 
             $model->fill([
+                'show'    => ($perms['show'] ?? 'no'),
                 'create'  => ($perms['create'] ?? 'no'),
                 'edit'    => ($perms['edit'] ?? 'no'),
-                'show'    => ($perms['show'] ?? 'no'),
                 'delete'  => ($perms['delete'] ?? 'no'),
                 ]);
 
             $model->save();
         }
 
-        return redirect()->route( config('laracl.routes.perms_edit'), $id);
+        $route = config('laracl.routes.users-permissions.edit');
+        return redirect()->route($route, $id);
     }
 }

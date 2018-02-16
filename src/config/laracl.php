@@ -23,7 +23,12 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'route'      => 'admin/user-permissions',
+    'routes'     => [
+        'users'              => 'admin/users',
+        'users-permissions'  => 'admin/users-permissions',
+        'groups'             => 'admin/groups',
+        'groups-permissions' => 'admin/groups-permissions', 
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -35,7 +40,13 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'controller' => 'default',
+    'controllers'     => [
+        'users'              => 'Laracl\Http\Controllers\UsersController',
+        'users-permissions'  => 'Laracl\Http\Controllers\UsersPermissionsController',
+        
+        'groups'             => 'Laracl\Http\Controllers\GroupsController',
+        'groups-permissions' => 'Laracl\Http\Controllers\GroupsPermissionsController',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -47,19 +58,28 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'view'       => 'default',
+    'views' => [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Componente
-    |--------------------------------------------------------------------------
-    |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
-    */
+        'users' => [
+            'index'             => 'laracl::users.index',
+            'create'            => 'laracl::users.create',
+            'edit'              => 'laracl::users.edit',
+        ],
 
-    'component'  => 'default',
+        'users-permissions' => [
+            'edit' => 'laracl::users-permissions.edit',
+        ],
+        
+        'groups' => [
+            'index'            => 'laracl::groups.index',
+            'create'           => 'laracl::groups.create',
+            'edit'             => 'laracl::groups.edit',
+        ],
+
+        'groups-permissions' => [
+            'edit' => 'laracl::groups-permissions.edit',
+        ]
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -73,19 +93,24 @@ return [
 
     'roles' => [
 
-        'guests' => [
-            'label' => 'Visitantes',
+        'users' => [
+            'label' => 'Usuários',
             'permissions' => 'create,edit,show,delete',
             ],
 
-        'admins' => [
-            'label' => 'Administradores',
+        'users-permissions' => [
+            'label' => 'Permissões de Usuários',
+            'permissions' => 'create,edit,show',
+            ],
+
+        'groups' => [
+            'label' => 'Grupos de Acesso',
             'permissions' => 'create,edit,show,delete',
             ],
 
-        'roots' => [
-            'label' => 'Super Usuários',
-            'permissions' => 'create,edit,show,delete',
+        'groups-permissions' => [
+            'label' => 'Permissões de Grupos',
+            'permissions' => 'create,edit,show',
             ],
     ]
 ];

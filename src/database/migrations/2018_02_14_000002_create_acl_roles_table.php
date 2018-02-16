@@ -21,7 +21,6 @@ class CreateAclRolesTable extends Migration
             $table->string('name', 50);
             $table->string('slug', 50)->unique();
             $table->text('description')->nullable();
-            $table->enum('system', ['yes', 'no'])->default('no');
             $table->timestamps();
         });
 
@@ -29,7 +28,24 @@ class CreateAclRolesTable extends Migration
             'name' => 'Users',
             'slug' => 'users',
             'description' => 'Gerenciamento de usuários',
-            'system' => 'yes',
+            ]);
+
+        AclRole::create([
+            'name' => 'Users Permissions',
+            'slug' => 'users-permissions',
+            'description' => 'Permissões de Usuários',
+            ]);
+
+        AclRole::create([
+            'name' => 'Groups',
+            'slug' => 'groups',
+            'description' => 'Grupos de Acesso',
+            ]);
+
+        AclRole::create([
+            'name' => 'Groups Permissions',
+            'slug' => 'groups-permissions',
+            'description' => 'Permissões de Grupos',
             ]);
     }
 

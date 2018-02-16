@@ -1,4 +1,29 @@
-        <form method="post" action="{{ route( config('laracl.routes.perms_update'), $user->id) }}">
+
+@component('laracl::document')
+
+    @slot('title') Permissoes do Grupo @endslot
+
+    @aclock('groups-permissions.show')
+
+        <div class="row mb-3">
+
+            <div class="col">
+
+                @acl_action('groups.show', route($route_index), 'Lista de Grupos')
+
+            </div>
+
+            <div class="col text-right justify-content-end">
+
+                @acl_action('groups.create', route($route_create), 'Novo Grupo')
+
+                @acl_action('groups.show', route($route_groups), 'Grupos de Acesso')
+
+            </div>
+            
+        </div>
+
+        <form method="post" action="{{ route($route_update, $group->id) }}">
 
             <div class="row mt-3">
 
@@ -14,12 +39,12 @@
                         <thead>
 
                             <th>Área da Loja</th>
+                            
+                            <th>Ver</th>
 
                             <th>Criar</th>
 
                             <th>Editar</th>
-
-                            <th>Ver</th>
 
                             <th>Excluir</th>
 
@@ -35,7 +60,7 @@
 
                                         {{-- É necessário para que a função sempre exista na matriz, 
                                         mesmo quando não existirem permissões ativas --}}
-                                        <input type="hidden" name="roles[{{ $route }}]['exists']" value="1">
+                                        <input type="hidden" name="roles[{{ $route }}][exists]" value="1">
                                     </td>
 
                                     @foreach($item['roles'] as $role => $role_value)
@@ -72,13 +97,14 @@
 
                 <div class="col text-right">
 
-                    <button type="submit" class="btn btn-lg btn-primary">
-                        <i class="fa fa-save"></i>
-                        Aplicar Permissões
-                    </button>        
+                    @acl_submit_lg('groups-permissions.edit', 'Aplicar Permissões')
 
                 </div>
 
             </div>
 
         </form>
+
+    @endaclock
+
+@endcomponent

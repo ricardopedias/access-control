@@ -14,9 +14,9 @@
 
     <body class="p-5">
 
-        <h1>{{ $title }}</h1>
+        <h1>{{ $title or config('laracl.name') }}</h1>
 
-        @include('laracl::permissions.form')
+        {!! $slot !!}
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" 
                 integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" 

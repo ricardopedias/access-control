@@ -5,11 +5,13 @@ namespace Laracl\Models;
 use Illuminate\Database\Eloquent\Model;
 use Laracl\Traits\HasCompositePrimaryKey;
 
-class AclPermission extends Model
+class AclUserPermission extends Model
 {
     use HasCompositePrimaryKey;
 
-    protected $primaryKey = ['user_id', 'role_id'];
+    protected $table = 'acl_users_permissions';
+
+    protected $primaryKey = ['role_id', 'user_id'];
 
     public $timestamps = false;
 
@@ -19,8 +21,8 @@ class AclPermission extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
         'role_id',
+        'user_id',
         'create',
         'edit',
         'show',
@@ -33,7 +35,7 @@ class AclPermission extends Model
 
     public function user()
     {
-        return $this->hasOne('App\User', 'id', 'user_id');
+        return $this->hasOne('Laracl\Models\AclUser', 'id', 'user_id');
     }
 
     public function role()

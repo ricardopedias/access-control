@@ -9,23 +9,11 @@ Route::middleware(['web', 'auth'])->group(function () {
 
     $config = config('laracl');
 
-    $controller = !isset($config['controller']) || $config['controller']=='default' 
-        ? "Laracl\Http\Controllers\PermissionsController"
-        : $config['controller'];
+    // Usuários, Grupos e Permissões
+    foreach ($config['routes'] as $slug => $nulled) {
 
-    $route = !isset($config['route']) || $config['route']=='default' 
-        ? "admin/users-permissions"
-        : $config['route'];
-
-    $route_base = explode('/', $route);
-    $route_base = array_pop($route_base);
-
-    config([
-        'laracl.controller'          => $controller,
-        'laracl.route'               => $route,
-        'laracl.routes.perms_edit'   => $route_base . ".edit",
-        'laracl.routes.perms_update' => $route_base . ".update"
-        ]);
-
-    Route::resource($route, $controller);
+        $route = $config['routes'][$slug]['base'];
+        $controller = $config['controllers'][$slug];
+        Route::resource($route, $controller);
+    }
 });

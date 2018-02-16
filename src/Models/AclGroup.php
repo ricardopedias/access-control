@@ -4,7 +4,7 @@ namespace Laracl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AclRole extends Model
+class AclGroup extends Model
 {
     protected $primaryKey = 'id';
 
@@ -24,14 +24,14 @@ class AclRole extends Model
     // Relacionamentos
     //
 
-    public function userPermissions()
-    {
-        return $this->hasOne('Laracl\Models\AclUserPermission', 'id', 'role_id');
-    }
-
-    public function groupPermissions()
+    public function permissions()
     {
         return $this->hasOne('Laracl\Models\AclGroupPermission', 'id', 'group_id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany('Laracl\Models\AclUsers', 'id', 'acl_group_id');
     }
 
     //

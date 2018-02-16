@@ -28,13 +28,18 @@ class Accessor
 
                 Gate::define("{$role}.{$permission}", function ($user, $callback = null) use ($role, $permission) {
                     
+                    // Em modo de desenvolvimento o usuário 1 é liberado
+                    if ( (env('APP_DEBUG') || env('APP_ENV') === 'local') && $user->id == 1) {
+                        return true;
+                    }
+
                     // Passou na verificação adicional?
                     if ($callback != null && is_callable($callback) && $callback() !== true) {
                         self::setCurrentPermissions($role, $permission, false);
                         return false;
                     }
 
-                    $user_permissions = \Laracl\Models\AclPermission::collectByUserRole($user->id, $role);
+                    $user_permissions = \Laracl\Models\AclUserPermission::collectByUserRole($user->id, $role);
 
                     // Existem permissões setadas?
                     if ($user_permissions->count() == 0) {
