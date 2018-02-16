@@ -30,7 +30,13 @@
                             @foreach($roles as $route => $item)
 
                                 <tr>
-                                    <td>{{ $item['label'] }}</td>
+                                    <td>
+                                        {{ $item['label'] }}
+
+                                        {{-- É necessário para que a função sempre exista na matriz, 
+                                        mesmo quando não existirem permissões ativas --}}
+                                        <input type="hidden" name="roles[{{ $route }}]['exists']" value="1">
+                                    </td>
 
                                     @foreach($item['roles'] as $role => $role_value)
 
