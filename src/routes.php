@@ -5,8 +5,7 @@
  * and open the template in the editor.
  */
 
-//Route::middleware(['web', 'auth'])->group(function () {
-Auth::loginUsingId(1);
+Route::middleware(['web', 'auth'])->group(function () {
 
     $config = config('laracl');
 
@@ -17,4 +16,5 @@ Auth::loginUsingId(1);
         $controller = $config['controllers'][$slug];
         Route::resource($route, $controller);
     }
-//});
+    
+});
