@@ -46,7 +46,7 @@
                             <td>
                                 {{ $item->name }} 
                                 @if($item->system == 'yes')
-                                <small>(Systema)</small>
+                                <small>(Sistema)</small>
                                 @endif
                             </td>
 
@@ -72,7 +72,7 @@
 
             <div class="col">
 
-                <button class="btn text-primary" style="background: transparent;">
+                <button class="btn text-primary" style="background: transparent; box-shadow: none !important;">
 
                     <i class="fa fa-info-circle"></i>
 

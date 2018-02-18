@@ -113,4 +113,20 @@ class AclGroupPermission extends Model
 
         return (new static)->where('role_id', $role)->get();
     }
+
+    /**
+     * Devolve as permissões disponiveis no grupo do usuário especificado
+     *
+     * @param int $user_id
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function collectByUser($user_id)
+    {
+        $user = AclUser::find($user_id);
+        if ($user === null) {
+            return collect([]);
+        }
+
+        return (new static)->where('group_id', $user->acl_group_id)->get();
+    }
 }

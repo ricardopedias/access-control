@@ -24,7 +24,7 @@ class AclUser extends \App\User
 
     public function group()
     {
-        return $this->hasMany('Laracl\Models\AclGroup', 'id', 'acl_group_id');
+        return $this->hasOne('Laracl\Models\AclGroup', 'id', 'acl_group_id');
     }
 
     public function permissions()

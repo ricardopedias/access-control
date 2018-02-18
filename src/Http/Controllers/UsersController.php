@@ -4,7 +4,7 @@ namespace Laracl\Http\Controllers;
 
 use Laracl\Models\AclUser;
 use Laracl\Models\AclGroup;
-use Laracl\Models\AclPermission;
+use Laracl\Models\AclUserPermission;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
@@ -59,10 +59,12 @@ class UsersController extends Controller
         $view = config('laracl.views.users.create');
 
         return view($view)->with([
-            'model'       => new AclUser,
-            'groups'      => AclGroup::all(),
-            'route_index' => config('laracl.routes.users.index'),
-            'route_store' => config('laracl.routes.users.store'),
+            'model'           => new AclUser,
+            'groups'          => AclGroup::all(),
+            'has_permissions' => false,
+            'require_pass'    => 'required',
+            'route_index'     => config('laracl.routes.users.index'),
+            'route_store'     => config('laracl.routes.users.store'),
             ]);
     }
 
@@ -74,16 +76,15 @@ class UsersController extends Controller
      */
     public function store(Request $form)
     {
-        // Se o password não for preenchido, seta um padrão. Transforma em hash sempre!
-        $pass = bcrypt($form->request->get('password') ?? uniqid());
-        $form->request->set('password', $pass);
-
         $form->validate([
             'name'         => 'required|max:100',
-            'username'     => 'required|unique:users|max:100',
             'email'        => 'required|unique:users|max:150',
-            'password'     => 'nullable',
+            'password'     => 'required',
         ]);
+
+        // Transforma o password em hash sempre!
+        $pass = bcrypt($form->password);
+        $form->request->set('password', $pass);
 
         $model = new AclUser;
         $model->fill($form->all());
@@ -101,11 +102,15 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
+        $db_permissions = AclUserPermission::collectByUser($id);
+
         $view = config('laracl.views.users.edit');
 
         return view($view)->with([
             'model'             => AclUser::find($id),
             'groups'            => AclGroup::all(),
+            'has_permissions'   => ($db_permissions->count()>0),
+            'require_pass'      => '',
             'route_index'       => config('laracl.routes.users.index'),
             'route_update'      => config('laracl.routes.users.update'),
             'route_create'      => config('laracl.routes.users.create'),
@@ -122,18 +127,30 @@ class UsersController extends Controller
      */
     public function update(Request $form, $id)
     {
+        $model = AclUser::find($id);
+
         // Se o password for preenchido, transforma em hash
-        $pass = $form->request->get('password') == null ? null : bcrypt($form->request->get('password'));
+        $pass = $form->request->get('password') == null 
+            ? $model->password 
+            : bcrypt($form->request->get('password'));
         $form->request->set('password', $pass);
 
         $form->validate([
             'name'         => 'required|max:100',
-            'username'     => "required|unique:users,username,{$id}|max:50",
             'email'        => "required|unique:users,email,{$id}|max:150",
-            'password'     => 'nullable',
+            'password'     => 'required',
         ]);
 
-        $model = AclUser::find($id);
+        // Usuário possui permissões exclusivas
+        if ($form->acl_group_id == 0) {
+            $form->request->set('acl_group_id', null);
+        }
+        // O grupo foi selecionado, 
+        // remove as permissões esclusivas
+        elseif ($form->acl_group_id != 0 && AclUserPermission::collectByUser($id)->count()>0) {
+            $result = AclUserPermission::removeByUser($id);
+        }
+        
         $model->fill($form->all());
         $model->save();
 

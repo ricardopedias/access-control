@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title')  Permissoes para "{{ $user->name }}" @endslot
+    @slot('title')  Permissoes Específicas para "{{ $user->name }}" @endslot
 
     @aclock('users-permissions.show')
 
@@ -15,7 +15,7 @@
 
             <div class="col text-right justify-content-end">
 
-                @acl_action('users.create', route($route_create), 'Novo Usuário')
+                @acl_action('users.edit', route($route_user, $user->id), 'Editar Usuário')
 
                 @acl_action('groups.show', route($route_groups), 'Grupos de Acesso')
 
@@ -23,9 +23,30 @@
             
         </div>
 
+        @if($has_permissions == false)
+
+            <div class="row">
+
+                <div class="col">
+
+                    <div class="alert alert-info">
+                        
+                        <h4 class="alert-heading">Atenção!</h4>
+
+                        <p>Este usuário possui os privilégios do grupo de acesso <strong>"{{ $user->group->name }}"</strong>. Clicando em "Aplicar Permissões", este usuário possuirá privilégios exclusivos. Isso pode ser mudado posteriormente setando um novo grupo para ele.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @endif
+
         <form method="post" action="{{ route($route_update, $user->id) }}">
 
-            <div class="row mt-3">
+            <div class="row">
 
                 <div class="col">
 

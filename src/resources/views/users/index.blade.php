@@ -56,8 +56,6 @@
                                 
                                 @acl_action_sm('users.edit', route($route_edit, $item->id ), 'Editar')
 
-                                @acl_action_sm('users-permissions.edit', route($route_permissions, $item->id ), 'Permissões')
-
                             </td>
                         </tr>
 
@@ -72,7 +70,7 @@
 
             <div class="col">
 
-                <button class="btn text-primary" style="background: transparent;">
+                <button class="btn text-primary" style="background: transparent; box-shadow: none !important;">
 
                     <i class="fa fa-info-circle"></i>
 

@@ -5,6 +5,7 @@ namespace Laracl\Http\Controllers;
 use Laracl\Models\AclUser;
 use Laracl\Models\AclRole;
 use Laracl\Models\AclUserPermission;
+use Laracl\Models\AclGroupPermission;
 use Laracl\Traits\HasRolesStructure;
 use Illuminate\Http\Request;
 use Gate;
@@ -22,20 +23,30 @@ class UsersPermissionsController extends Controller
      */
     public function edit($id)
     {
+        $db_permissions = AclUserPermission::collectByUser($id);
+        $has_permissions = ($db_permissions->count()>0);
+
+        // Se o usuário não possuir permissões específicas
+        // popula o formulário com as permissões do grupo 
+        // para facilitar a vida ;)
+        if ($has_permissions==false) {
+            $db_permissions = AclGroupPermission::collectByUser($id);
+        }
+
         // Aplica as permissões do banco na estrutura
         // de permissões do formulário
-        $db_permissions = AclUserPermission::collectByUser($id);
         $this->populateStructure($db_permissions);
 
         $view = config('laracl.views.users-permissions.edit');
         return view($view)->with([
-            'title'        => config('laracl.name'),
-            'user'         => AclUser::find($id),
-            'roles'        => $this->getRolesStructure(),
-            'route_index'  => config('laracl.routes.users.index'),
-            'route_create' => config('laracl.routes.users.create'),
-            'route_update' => config('laracl.routes.users-permissions.update'),
-            'route_groups' => config('laracl.routes.groups.index'),
+            'title'           => config('laracl.name'),
+            'user'            => AclUser::find($id),
+            'has_permissions' => $has_permissions,
+            'roles'           => $this->getRolesStructure(),
+            'route_index'     => config('laracl.routes.users.index'),
+            'route_user'      => config('laracl.routes.users.edit'),
+            'route_update'    => config('laracl.routes.users-permissions.update'),
+            'route_groups'    => config('laracl.routes.groups.index'),
         ]);
     }
 

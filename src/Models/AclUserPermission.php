@@ -79,17 +79,6 @@ class AclUserPermission extends Model
     }
 
     /**
-     * Devolve as permissões do usuário
-     *
-     * @param mixed $role A slug ou o ID da função
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public static function collectByUser($user_id)
-    {
-        return (new static)->where('user_id', $user_id)->get();
-    }
-
-    /**
      * Devolve as permissões disponiveis na função especificada
      *
      * @param mixed $role A slug ou o ID da função
@@ -112,5 +101,28 @@ class AclUserPermission extends Model
         }
 
         return (new static)->where('role_id', $role)->get();
+    }
+
+    /**
+     * Devolve as permissões do usuário
+     *
+     * @param integer $user_id
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function collectByUser($user_id)
+    {
+        return (new static)->where('user_id', $user_id)->get();
+    }
+
+    /**
+     * Remove as permissões do usuário e
+     * devolve o número de registros excluídos
+     *
+     * @param integer $user_id
+     * @return integer 
+     */
+    public static function removeByUser($user_id)
+    {
+        return (new static)->where('user_id', $user_id)->delete();
     }
 }
