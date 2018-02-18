@@ -9,7 +9,7 @@
 
             <div class="col">
 
-                {{-- ... --}}
+                @acl_action('users.show', route($route_users), 'Usuários')
 
             </div>
 
@@ -108,7 +108,7 @@
             </div>
 
             <div class="col">
-                {{ $collection->links('table-pagination') }}
+                {{ $collection->links('laracl::table-pagination') }}
             </div>
             
         </div>

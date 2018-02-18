@@ -41,6 +41,7 @@ class GroupsController extends Controller
             'route_create'      => config('laracl.routes.groups.create'),
             'route_edit'        => config('laracl.routes.groups.edit'),
             'route_permissions' => config('laracl.routes.groups-permissions.edit'),
+            'route_users'       => config('laracl.routes.users.index'),
             ]);
     }
 

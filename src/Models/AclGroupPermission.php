@@ -40,7 +40,7 @@ class AclGroupPermission extends Model
 
     public function role()
     {
-        return $this->hasOne('Laracl\Models\AclRole', 'id', 'group_id');
+        return $this->hasOne('Laracl\Models\AclRole', 'id', 'role_id');
     }
 
     //

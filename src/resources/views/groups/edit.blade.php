@@ -23,7 +23,7 @@
             
         </div>
 
-        @include('form-alert')
+        <hr>
 
         <form method="post" action="{{ route($route_update, $model->id) }}">
 

@@ -5,94 +5,29 @@ namespace Laracl\Http\Controllers;
 use Laracl\Models\AclGroup;
 use Laracl\Models\AclRole;
 use Laracl\Models\AclGroupPermission;
+use Laracl\Traits\HasRolesStructure;
 use Illuminate\Http\Request;
 use Gate;
 use DB;
 
 class GroupsPermissionsController extends Controller
 {
-    private $routes = null; 
+    use HasRolesStructure;
 
     /**
-     * Este método gera uma lista de opções para o formulário de opções.
-     * A fonte de rotas é obtida diretamente do Gate do Laravel.
-     * 
-     * @return array
-     */
-    private function getRolesStructure()
-    {
-        if ($this->routes !== null) {
-            return $this->routes;
-        }
-
-        $abilities = config('laracl.roles');
-
-        // Habilidades resistradas
-        foreach (Gate::abilities() as $ability => $closure) {
-
-            $nodes = explode('.', $ability);
-            $route = $nodes[0];
-            $role  = $nodes[1];
-
-            if ( !isset($this->routes[$route]) ) {
-                $this->routes[$route] = [
-                    'label' => $abilities[$route]['label']
-                ];
-            }
-
-            if ( !isset($this->routes[$route]['roles']) ) {
-                $this->routes[$route]['roles'] = [
-                    'show'   => null,
-                    'create' => null,
-                    'edit'   => null,
-                    'delete' => null,
-                ];
-            }
-
-            // Não nulos aparecerão no formulário
-            $this->routes[$route]['roles'][$role] = '';
-        }
-
-        return $this->routes;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de configuração das permissões de acesso.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        // Permissoes do banco
-        $group_permissions = AclGroupPermission::collectByGroup($id);
-
-        dd($group_permissions);
-
-        $permissions = [];
-        foreach ($group_permissions as $item) {
-            $permissions[$item->role->slug] = [
-                'show'   => $item->show,
-                'create' => $item->create,
-                'edit'   => $item->edit,
-                'delete' => $item->delete,
-            ];
-        }
-
-        // Aplica as permissões na estrutura de habilidades
-        foreach ($this->getRolesStructure() as $route => $item) {
-            foreach ($item['roles'] as $role => $nullable) {
-                if ($nullable !== null) {
-                    $this->routes[$route]['roles'][$role] = isset($permissions[$route])
-                        ? $permissions[$route][$role] : 'no';
-                }
-            }
-        }
-
-        dd($this->getRolesStructure());
+        // Aplica as permissões do banco na estrutura
+        // de permissões do formulário
+        $db_permissions = AclGroupPermission::collectByGroup($id);
+        $this->populateStructure($db_permissions);
 
         $view = config('laracl.views.groups-permissions.edit');
-
         return view($view)->with([
             'title'        => config('laracl.name'),
             'group'        => AclGroup::find($id),
@@ -105,7 +40,7 @@ class GroupsPermissionsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza as permissões no banco de dados
      *
      * @param  \Illuminate\Http\Request $form
      * @param  int $id
@@ -113,23 +48,11 @@ class GroupsPermissionsController extends Controller
      */
     public function update(Request $form, $id)
     {
-
         foreach ($form->roles as $slug => $perms) {
 
-            $role = AclRole::findBySlug($slug);
+            $role = $this->getSyncedRole($slug);
 
-            // Se a função nunca foi setada, 
-            // deve ser criada
-            if ($role == NULL) {
-
-                $info = config("laracl.roles.{$slug}");
-                $role = AclRole::create([
-                    'name' => $info['label'],
-                    'slug' => $slug,
-                ]);
-            }
-
-            // Aplica as permissões para o usuário
+            // Aplica as permissões para o grupo
             $model = AclGroupPermission::firstOrNew([
                 'role_id' => $role->id,
                 'group_id' => $id,

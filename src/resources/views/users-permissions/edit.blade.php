@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title')  Permissoes do Usuário @endslot
+    @slot('title')  Permissoes para "{{ $user->name }}" @endslot
 
     @aclock('users-permissions.show')
 

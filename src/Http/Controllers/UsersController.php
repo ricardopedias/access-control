@@ -45,6 +45,7 @@ class UsersController extends Controller
             'route_create'      => config('laracl.routes.users.create'),
             'route_edit'        => config('laracl.routes.users.edit'),
             'route_permissions' => config('laracl.routes.users-permissions.edit'),
+            'route_groups'      => config('laracl.routes.groups.index'),
             ]);
     }
 

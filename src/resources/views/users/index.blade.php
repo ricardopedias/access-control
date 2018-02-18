@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title') Permissoes do Usuário @endslot
+    @slot('title') Usuários @endslot
 
     @aclock('users.show')
 
@@ -16,6 +16,8 @@
             <div class="col text-right justify-content-end">
 
                 @acl_action('users.create', route($route_create), 'Novo Usuário')
+
+                @acl_action('groups.show', route($route_groups), 'Grupos de Acesso')
 
             </div>
             
@@ -44,7 +46,7 @@
                         <tr>
                             <td class="text-center">{{ $item->id }}</td>
 
-                            <td>{{ $item->name }} ({{ $item->username }})</td>
+                            <td>{{ $item->name }}</td>
 
                             <td>{!! str_replace(['@', '.'], ['<wbr>@', '<wbr>.'], $item->email) !!}</td>
 
@@ -106,7 +108,7 @@
             </div>
 
             <div class="col">
-                {{ $collection->links('table-pagination') }}
+                {{ $collection->links('laracl::table-pagination') }}
             </div>
             
         </div>

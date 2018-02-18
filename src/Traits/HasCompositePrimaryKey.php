@@ -1,4 +1,5 @@
 <?php
+
 namespace Laracl\Traits;
 
 use Exception;

@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title') Permissoes do Grupo @endslot
+    @slot('title') Permissoes para "{{ $group->name }}" @endslot
 
     @aclock('groups-permissions.show')
 
@@ -9,15 +9,13 @@
 
             <div class="col">
 
-                @acl_action('groups.show', route($route_index), 'Lista de Grupos')
+                @acl_action('groups.show', route($route_index), 'Grupos de Acesso')
 
             </div>
 
             <div class="col text-right justify-content-end">
 
                 @acl_action('groups.create', route($route_create), 'Novo Grupo')
-
-                @acl_action('groups.show', route($route_groups), 'Grupos de Acesso')
 
             </div>
             

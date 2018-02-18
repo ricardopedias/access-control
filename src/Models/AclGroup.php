@@ -3,6 +3,7 @@
 namespace Laracl\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class AclGroup extends Model
 {
@@ -19,6 +20,12 @@ class AclGroup extends Model
         'description',
         'system',
     ];
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
+    }
 
     //
     // Relacionamentos
