@@ -16,7 +16,7 @@ class UpdateUsersAclGroupTable extends Migration
         // Roles: visitantes, administradores, gerentes, etc
         Schema::table('users', function (Blueprint $table) {
 
-            $table->unsignedInteger('acl_group_id')->nullable();
+            $table->unsignedInteger('acl_group_id')->default(1);
             $table->foreign('acl_group_id')->references('id')->on('acl_groups')->onDelete('cascade');
         });
     }
