@@ -81,13 +81,13 @@ class Accessor
 
                     // Existem permissões setadas?
                     $user_abilities = $this->getUserPermissions($user->id, $role);
-                    if ($user_abilities == null) {
+                    if ($user_abilities === null) {
                         $this->setCurrentAbility($role, $permission, false);
                         return false;
                     }
 
                     // create,edit,show ou delete == yes?
-                    $result = ($user_abilities['permissions'][$permission] == 'yes');
+                    $result = (isset($user_abilities['permissions']) && $user_abilities['permissions'][$permission] == 'yes');
                     $this->setCurrentAbility($role, $permission, $result);
                     return $result;
                 });
