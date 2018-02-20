@@ -33,7 +33,7 @@ $ mkdir /caminho/do/projeto/packages
 
 ### 3. Obtendo o pacote para desenvolvimento
 
-No novo diretório de pacotes, é preciso criar a estrutura do pacote 'laravel-old-extened'. O formato deve ser '[vendor]/[pacote]', ou seja, a estrutura do pacote ficará assim '/plexi/laracl':
+No novo diretório de pacotes, é preciso criar a estrutura do pacote 'laracl'. O formato deve ser '[vendor]/[pacote]', ou seja, a estrutura do pacote ficará assim '/plexi/laracl':
 
 ```
 $ cd /caminho/do/projeto/packages
