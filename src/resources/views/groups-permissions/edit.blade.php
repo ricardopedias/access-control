@@ -3,7 +3,7 @@
 
     @slot('title') Permissoes para "{{ $group->name }}" @endslot
 
-    @aclock('groups-permissions.show')
+    @acl_content('groups-permissions.show')
 
         <div class="row mb-3">
 
@@ -103,6 +103,6 @@
 
         </form>
 
-    @endaclock
+    @end_acl_content
 
 @endcomponent

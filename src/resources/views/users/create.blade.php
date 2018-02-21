@@ -3,7 +3,7 @@
 
     @slot('title') Novo Usuário @endslot
 
-    @aclock('users.show')
+    @acl_content('users.show')
 
         <div class="row mb-3">
 
@@ -41,6 +41,6 @@
 
         </form>
         
-    @endaclock
+    @end_acl_content
 
 @endcomponent

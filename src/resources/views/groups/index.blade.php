@@ -3,7 +3,7 @@
 
     @slot('title') {{ $title }} @endslot
 
-    @aclock('groups.show')
+    @acl_content('groups.show')
 
         <div class="row mb-3">
 
@@ -113,6 +113,6 @@
             
         </div>
 
-    @endaclock
+    @end_acl_content
 
 @endcomponent

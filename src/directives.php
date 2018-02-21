@@ -17,6 +17,36 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
 
     /*
     |--------------------------------------------------------------------------
+    | Botões de ação:
+    |--------------------------------------------------------------------------
+    |
+    | @acl_action('role', 'url', 'label', 'view opcional')
+    | @acl_action_sm
+    | @acl_action_lg
+    |
+    |--------------------------------------------------------------------------
+    | Botões de submissão de Formulário:
+    |--------------------------------------------------------------------------
+    |
+    | @acl_submit('role', 'label', 'view opcional')
+    | @acl_submit_sm
+    | @acl_submit_lg
+    |
+    |--------------------------------------------------------------------------
+    | Conteúdo restrito:
+    |--------------------------------------------------------------------------
+    |
+    | @acl_content('role', 'callback opcional')
+    |  ...
+    |  ... conteudo a ser protegido
+    |  ...
+    | @end_acl_content('view opcional')
+    |
+    */
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Botões de Ação
     |--------------------------------------------------------------------------
     |
@@ -164,14 +194,14 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
     | Se o usuário não possuir credenciais, exibe uma mensagem de 
     | acesso não autorizado no lugar do conteudo.
     |
-    | @aclock('role', 'callback opcional')
-    |
+    | @acl_content('role', 'callback opcional')
+    |  ...
     |  ... conteudo html
-    |
-    | @endaclock('view opcional')
+    |  ...
+    | @end_acl_content('view opcional')
     */
 
-    \Blade::directive('aclock', function ($expression) {
+    \Blade::directive('acl_content', function ($expression) {
 
         $args = explode(',', $expression);
 
@@ -189,7 +219,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
         return "<{$open} if ( \Auth::user()->can('$ability') ): {$close}>";
     });
 
-    \Blade::directive('endaclock', function ($expression) {
+    \Blade::directive('end_acl_content', function ($expression) {
         
         $open = "?php";
         $close = "?";

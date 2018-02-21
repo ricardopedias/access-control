@@ -3,7 +3,7 @@
 
     @slot('title') Novo Grupo de Acesso @endslot
 
-    @aclock('groups.show')
+    @acl_content('groups.show')
 
         <div class="row mb-3">
 
@@ -42,6 +42,6 @@
 
         </form>
         
-    @endaclock
+    @end_acl_content
 
 @endcomponent
