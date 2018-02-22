@@ -1,8 +1,10 @@
 
 @component('laracl::document')
 
-    @slot('title') Editar Usuário @endslot
+    @slot('title') {{ $title }} @endslot
 
+    <hr>
+    
     @acl_content('users.show')
 
         <div class="row mb-3">

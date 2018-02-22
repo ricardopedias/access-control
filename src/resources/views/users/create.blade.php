@@ -1,7 +1,9 @@
 
 @component('laracl::document')
 
-    @slot('title') Novo Usuário @endslot
+    @slot('title') {{ $title }} @endslot
+
+    <hr>
 
     @acl_content('users.show')
 

@@ -1,7 +1,9 @@
 
 @component('laracl::document')
 
-    @slot('title') Editar Grupo de Acesso @endslot
+    @slot('title') {{ $title }} @endslot
+
+    <hr>
 
     @acl_content('groups.show')
 
@@ -22,8 +24,6 @@
             </div>
             
         </div>
-
-        <hr>
 
         <form method="post" action="{{ route($route_update, $model->id) }}">
 

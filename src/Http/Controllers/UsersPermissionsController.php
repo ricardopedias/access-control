@@ -8,8 +8,6 @@ use Laracl\Models\AclUserPermission;
 use Laracl\Models\AclGroupPermission;
 use Laracl\Traits\HasRolesStructure;
 use Illuminate\Http\Request;
-use Gate;
-use DB;
 
 class UsersPermissionsController extends Controller
 {
@@ -37,10 +35,11 @@ class UsersPermissionsController extends Controller
         // de permissões do formulário
         $this->populateStructure($db_permissions);
 
+        $user = AclUser::find($id);
         $view = config('laracl.views.users-permissions.edit');
         return view($view)->with([
-            'title'           => config('laracl.name'),
-            'user'            => AclUser::find($id),
+            'title'           => "Permissões Específicas para \"{$user->name}\"",
+            'user'            => $user,
             'has_permissions' => $has_permissions,
             'roles'           => $this->getRolesStructure(),
             'route_index'     => config('laracl.routes.users.index'),

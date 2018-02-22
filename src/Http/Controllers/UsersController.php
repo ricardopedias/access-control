@@ -5,43 +5,58 @@ namespace Laracl\Http\Controllers;
 use Laracl\Models\AclUser;
 use Laracl\Models\AclGroup;
 use Laracl\Models\AclUserPermission;
+use SortableGrid\Http\Controllers\SortableGridController;
 use Illuminate\Http\Request;
-use Gate;
-use DB;
 
-class UsersController extends Controller
+class UsersController extends SortableGridController 
 {
+    protected $initial_field = 'id';
+
+    protected $initial_order = 'desc';
+
+    protected $initial_perpage = 10;
+
+    protected $fields = [
+        'id'         => 'ID',
+        'name'       => 'Nome',
+        'email'      => 'E-mail',
+        'created_at' => 'Criação',
+        'Ações'
+    ];
+
+    protected $searchable_fields = [
+        'id',
+        'name',
+        'email',
+    ];
+
+    protected $orderly_fields = [
+        'id',
+        'name',
+        'email',
+        'created_at',
+    ];
+
     /**
-     * Display a listing of the resource.
+     * Devolve a coleção que será usada para a busca.
      *
-     * @return \Illuminate\Http\Response 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function getSearchableCollection()
+    {
+        return AclUser::query();
+    }
+
+    /**
+     * Display a listing of the resource. 
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $filters = function ($query) use ($request) {
-
-            $q = $request->get('q', NULL);
-            if ($q !== NULL) {
-                $query->where('name', 'like', "%{$q}%");
-                $query->orWhere('username', 'like', "%{$q}%");
-                $query->orWhere('email', 'like', "%{$q}%");
-            }
-        };
-            
-        $order   = $request->get('order', 'id');
-        $by      = $request->get('by', 'asc');
-        $perpage = $request->get('perpage', 10);
-
-        $collection = AclUser::where($filters)
-            ->orderBy($order, $by)
-            ->paginate($perpage)
-            ->appends($request->all());
-
         $view = config('laracl.views.users.index');
-
-        return view($view)->with([
+        return $this->searchableView($view)->with([
             'title'             => 'Gerenciamento de Usuários',
-            'collection'        => $collection,
             'route_create'      => config('laracl.routes.users.create'),
             'route_edit'        => config('laracl.routes.users.edit'),
             'route_permissions' => config('laracl.routes.users-permissions.edit'),
@@ -62,6 +77,7 @@ class UsersController extends Controller
             'model'           => new AclUser,
             'groups'          => AclGroup::all(),
             'has_permissions' => false,
+            'title'           => 'Novo Usuário',
             'require_pass'    => 'required',
             'route_index'     => config('laracl.routes.users.index'),
             'route_store'     => config('laracl.routes.users.store'),
@@ -111,6 +127,7 @@ class UsersController extends Controller
             'groups'            => AclGroup::all(),
             'has_permissions'   => ($db_permissions->count()>0),
             'require_pass'      => '',
+            'title'             => 'Editar Usuário',
             'route_index'       => config('laracl.routes.users.index'),
             'route_update'      => config('laracl.routes.users.update'),
             'route_create'      => config('laracl.routes.users.create'),

@@ -27,10 +27,11 @@ class GroupsPermissionsController extends Controller
         $db_permissions = AclGroupPermission::collectByGroup($id);
         $this->populateStructure($db_permissions);
 
+        $group = AclGroup::find($id);
         $view = config('laracl.views.groups-permissions.edit');
         return view($view)->with([
-            'title'        => config('laracl.name'),
-            'group'        => AclGroup::find($id),
+            'title'        => "Permissões para \"{$group->name}\"",
+            'group'        => $group,
             'roles'        => $this->getRolesStructure(),
             'route_index'  => config('laracl.routes.groups.index'),
             'route_create' => config('laracl.routes.groups.create'),

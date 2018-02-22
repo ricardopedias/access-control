@@ -1,7 +1,9 @@
 
 @component('laracl::document')
 
-    @slot('title') Novo Grupo de Acesso @endslot
+    @slot('title') {{ $title }} @endslot
+
+    <hr>
 
     @acl_content('groups.show')
 
@@ -21,8 +23,6 @@
             </div>
             
         </div>
-
-        <hr>
 
         <form method="post" action="{{ route($route_store) }}">
 

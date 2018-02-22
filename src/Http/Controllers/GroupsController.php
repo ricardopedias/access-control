@@ -4,40 +4,54 @@ namespace Laracl\Http\Controllers;
 
 use Laracl\Models\AclGroup;
 use Illuminate\Http\Request;
-use Gate;
-use DB;
+use SortableGrid\Http\Controllers\SortableGridController;
 
-class GroupsController extends Controller
+class GroupsController extends SortableGridController
 {
+    protected $initial_field = 'id';
+
+    protected $initial_order = 'desc';
+
+    protected $initial_perpage = 10;
+
+    protected $fields = [
+        'id'         => 'ID',
+        'name'       => 'Nome',
+        'created_at' => 'Criação',
+        'Ações'
+    ];
+
+    protected $searchable_fields = [
+        'id',
+        'name',
+    ];
+
+    protected $orderly_fields = [
+        'id',
+        'name',
+        'created_at',
+    ];
+
     /**
-     * Display a listing of the resource.
+     * Devolve a coleção que será usada para a busca.
      *
-     * @return \Illuminate\Http\Response 
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    protected function getSearchableCollection()
+    {
+        return AclGroup::query();
+    }
+
+    /**
+     * Display a listing of the resource. 
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        $filters = function ($query) use ($request) {
-
-            $q = $request->get('q', NULL);
-            if ($q !== NULL) {
-                $query->where('name', 'like', "%{$q}%");
-            }
-        };
-            
-        $order   = $request->get('order', 'id');
-        $by      = $request->get('by', 'asc');
-        $perpage = $request->get('perpage', 10);
-
-        $collection = AclGroup::where($filters)
-            ->orderBy($order, $by)
-            ->paginate($perpage)
-            ->appends($request->all());
-
         $view = config('laracl.views.groups.index');
-
-        return view($view)->with([
+        return $this->searchableView($view)->with([
             'title'             => 'Grupos de Acesso',
-            'collection'        => $collection,
             'route_create'      => config('laracl.routes.groups.create'),
             'route_edit'        => config('laracl.routes.groups.edit'),
             'route_permissions' => config('laracl.routes.groups-permissions.edit'),
@@ -56,6 +70,7 @@ class GroupsController extends Controller
 
         return view($view)->with([
             'model'       => new AclGroup,
+            'title'       => 'Novo Grupo de Acesso',
             'route_index' => config('laracl.routes.groups.index'),
             'route_store' => config('laracl.routes.groups.store'),
             'route_users' => config('laracl.routes.users.index'),
@@ -94,6 +109,7 @@ class GroupsController extends Controller
 
         return view($view)->with([
             'model'             => AclGroup::find($id),
+            'title'             => 'Editar Grupo de Acesso',
             'route_index'       => config('laracl.routes.groups.index'),
             'route_update'      => config('laracl.routes.groups.update'),
             'route_create'      => config('laracl.routes.groups.create'),

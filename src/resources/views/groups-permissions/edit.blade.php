@@ -1,7 +1,9 @@
 
 @component('laracl::document')
 
-    @slot('title') Permissoes para "{{ $group->name }}" @endslot
+    @slot('title') {{ $title }} @endslot
+
+    <hr>
 
     @acl_content('groups-permissions.show')
 
@@ -13,7 +15,7 @@
 
             </div>
 
-            <div class="col text-right justify-content-end">
+            <div class="col text-right">
 
                 @acl_action('groups.create', route($route_create), 'Novo Grupo')
 
@@ -36,15 +38,15 @@
 
                         <thead>
 
-                            <th>Área da Loja</th>
+                            <th>Áreas de Acesso</th>
                             
-                            <th>Ver</th>
+                            <th class="text-center" style="background:rgba(0,0,0,0.05)"><i class="fa fa-eye"></i> Ver</th>
 
-                            <th>Criar</th>
+                            <th class="text-center"><i class="fa fa-plus-circle"></i> Criar</th>
 
-                            <th>Editar</th>
+                            <th class="text-center" style="background:rgba(0,0,0,0.05)"><i class="fa fa-edit"></i> Editar</th>
 
-                            <th>Excluir</th>
+                            <th class="text-center"><i class="fa fa-times-circle"></i> Excluir</th>
 
                         </thead>
 
@@ -67,7 +69,12 @@
                                         $role_name = "roles[{$route}][{$role}]";
                                         @endphp
 
-                                        <td>
+                                        @if($loop->iteration%2 == 0)
+                                        <td class="text-center">
+                                        @else
+                                        <td class="text-center" style="background:rgba(0,0,0,0.05)">
+                                        @endif
+    
                                             @if($role_value != null)
 
                                                 <input type="checkbox" name="{{ $role_name }}" class="check-toggle" 
