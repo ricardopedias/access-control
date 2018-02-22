@@ -36,10 +36,10 @@ return [
     */
 
     'routes'     => [
-        'users'              => 'admin/users',
-        'users-permissions'  => 'admin/users-permissions',
-        'groups'             => 'admin/groups',
-        'groups-permissions' => 'admin/groups-permissions', 
+        'users'              => 'laracl/users',
+        'users-permissions'  => 'laracl/users-permissions',
+        'groups'             => 'laracl/groups',
+        'groups-permissions' => 'laracl/groups-permissions', 
     ],
 
     /*
