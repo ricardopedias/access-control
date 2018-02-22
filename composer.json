@@ -12,7 +12,8 @@
     "require": {
         "php": ">=7.0.0",
         "laravel/framework": "~5.5",
-        "plexi/old-extended": "~1.0"
+        "plexi/old-extended": "1.0.0",
+        "plexi/sortable-grid": "1.1.5"
     },
     "autoload": {
         "psr-4": {
