@@ -1,4 +1,16 @@
 
+    @if ($errors->any())
+
+        <div class="alert alert-warning">
+            
+            @foreach ($errors->all() as $error)
+                <i class="fa fa-angle-right"></i> {{ $error }} <br>
+            @endforeach
+            
+        </div>
+
+    @endif
+
     <div class="row">
 
         <div class="col form-group">

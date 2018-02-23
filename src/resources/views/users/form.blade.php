@@ -1,4 +1,16 @@
 
+    @if ($errors->any())
+
+        <div class="alert alert-warning">
+            
+            @foreach ($errors->all() as $error)
+                <i class="fa fa-angle-right"></i> {{ $error }} <br>
+            @endforeach
+            
+        </div>
+
+    @endif
+
     <div class="row">
 
         <div class="col form-group">
@@ -48,7 +60,7 @@
 
             <label>Senha</label>
             <input name="password" type="text" 
-                   class="form-control" 
+                   class="form-control"
                    {{ $require_pass }}>
             <small class="form-text text-muted">A palavra chave de acesso</small>
         </div>
