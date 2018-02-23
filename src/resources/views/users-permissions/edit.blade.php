@@ -102,7 +102,7 @@
 
                                                 <input type="checkbox" name="{{ $role_name }}" class="check-toggle" 
                                                        data-on-text="Sim" data-off-text="Não"
-                                                       value="yes" {{ old_check($role_name, $role_value, 'yes') }}>
+                                                       value="yes" {{ old_check($role_name, 'yes', $role_value) }}>
 
                                             @endif
 

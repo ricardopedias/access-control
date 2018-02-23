@@ -36,6 +36,8 @@
 
                     <td>{{ $item->name }}</td>
 
+                    <td>{{ $item->group_name }}</td>
+
                     <td>{!! str_replace(['@', '.'], ['<wbr>@', '<wbr>.'], $item->email) !!}</td>
 
                     <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>

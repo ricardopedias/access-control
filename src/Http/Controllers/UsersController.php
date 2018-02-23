@@ -10,31 +10,33 @@ use Illuminate\Http\Request;
 
 class UsersController extends SortableGridController 
 {
-    protected $initial_field = 'id';
+    protected $initial_field = 'users.id';
 
     protected $initial_order = 'desc';
 
     protected $initial_perpage = 10;
 
     protected $fields = [
-        'id'         => 'ID',
-        'name'       => 'Nome',
-        'email'      => 'E-mail',
-        'created_at' => 'Criação',
+        'users.id'         => 'ID',
+        'users.name'       => 'Nome',
+        'acl_groups.name'  => 'Grupo de Acesso',
+        'users.email'      => 'E-mail',
+        'users.created_at' => 'Criação',
         'Ações'
     ];
 
     protected $searchable_fields = [
-        'id',
-        'name',
-        'email',
+        'users.id',
+        'users.name',
+        'users.email',
     ];
 
     protected $orderly_fields = [
-        'id',
-        'name',
-        'email',
-        'created_at',
+        'users.id',
+        'users.name',
+        'acl_groups.name',
+        'users.email',
+        'users.created_at',
     ];
 
     /**
@@ -44,7 +46,14 @@ class UsersController extends SortableGridController
      */
     protected function getSearchableCollection()
     {
-        return AclUser::query();
+        return AclUser::select([
+                'users.id',
+                'users.name',
+                'acl_groups.name as group_name',
+                'users.email',
+                'users.created_at',
+            ])
+            ->leftJoin('acl_groups', 'users.acl_group_id', '=', 'acl_groups.id');
     }
 
     /**
