@@ -27,6 +27,11 @@ class AclGroup extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
+    public function getFillableColumns()
+    {
+        return $this->fillable;
+    }
+
     //
     // Relacionamentos
     //

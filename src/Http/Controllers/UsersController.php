@@ -46,13 +46,37 @@ class UsersController extends SortableGridController
      */
     protected function getSearchableCollection()
     {
-        return AclUser::select([
-                'users.id',
-                'users.name',
-                'acl_groups.name as group_name',
-                'users.email',
-                'users.created_at',
-            ])
+        $columns = [];
+
+        // \App\User
+        // Adiciona o prefixo 'users' nos campos do modelo 
+        $fillable_user = (new AclUser)->getFillableColumns();
+        foreach($fillable_user as $field) {
+            $columns["users.{$field}"] = "users.{$field}";
+        }
+
+        // Se os campos especiais não forem 'fillable'
+        if (!isset($columns['users.id'])) {
+            $columns[] = 'users.id';
+        }
+        if (!isset($columns['users.created_at'])) {
+            $columns[] = 'users.created_at';
+        }
+        if (!isset($columns['users.updated_at'])) {
+            $columns[] = 'users.updated_at';
+        }
+
+        // \Laracl\Models\AclUser
+        // O campo com o grupo de acesso
+        $fillable_group = (new AclGroup)->getFillableColumns();
+        foreach($fillable_group as $field) {
+            $columns[] = "acl_groups.{$field} as group_{$field}";
+        }
+        $columns[] = "acl_groups.created_at as group_created_at";
+        $columns[] = "acl_groups.updated_at as group_updated_at";
+
+        // Faz o select devolvendo os campos de \App\User + \Laracl\Models\AclGroup
+        return AclUser::select($columns)
             ->leftJoin('acl_groups', 'users.acl_group_id', '=', 'acl_groups.id');
     }
 

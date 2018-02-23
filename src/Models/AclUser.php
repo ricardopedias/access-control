@@ -18,6 +18,11 @@ class AclUser extends \App\User
         $this->fillable[] = 'acl_group_id';
     }
 
+    public function getFillableColumns()
+    {
+        return $this->fillable;
+    }
+
     //
     // Relacionamentos
     //
