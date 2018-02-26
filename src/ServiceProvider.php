@@ -22,7 +22,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         
         // Config
         // php artisan vendor:publish
-        $this->publishes([__DIR__.'/config/laracl.php' => config_path('laracl.php')], 'laracl');
+        $this->publishes([__DIR__.'/config/laracl.php' => config_path('laracl.php')], 'config-laracl');
         
         // Views
         // php artisan vendor:publish --provider="Laracl\ServiceProvider"
