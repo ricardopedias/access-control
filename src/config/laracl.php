@@ -4,18 +4,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Nome do Formulário
-    |--------------------------------------------------------------------------
-    |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
-    */
-
-    'name'       => 'Laracl',
-
-    /*
-    |--------------------------------------------------------------------------
     | Usuário com permissão total
     |--------------------------------------------------------------------------
     |
@@ -23,16 +11,16 @@ return [
     | O usuário setado aqui terá acesso total.
     */
 
-    'root_user'       => 0,
+    'root_user' => 0,
 
     /*
     |--------------------------------------------------------------------------
-    | Rota Base
+    | Rotas
     |--------------------------------------------------------------------------
     |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
+    | Estas são as rotas usadas pelos CRUS's do mecanismo de configuração de 
+    | permissões. Para adequer as rotas ao seu projeto do Laravel, 
+    | basta especificá-las aqui.
     */
 
     'routes'     => [
@@ -44,12 +32,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Rota Base
+    | Controladores
     |--------------------------------------------------------------------------
     |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
+    | Os controladores podem ser personalizados, configurando-os nesta seção.
+    | Uma forma limpa de implementar controladores personalizados é estendendo 
+    | suas funcionalidades originas e mudando apenas o necessário:
+    |
+    | Por exemplo: 
+    | class PersonalController extends Laracl\Http\Controllers\UsersController {
+    |    ...
+    | }
     */
 
     'controllers'     => [
@@ -62,12 +55,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Visão
+    | Visões
     |--------------------------------------------------------------------------
     |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
+    | Os templates podem ser personalizados, configurando-os nesta seção.
     */
 
     'views' => [
@@ -95,12 +86,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Funções disponíveis
+    | Habilidades
     |--------------------------------------------------------------------------
     |
-    | This value is the name of your application. This value is used when the
-    | framework needs to place the application's name in a notification or
-    | any other location as required by the application or its packages.
+    | As habilidades gerenciáveis nos CRUD's do mecanismo de configuração de 
+    | permissões devem ser adicionadas aqui. Cada habilidade deve ser adicionada 
+    | com sua slug, seguida de dois parâmetros, sendo:
+    |
+    | 'users' => [                                    <-- A slug da função
+    |    'label'       => 'Usuários',                 <-- O nome para exibição da função
+    |    'permissions' => 'create,edit,show,delete',  <-- As habilidades configuráveis
+    | ],
     */
 
     'roles' => [
