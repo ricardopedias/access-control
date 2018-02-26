@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="wqooS6uBwAf0ODcaElwctdVspF6AhXQUnya8Qc6k">
 
-        <title>{{ $title or config('laracl.name') }}</title>
+        <title>{{ $title or 'Laracl' }}</title>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
@@ -14,7 +14,7 @@
 
     <body class="p-5">
 
-        <h1>{{ $title or config('laracl.name') }}</h1>
+        <h1>{{ $title or 'Laracl' }}</h1>
 
         {!! $slot !!}
 
