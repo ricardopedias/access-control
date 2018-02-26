@@ -1,6 +1,8 @@
 # Laracl
 
-Laracl é um gerenciador de listas de acesso (Access Control List) com cruds elaborados para configurar o acesso das páginas dentro de um sistema.
+O Laracl foi desenvolvido para disponibilizar facilmente um gerenciador de listas de acesso (Access Control List) para 
+um projeto Laravel. Com CRUD's funcionais e personalizáveis, é simples configurar permissões baseadas em Grupos de Acesso 
+ou exclusivamente para determinados usuários.
 
 ### Características
 

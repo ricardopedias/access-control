@@ -1,18 +1,11 @@
 # 2. Instalação
 
-## Sumário
-
-1. [Sobre](00-Home.md)
-2. [Instalação](01-Installation.md)
-3. [Como Usar](02-Usage.md)
-4. [Exemplos](03-Examples.md)
-5. [Extras](04-Extras.md)
-
 ## Requisitos do servidor
 
-O pacote Laracl possui os seguintes requisitos:
+O pacote Laracl possui os seguintes requisitos básicos:
 
 * PHP >= 7.0.0
+* Extensão PDO do PHP
 * Laravel >= 5.5
 
 ## Baixando o pacote e as dependências
@@ -31,7 +24,7 @@ arquivo composer.json do Laravel e em seguia efetuar o processo de instalação.
 Para instalar uma versão específica, basta substituir pelo comando:
 
 ```
-$ composer require plexi/laracl:1.1.0
+$ composer require plexi/laracl:1.1.5
 ```
 
 ## Atualizando o banco de dados
@@ -66,13 +59,20 @@ Para acessá-los, basta seguir a url:
 http://www.meuprojeto.com.br/laracl/users
 ```
 
-*** Nota: troque o domínio 'meuprojeto.com.br' para o domíbio onde o seu projeto Laravel está instalado. ***
+Nota: troque o domínio do exemplo ('meuprojeto.com.br') para o domínio onde o seu projeto Laravel está instalado.
 
+## Revertendo/Limpando o banco de dados
 
+Para remover as alterações efetuadas no bancod e dados:
 
+```
+$ php artisan migrate:reset --path=vendor/plexi/laracl/src/database/migrations
+```
 
+## Sumário
 
-
-
-
-
+1. [Sobre](00-Home.md)
+2. [Instalação](01-Installation.md)
+3. [Como Usar](02-Usage.md)
+4. [Exemplos](03-Examples.md)
+5. [Extras](04-Extras.md)
