@@ -34,20 +34,94 @@ se necessário, remover o ID de ROOT para o usuário voltar ao seu 'estado norma
 Por padrão, existem 4 funções com suas respectivas habilidades. Essas funções são 
 gerenciaveis visualmente através dos CRUD's do Laracl:
 
-* users - create, edit, show, delete
-* users-permissions - create, edit, show
-* groups - create, edit ,show, delete
-* groups-permissions - create, edit, show
-
-Onde 'users' é a função e 'create, edit, show, delete' são as habilidades.
+Função             | Habilidades
+-------------------|-----------------------------
+users              | create, edit, show, delete
+users-permissions  | create, edit, show
+groups             | create, edit ,show, delete
+groups-permissions | create, edit, show
 
 Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar 
 se o usuário atual tem ou não direito de acesso a determinada área.
 
-### Permissões em Views
+## Diretivas do Blade
 
-...
+O Laracl possui directivas especias para controlar o acesso diretamente em templates do blade.
+São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando 
+o framework Bootstrap 4.
 
+### Botões de Ação
+
+São botões simples, que contém um link ou uma determinada rota. Por exemplo:
+
+```
+@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
+```
+No exemplo acima, 'users.edit' verifica se a função 'users' possui acesso à habilidade 'edit'.
+Caso seja positivo, um botão será gerado com o texto 'Editar Usuário' e conterá o link para '/admin/users/1/edit'. 
+Caso seja negativo, um botão será gerado sem o link e com aparência esmaecida, indicando que o usuário não tem direito de acesso.
+
+Existem variantes deste botão, para tamanhos diferentes, onde o sufixo '_sm' signifca um botão pequeno e o sufixo '_lg', um botão grande:
+
+```
+@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
+@acl_action_sm('users.edit', '/admin/users/1/edit', 'Editar Usuário')
+@acl_action_lg('users.edit', '/admin/users/1/edit', 'Editar Usuário')
+```
+
+### Botões de Submissão de Formulário
+
+São botões especiais, que só funcionam dentro de formulários. Por exemplo:
+
+```
+@acl_submit('users.create', 'Gravar Novo Usuário') 
+```
+No exemplo acima, 'users.create' verifica se a função 'users' possui acesso à habilidade 'create'.
+Caso seja positivo, o formulário será liberado para submissão e um botão será gerado com o texto 'Gravar Novo Usuário'. 
+Caso seja negativo, o formulário será bloqueado para submição e um botão será gerado com aparência esmaecida, indicando que o usuário não tem direito de acesso.
+
+Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo '_sm' signifca um botão pequeno e o sufixo '_lg', um botão grande:
+
+
+```
+@acl_submit('users.create', 'Gravar Novo Usuário') 
+@acl_submit_sm('users.create', 'Gravar Novo Usuário') 
+@acl_submit_lg('users.create', 'Gravar Novo Usuário') 
+```
+
+### Restrição de conteúdo
+
+Também é possível restringir uma parte especifica de um layout, usando o invólucro de conteúdo, como no exemplo abaixo:
+
+```
+@acl_content('users.show')
+
+    Conteudo html restrito!
+
+@end_acl_content
+```
+
+No exemplo acima, 'users.show' verifica se a função 'users' possui acesso à habilidade 'show'.
+Caso seja positivo, o conteúdo será renderizado normalmente no template. 
+Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
+
+
+### Restrição simples ou condicional
+
+A diretiva @can é padrão do Laravel e pode ser usada para efetuar  verificações de acesso, bastando passar a função e a habilidade desejada como parâmetro:
+
+
+```
+@can('users.edit')
+
+    Parabéns, você pode editar!!
+
+@else
+
+    Desculpe, você não pode editar!!
+
+@endif
+```
 
 ### Permissões em Controllers
 
