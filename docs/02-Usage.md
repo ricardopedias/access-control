@@ -224,6 +224,9 @@ Usando o comando abaixo, as views personalizáveis serão geradas no diretório
 php artisan vendor:publish --tag=laracl-cruds
 ```
 
+> **Nota**:
+> As views publicadas, por se tratarem de cópias das views internas do Laracl, possuem chamadas para o pacote 'laracl::'. Para usar as mesmas views e componentes originais, mude as invocações 'laracl::' para 'laracl.cruds.', fazendo com que as chamadas sejam locais.
+
 Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
 são configuradas manualmente na seção 'views' do arquivo de configuração:
 
@@ -248,9 +251,6 @@ return [
     ...
 
 ```
-
-> **Nota**:
-> As views publicadas, por se tratarem de cópias das views internas do Laracl, possuem chamadas para o pacote 'laracl::'. Para usar as mesmas views e componentes originais, mude as invocações 'laracl::' para 'laracl.cruds.', fazendo com que as chamadas sejam locais.
 
 
 ### Controlladores Personalizados
