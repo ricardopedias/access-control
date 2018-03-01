@@ -33,9 +33,9 @@
 
                     <div class="alert alert-info">
                         
-                        <h4 class="alert-heading">Atenção!</h4>
+                        <h4 class="alert-heading">Atenção, este usuário pertence ao grupo <strong>"{{ $user->group->name }}"</strong>!</h4>
 
-                        <p>Este usuário possui os privilégios do grupo de acesso <strong>"{{ $user->group->name }}"</strong>. Clicando em "Aplicar Permissões", este usuário possuirá privilégios exclusivos. Isso pode ser mudado posteriormente setando um novo grupo para ele.
+                        <p>Atualmente o usuário possui as permissões do grupo. Clicando em <i>"Aplicar Permissões"</i>, este usuário possuirá <strong>Privilégios Personalizados</strong>. Você poderá remover estes privilégios personalizados a qualquer momento na tela de edição do usuário, bastando setar um grupo para ele.
                         </p>
 
                     </div>
