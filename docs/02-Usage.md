@@ -6,7 +6,7 @@ A primeira coisa a se fazer é efetuar a configuração básica do Laracl.
 Isso é realizado no arquivo de configuração que deve ser publicado através do seguinte comando:
 
 ```
-php artisan vendor:publish --tag=config-laracl
+php artisan vendor:publish --tag=laracl-config
 ```
 
 Após executar este comando, o arquivo de configuração poderá ser encontrado em config/laracl.php.
@@ -31,8 +31,8 @@ se necessário, remover o ID de ROOT para o usuário voltar ao seu 'estado norma
 
 ## Usando as funções e habilidades
 
-Por padrão, existem 4 funções com suas respectivas habilidades. Essas funções são 
-gerenciaveis visualmente através dos CRUD's do Laracl:
+Por padrão, existem 4 funções com suas respectivas habilidades, que podem ser usados em qualquer projeto Laravel. 
+Essas funções são gerenciáveis visualmente através dos CRUD's do Laracl:
 
 Função             | Habilidades
 -------------------|-----------------------------
@@ -44,11 +44,24 @@ groups-permissions | create, edit, show
 Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar 
 se o usuário atual tem ou não direito de acesso a determinada área.
 
-## Diretivas do Blade
+## Diretivas para layout no Blade
 
 O Laracl possui directivas especias para controlar o acesso diretamente em templates do blade.
 São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando 
 o framework Bootstrap 4.
+
+### Personalização
+
+Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões. 
+Usando o comando abaixo, as views personalizaveis serão geradas no diretório 
+'resources/views/laracl/buttons':
+
+```
+php artisan vendor:publish --tag=laracl-buttons
+```
+
+Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
+são setadas no momento da exibição do botão e podem possuir qualquer localização.
 
 ### Botões de Ação
 
@@ -69,6 +82,14 @@ Existem variantes deste botão, para tamanhos diferentes, onde o sufixo '_sm' si
 @acl_action_lg('users.edit', '/admin/users/1/edit', 'Editar Usuário')
 ```
 
+Os botões usam um template padrão, baseado no Bootstrap 4. 
+Para especificar um template personalizado, basta fornecer um quarto parâmetro com a view desejada e o 
+botão será renderizado com ela.
+
+```
+@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário', 'meus-botoes.botao-de-edicao')
+```
+
 ### Botões de Submissão de Formulário
 
 São botões especiais, que só funcionam dentro de formulários. Por exemplo:
@@ -78,15 +99,21 @@ São botões especiais, que só funcionam dentro de formulários. Por exemplo:
 ```
 No exemplo acima, 'users.create' verifica se a função 'users' possui acesso à habilidade 'create'.
 Caso seja positivo, o formulário será liberado para submissão e um botão será gerado com o texto 'Gravar Novo Usuário'. 
-Caso seja negativo, o formulário será bloqueado para submição e um botão será gerado com aparência esmaecida, indicando que o usuário não tem direito de acesso.
+Caso seja negativo, o formulário será bloqueado para submissão e um botão será gerado com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
 Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo '_sm' signifca um botão pequeno e o sufixo '_lg', um botão grande:
-
 
 ```
 @acl_submit('users.create', 'Gravar Novo Usuário') 
 @acl_submit_sm('users.create', 'Gravar Novo Usuário') 
 @acl_submit_lg('users.create', 'Gravar Novo Usuário') 
+```
+
+Para especificar um template personalizado, basta fornecer um terceiro parâmetro com a view desejada e o 
+botão será renderizado com ela.
+
+```
+@acl_submit('users.create', 'Gravar Novo Usuário', 'meus-botoes.botao-de-criacao') 
 ```
 
 ### Restrição de conteúdo
@@ -105,11 +132,14 @@ No exemplo acima, 'users.show' verifica se a função 'users' possui acesso à h
 Caso seja positivo, o conteúdo será renderizado normalmente no template. 
 Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
 
+## Restrições condicionais
 
-### Restrição simples ou condicional
+As verificações condicionais são efetuadas através do método 'can', presente no objeto de autenticação padrão do Laravel.
+O método está disponível tanto no Blade como no ambiente PHP:
 
-A diretiva @can é padrão do Laravel e pode ser usada para efetuar  verificações de acesso, bastando passar a função e a habilidade desejada como parâmetro:
+### No blade
 
+A diretiva '@can' pode ser usada para efetuar verificações de acesso, bastando passar a função e a habilidade desejada como parâmetro:
 
 ```
 @can('users.edit')
@@ -123,15 +153,23 @@ A diretiva @can é padrão do Laravel e pode ser usada para efetuar  verificaç�
 @endif
 ```
 
-### Permissões em Controllers
+### No PHP
 
-...
+Dentro das rotina de programação também é possível verificar as permissões de acesso, usando o médodo 'can' do facade 'Auth' do Laravel: 
 
+```
+if ( \Auth::user()->can('users.edit') == true) {
+    echo 'Parabéns, você pode editar!!';
+}
+else {
+    echo 'Desculpe, você não pode editar!!';
+}
+```
 
 ## Adicionando funções e habilidades
 
 Novas funções e habilidades devem ser adicionadas na seção 'roles' do arquivo de configuração.
-Cada habilidade deve possuie a sua slug, seguida de dois parâmetros, sendo:
+Cada habilidade deve possuir a sua slug, seguida de dois parâmetros, sendo:
 
 ```
 <?php
@@ -142,33 +180,118 @@ return [
     'roles' => [
 
         'users' => [                                    <-- A slug da função
-            'label'       => 'Usuários',                <-- O nome para exibição da função nos CRUD's
-            'permissions' => 'create,edit,show,delete', <-- As habilidades configuráveis nos CRUD's
+            'label'       => 'Usuários',                <-- O nome para exibição
+            'permissions' => 'create,edit,show,delete', <-- As habilidades configuráveis
         ],
 
     ...
 
 ```
 
-
 ## Personalizando os CRUDs
 
-É possível personalizar as funcionalidades dos CRUDs do Laracl. Entre as personalizações, pode-se alterar as rotas, os controladores e as views usadas pelo mecanismo interno. Isso oferece liberdade e flexibilidade para adequar o Laracl a qualquer 
-projeto Laravel existente.
+Para adicionar flexibilidade, e possibilitar a adaptação a qualquer projeto, o Laracl permite configurar os CRUDs de configuração das permissões. Entre as personalizações, pode-se alterar as rotas, os controladores e as views usadas pelo mecanismo interno. 
 
 ### Rotas Personalizados
 
-...
+As rotas padrões possuem as urls com o prefixo 'laracl' seguido da rota básica ('laracl/users' ou 'laracl/users-permissions').
+Isso pode ser facilmente mudado, setando urls personalizadas na seção 'routes' do arquivo de configuração:
+
+```
+<?php
+return [
+
+    ...
+
+    'routes'     => [
+        'users'              => 'meu-painel/usuarios', <-- rota personalizada
+        'users-permissions'  => 'laracl/users-permissions',
+        'groups'             => 'laracl/groups',
+        'groups-permissions' => 'laracl/groups-permissions', 
+    ],
+
+    ...
+
+```
+
+### Visões Personalizadas
+
+Para personalizar a aparência dos CRUD's, basta publicar uma cópia dos templates padrões. 
+Usando o comando abaixo, as views personalizáveis serão geradas no diretório 
+'resources/views/laracl/cruds':
+
+```
+php artisan vendor:publish --tag=laracl-cruds
+```
+
+Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
+são configuradas manualmente na seção 'views' do arquivo de configuração:
+
+```
+<?php
+return [
+
+    ...
+
+    'views' => [
+
+        'users' => [
+            'index'  => 'laracl.cruds.index',   <-- view personalizada
+            'create' => 'laracl::users.create', <-- view do pacote laracl (::)
+            'edit'   => 'laracl::users.edit',   <-- view do pacote laracl (::)
+        ],
+
+        ...
+
+    ],
+
+    ...
+
+```
+
+> **Nota**:
+> As views publicadas, por se tratarem de cópias das views internas do Laracl, possuem chamadas para o pacote 'laracl::'. Para usar as mesmas views e componentes originais, mude as invocações 'laracl::' para 'laracl.cruds.', fazendo com que as chamadas sejam locais.
 
 
 ### Controlladores Personalizados
 
-...
+Os controladores também podem ser personalizados, setando-os na seção 'controllers':
 
-### Visões Personalizadas
+```
+<?php
+return [
 
-...
+    ...
 
+    'controllers'     => [
+        'users'              => 'App\Http\Controllers\MeuUsersController', <-- controlador personalizado
+        'users-permissions'  => 'Laracl\Http\Controllers\UsersPermissionsController',
+        'groups'             => 'Laracl\Http\Controllers\GroupsController',
+        'groups-permissions' => 'Laracl\Http\Controllers\GroupsPermissionsController',
+    ],
+
+    ...
+
+```
+
+O aproveitamento das funcionalidades padrões é feita facilmente, extendendo o controlador original do Laracl:
+
+```
+class MeuUsersController extends \Laracl\Http\Controllers\UsersController
+{
+    public function store(Request $form)
+    {
+        // Faz a validação de uma informação adicional
+        // proveniente de uma view personalizada
+        $form->validate([
+            'blog_id' => 'required|int',
+        ]);
+
+        // Invoca o método store padrão do Laracl
+        return parent::store($form);
+    }
+}
+```
 
 ## Sumário
 
