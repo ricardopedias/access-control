@@ -169,7 +169,6 @@ class Accessor
             // As permissões setadas para o usuário tem precedencia
             $user_permissions = \Laracl\Models\AclUserPermission::collectByUser($user_id);
             if ($user_permissions->count() > 0) {
-
                 foreach($user_permissions as $item) {
                     if (isset($cache_slugs[$item->role_id])) {
                         $slug = $cache_slugs[$item->role_id];
@@ -184,7 +183,7 @@ class Accessor
             else {
 
                 $group_permissions = \Laracl\Models\AclGroupPermission::collectByUser($user_id);
-                foreach($user_permissions as $item) {
+                foreach($group_permissions as $item) {
                     if (isset($cache_slugs[$item->role_id])) {
                         $slug = $cache_slugs[$item->role_id];
                         $cache_all[$slug]['permissions'] = $item->toArray();
