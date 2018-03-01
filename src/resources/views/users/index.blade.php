@@ -46,6 +46,8 @@
                         
                         @acl_action_sm('users.edit', route($route_edit, $item->id ), 'Editar')
 
+                        @acl_action_sm('users-permissions.edit', route($route_permissions, $item->id), 'Permissões')
+
                     </td>
                 </tr>
 
