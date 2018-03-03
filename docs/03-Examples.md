@@ -1,5 +1,7 @@
 # 3. Exemplos
 
+Desculpe... ainda estou fazendo essa parte...
+
 ## Sumário
 
 1. [Sobre](00-Home.md)
