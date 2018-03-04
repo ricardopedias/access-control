@@ -5,7 +5,7 @@
 A primeira coisa a se fazer é efetuar a configuração básica do Laracl. 
 Isso é realizado no arquivo de configuração que deve ser publicado através do seguinte comando:
 
-```
+```bash
 php artisan vendor:publish --tag=laracl-config
 ```
 
@@ -16,8 +16,8 @@ Após executar este comando, o arquivo de configuração poderá ser encontrado 
 Para acessar os CRUD's, é preciso configurar as permissões de acesso aos usuários ou grupos de acesso paar que estes possam acessar as páginas.
 Na instalação inicial, nenhum usuário possui permissões. Por isso, é necessário setar o ID do usuário ROOT na configuração:
 
-```
-<?php
+```php
+
 return [
 
     'root_user' => 1, // <--- Usuário 1 será o ROOT
@@ -56,7 +56,7 @@ Para personalizar a aparência dos botões, basta publicar uma cópia dos templa
 Usando o comando abaixo, as views personalizaveis serão geradas no diretório 
 'resources/views/laracl/buttons':
 
-```
+```bash
 php artisan vendor:publish --tag=laracl-buttons
 ```
 
@@ -157,7 +157,7 @@ A diretiva '@can' pode ser usada para efetuar verificações de acesso, bastando
 
 Dentro das rotina de programação também é possível verificar as permissões de acesso, usando o médodo 'can' do facade 'Auth' do Laravel: 
 
-```
+```php
 if ( \Auth::user()->can('users.edit') == true) {
     echo 'Parabéns, você pode editar!!';
 }
@@ -171,8 +171,7 @@ else {
 Novas funções e habilidades devem ser adicionadas na seção 'roles' do arquivo de configuração.
 Cada habilidade deve possuir a sua slug, seguida de dois parâmetros, sendo:
 
-```
-<?php
+```php
 return [
 
     ...
@@ -197,8 +196,7 @@ Para adicionar flexibilidade, e possibilitar a adaptação a qualquer projeto, o
 As rotas padrões possuem as urls com o prefixo 'laracl' seguido da rota básica ('laracl/users' ou 'laracl/users-permissions').
 Isso pode ser facilmente mudado, setando urls personalizadas na seção 'routes' do arquivo de configuração:
 
-```
-<?php
+```php
 return [
 
     ...
@@ -220,7 +218,7 @@ Para personalizar a aparência dos CRUD's, basta publicar uma cópia dos templat
 Usando o comando abaixo, as views personalizáveis serão geradas no diretório 
 'resources/views/laracl/cruds':
 
-```
+```bash
 php artisan vendor:publish --tag=laracl-cruds
 ```
 
@@ -230,8 +228,7 @@ php artisan vendor:publish --tag=laracl-cruds
 Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
 são configuradas manualmente na seção 'views' do arquivo de configuração:
 
-```
-<?php
+```php
 return [
 
     ...
@@ -257,8 +254,7 @@ return [
 
 Os controladores também podem ser personalizados, setando-os na seção 'controllers':
 
-```
-<?php
+```php
 return [
 
     ...
@@ -276,7 +272,7 @@ return [
 
 O aproveitamento das funcionalidades padrões é feita facilmente, extendendo o controlador original do Laracl:
 
-```
+```php
 class MeuUsersController extends \Laracl\Http\Controllers\UsersController
 {
     public function store(Request $form)

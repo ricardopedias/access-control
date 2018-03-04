@@ -13,7 +13,7 @@ O pacote Laracl possui os seguintes requisitos básicos:
 Para baixar o pacote, será necessário usar o [Composer](http://getcomposer.org/).
 Com o composer devidamente instalado no sistema operacional, execute o seguinte comando: 
 
-```
+```bash
 $ cd /diretorio/meu/projeto/laravel/
 $ composer require plexi/laracl
 ```
@@ -23,7 +23,7 @@ arquivo composer.json do Laravel e em seguia efetuar o processo de instalação.
 
 Para instalar uma versão específica, basta substituir pelo comando:
 
-```
+```bash
 $ composer require plexi/laracl:1.1.5
 ```
 
@@ -33,7 +33,7 @@ O Laracl precisa de algumas tabelas adicionais no banco de dados para o gerencia
 Para adicioná-las ao seu banco de dados será necessário executar as [Migrações](https://laravel.com/docs/5.6/migrations) 
 contidas no pacote plexi/laracl:
 
-```
+```bash
 $ php artisan migrate --path=vendor/plexi/laracl/src/database/migrations
 ```
 
@@ -55,7 +55,7 @@ Esta coluna servirá para especificar a identificação do grupo de acesso ao qu
 O Laracl possui CRUDs já implementados para o gerenciamento de usuários e grupos de acesso.
 Para acessá-los, basta seguir a url:
 
-```
+```text
 http://www.meuprojeto.com.br/laracl/users
 ```
 
@@ -65,7 +65,7 @@ Nota: troque o domínio do exemplo ('meuprojeto.com.br') para o domínio onde o 
 
 Para remover as alterações efetuadas no bancod e dados:
 
-```
+```bash
 $ php artisan migrate:reset --path=vendor/plexi/laracl/src/database/migrations
 ```
 
