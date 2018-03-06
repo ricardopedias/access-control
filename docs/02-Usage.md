@@ -1,4 +1,4 @@
-# 2. Como Usar
+# 3. Como Usar
 
 ## Configurando
 
