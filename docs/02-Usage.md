@@ -43,7 +43,7 @@ groups-permissions | create, edit, show
 
 Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar se o usuário atual tem ou não direito de acesso a determinada área.
 
-> ***Nota***: no Laracl, optou-se por usar o termo '*show*' ao invés de '*read*', para se adequar aos termos dos resources dos CRUD's do Laravel.
+> ***Nota***: no Laracl, optou-se por usar o termo '*show*' ao invés de '*read*', para se adequar aos termos dos [resources](https://laravel.com/docs/5.6/controllers#resource-controllers) dos CRUD's gerados pelo Artisan.
 
 ## Diretivas para layout no Blade
 
@@ -217,7 +217,7 @@ return [
     ...
 
     'routes'     => [
-        'users'              => 'meu-painel/usuarios', <-- rota personalizada
+        'users'              => 'meu-painel/usuarios', // <-- rota personalizada
         'users-permissions'  => 'laracl/users-permissions',
         'groups'             => 'laracl/groups',
         'groups-permissions' => 'laracl/groups-permissions', 
