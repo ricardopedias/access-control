@@ -63,55 +63,58 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
     | @acl_action_lg
     */
 
-    function blade_acl_action($expression, $size) {
+    if (! function_exists('blade_acl_action')) {
 
-        // Se a função route for usada, converte a virgula
-        $start = strpos($expression, 'route');
-        if ($start !== false) {
-            $end = strpos($expression, ')', $start);
-            $route_origin = substr($expression, $start, ($end-$start));
-            $route_fix    = str_replace(',', '#|#|#', $route_origin);
-            $expression = str_replace($route_origin, $route_fix, $expression);
+        function blade_acl_action($expression, $size) {
+
+            // Se a função route for usada, converte a virgula
+            $start = strpos($expression, 'route');
+            if ($start !== false) {
+                $end = strpos($expression, ')', $start);
+                $route_origin = substr($expression, $start, ($end-$start));
+                $route_fix    = str_replace(',', '#|#|#', $route_origin);
+                $expression = str_replace($route_origin, $route_fix, $expression);
+            }
+
+            $args = explode(',', $expression);
+
+            $args[0] = $args[0] ?? '';
+            $args[1] = $args[1] ?? '';
+            $args[2] = $args[2] ?? '';
+            $args[3] = $args[3] ?? '';
+
+            // url (apenas action)
+            $args[1] = trim($args[1]);
+
+            // demais parâmetros
+            foreach([0,2,3] as $index) {
+                $args[$index] = str_replace("'", "", $args[$index]);
+                $args[$index] = trim($args[$index]);
+            }
+            
+            $ability = $args[0];
+            $url     = $args[1];
+            $label   = $args[2];
+            $view    = $args[3];    
+
+            $perm = preg_replace('#.*\.#', '', $ability);
+            if (empty($view)) {
+                $view = "laracl::buttons.{$perm}";
+            }
+
+            $status  = var_export(\Auth::user()->can($ability), true);
+            $url     = ($status == 'true') ? $url : '\'javascript:void(0)\'';
+
+            // Se a função route for usada, converte a virgula
+            if ($status == 'true' && $start !== false) {
+                $url = str_replace($route_fix, $route_origin, $url);
+            }
+
+            $open = "?php";
+            $close = "?";
+
+            return "<{$open} echo view('$view')->with(['size' => '$size', 'status' => $status, 'url' => $url, 'label'  => '$label' ])->render(); {$close}>";
         }
-
-        $args = explode(',', $expression);
-
-        $args[0] = $args[0] ?? '';
-        $args[1] = $args[1] ?? '';
-        $args[2] = $args[2] ?? '';
-        $args[3] = $args[3] ?? '';
-
-        // url (apenas action)
-        $args[1] = trim($args[1]);
-
-        // demais parâmetros
-        foreach([0,2,3] as $index) {
-            $args[$index] = str_replace("'", "", $args[$index]);
-            $args[$index] = trim($args[$index]);
-        }
-        
-        $ability = $args[0];
-        $url     = $args[1];
-        $label   = $args[2];
-        $view    = $args[3];    
-
-        $perm = preg_replace('#.*\.#', '', $ability);
-        if (empty($view)) {
-            $view = "laracl::buttons.{$perm}";
-        }
-
-        $status  = var_export(\Auth::user()->can($ability), true);
-        $url     = ($status == 'true') ? $url : '\'javascript:void(0)\'';
-
-        // Se a função route for usada, converte a virgula
-        if ($status == 'true' && $start !== false) {
-            $url = str_replace($route_fix, $route_origin, $url);
-        }
-
-        $open = "?php";
-        $close = "?";
-
-        return "<{$open} echo view('$view')->with(['size' => '$size', 'status' => $status, 'url' => $url, 'label'  => '$label' ])->render(); {$close}>";
     }
 
     \Blade::directive('acl_action', function ($expression) {
@@ -143,35 +146,38 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
     | @acl_submit_lg
     */
 
-    function blade_acl_submit($expression, $size) {
+    if (! function_exists('blade_acl_submit')) {
 
-        $args = explode(',', $expression);
+        function blade_acl_submit($expression, $size) {
 
-        $args[0] = $args[0] ?? '';
-        $args[1] = $args[1] ?? '';
-        $args[2] = $args[2] ?? '';
+            $args = explode(',', $expression);
 
-        // demais parâmetros
-        foreach($args as $index => $nulled) {
-            $args[$index] = str_replace("'", "", $args[$index]);
-            $args[$index] = trim($args[$index]);
+            $args[0] = $args[0] ?? '';
+            $args[1] = $args[1] ?? '';
+            $args[2] = $args[2] ?? '';
+
+            // demais parâmetros
+            foreach($args as $index => $nulled) {
+                $args[$index] = str_replace("'", "", $args[$index]);
+                $args[$index] = trim($args[$index]);
+            }
+            
+            $ability = $args[0];
+            $label   = $args[1];
+            $view    = $args[2];    
+
+            $perm = preg_replace('#.*\.#', '', $ability);
+            if (empty($view)) {
+                $view = "laracl::buttons.submit";
+            }
+
+            $status  = var_export(\Auth::user()->can($ability), true);
+
+            $open = "?php";
+            $close = "?";
+
+            return "<{$open} echo view('$view')->with(['size' => '$size', 'status' => $status, 'label'  => '$label' ])->render(); {$close}>";
         }
-        
-        $ability = $args[0];
-        $label   = $args[1];
-        $view    = $args[2];    
-
-        $perm = preg_replace('#.*\.#', '', $ability);
-        if (empty($view)) {
-            $view = "laracl::buttons.submit";
-        }
-
-        $status  = var_export(\Auth::user()->can($ability), true);
-
-        $open = "?php";
-        $close = "?";
-
-        return "<{$open} echo view('$view')->with(['size' => '$size', 'status' => $status, 'label'  => '$label' ])->render(); {$close}>";
     }
 
     \Blade::directive('acl_submit', function ($expression) {
