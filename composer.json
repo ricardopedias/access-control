@@ -1,6 +1,6 @@
 {
     "name": "plexi/laracl",
-    "description": "Gerenciador de listas de acesso (Access Control List) com formulário de configuração de usuários",
+    "description": "Gerenciador de listas de acesso (Access Control List) com CRUD's de configuração para usuários e grupos",
     "keywords": ["laravel","cruds","auth","acl","security","blade","helpers"],
     "license": "MIT",
     "authors": [

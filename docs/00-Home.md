@@ -1,22 +1,21 @@
 # Laracl
 
-O Laracl foi desenvolvido para disponibilizar facilmente um gerenciador de listas de acesso (Access Control List) para 
-um projeto Laravel. Com CRUD's funcionais e personalizáveis, é simples configurar permissões baseadas em Grupos de Acesso 
-ou exclusivamente para determinados usuários.
+O Laracl foi desenvolvido para disponibilizar facilmente um gerenciador de [ACL](https://pt.wikipedia.org/wiki/Lista_de_controle_de_acesso) (Lista de Controle de Acesso) para um projeto Laravel. 
 
-### Características
+Com CRUD's funcionais e personalizáveis, é simples configurar permissões baseadas em Grupos de Acesso ou exclusivamente para determinados usuários.
 
-  * Feito para o Laravel 5.5 ou superior.
-  * Configuração automática.
-  * Bem documentado &amp; e amigável para IDEs.
-  * Bem testado e com máxima qualidade de código.
-  * Feito com :heart: &amp; :coffee:.
+O sistema é construído sob a implementação de [Gates](https://laravel.com/docs/5.6/authorization#writing-gates) do Laravel, que monitoram o conteúdo com base na configuração.
+
+Genericamente, o método ***can***, invocado através do facade ***Auth*** realiza as verificações sobre a função e a habilidade do usuário logado:
+
+```php
+\Auth::user()->can('users.create')
+```
 
 ## Sumário
 
 1. [Sobre](00-Home.md)
 2. [Instalação](01-Installation.md)
 3. [Como Usar](02-Usage.md)
-4. [Exemplos](03-Examples.md)
-5. [Extras](04-Extras.md)
+4. [Extras](03-Extras.md)
   

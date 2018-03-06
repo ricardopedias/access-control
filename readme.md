@@ -8,13 +8,9 @@
 
 *By [Ricardo Pereira Dias &copy;](https://github.com/rpdesignerfly)*
 
-Laracl é um gerenciador de listas de acesso (Access Control List) para configurar o acesso das páginas dentro de um sistema. 
-Através de um formulário, o administrador pode setar as permissões para cada usuário específico.
+Laracl é um gerenciador de listas de acesso (Access Control List) com CRUD's personalizáveis para setagem de permissões para Usuários e Grupos. De forma fácil e flexível o Laracl provê ferramentas para customizar os CRUD's e realizar verificações com base nas credenciais do usuário logado.
 
-> **Atenção**:
-> Esta biblioteca está em fase de desenvolvimento. Use-a por sua conta e risco!
-
-Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly/laracl/releases), a [licença](license.md) e a [documentação](https://rpdesignerfly.github.io/laracl).
+Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly/laracl/releases), a [licença](license.md) e a [documentação](docs/00-Home.md).
 
 ### Características
 
@@ -26,10 +22,10 @@ Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly
 
 ## Sumário
 
+  1. [Sobre](docs/00-Home.md)
   1. [Instalação](docs/01-Installation.md)
   2. [Como Usar](docs/02-Usage.md)
-  3. [Exemplos](docs/03-Examples.md)
-  4. [Extras](docs/04-Extras.md)
+  3. [Extras](docs/03-Extras.md)
   
 
 ## Creditos
