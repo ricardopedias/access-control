@@ -1,13 +1,5 @@
 # 4. Extras
 
-## Sumário
-
-1. [Sobre](00-Home.md)
-2. [Instalação](01-Installation.md)
-3. [Como Usar](02-Usage.md)
-4. [Exemplos](03-Examples.md)
-5. [Extras](04-Extras.md)
-
 ## Para desenvolver o pacote:
 
 ### 1. Instalação limpa do Laravel:
@@ -102,3 +94,10 @@ Para mais informações, leia:
 
 * [Package Auto Discovery](https://medium.com/@taylorotwell/package-auto-discovery-in-laravel-5-5-ea9e3ab20518)
 * [Custom Packages With Auto Discovery](https://medium.com/sureshvel/laravel-5-5-custom-packages-with-autodiscover-the-providers-5772c60d847e)
+
+## Sumário
+
+1. [Sobre](00-Home.md)
+2. [Instalação](01-Installation.md)
+3. [Como Usar](02-Usage.md)
+4. [Extras](03-Extras.md)

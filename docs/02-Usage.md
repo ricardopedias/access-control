@@ -13,7 +13,7 @@ Após executar este comando, o arquivo de configuração poderá ser encontrado 
 
 ## O usuário ROOT
 
-Para acessar os CRUD's, é preciso configurar as permissões de acesso aos usuários ou grupos de acesso paar que estes possam acessar as páginas.
+Para acessar os CRUD's, é preciso configurar as permissões dos usuários ou grupos de acesso para que estes possam acessar as páginas.
 Na instalação inicial, nenhum usuário possui permissões. Por isso, é necessário setar o ID do usuário ROOT na configuração:
 
 ```php
@@ -41,52 +41,51 @@ users-permissions  | create, edit, show
 groups             | create, edit ,show, delete
 groups-permissions | create, edit, show
 
-Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar 
-se o usuário atual tem ou não direito de acesso a determinada área.
+Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar se o usuário atual tem ou não direito de acesso a determinada área.
+
+> ***Nota***: no Laracl, optou-se por usar o termo '*show*' ao invés de '*read*', para se adequar aos termos dos resources dos CRUD's do Laravel.
 
 ## Diretivas para layout no Blade
 
-O Laracl possui directivas especias para controlar o acesso diretamente em templates do blade.
-São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando 
-o framework Bootstrap 4.
+O Laracl possui diretivas especias para controlar o acesso diretamente em templates do blade.
+São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando o framework [Bootstrap 4](https://getbootstrap.com/).
 
 ### Personalização
 
 Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões. 
-Usando o comando abaixo, as views personalizaveis serão geradas no diretório 
-'resources/views/laracl/buttons':
+Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/laracl/buttons':
 
 ```bash
 php artisan vendor:publish --tag=laracl-buttons
 ```
 
 Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
-são setadas no momento da exibição do botão e podem possuir qualquer localização.
+são setadas no momento da exibição do botão e podem possuir qualquer caminho de localização.
 
 ### Botões de Ação
 
-São botões simples, que contém um link ou uma determinada rota. Por exemplo:
+São botões simples, que contém um determinando link. Por exemplo:
 
-```
+```html
 @acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
 ```
-No exemplo acima, 'users.edit' verifica se a função 'users' possui acesso à habilidade 'edit'.
+No exemplo acima, '***users.edit***' diz ao Laracl para verificar se a função '***users***' possui acesso à habilidade '***edit***'.
 Caso seja positivo, um botão será gerado com o texto 'Editar Usuário' e conterá o link para '/admin/users/1/edit'. 
 Caso seja negativo, um botão será gerado sem o link e com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
-Existem variantes deste botão, para tamanhos diferentes, onde o sufixo '_sm' signifca um botão pequeno e o sufixo '_lg', um botão grande:
+Existem variantes deste botão, para tamanhos diferentes, onde o sufixo '***_sm***' signifca um botão pequeno e o sufixo '***_lg***', um botão grande:
 
-```
+```html
 @acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
 @acl_action_sm('users.edit', '/admin/users/1/edit', 'Editar Usuário')
 @acl_action_lg('users.edit', '/admin/users/1/edit', 'Editar Usuário')
 ```
 
-Os botões usam um template padrão, baseado no Bootstrap 4. 
+Os botões usam um template padrão, baseado no [Bootstrap 4](https://getbootstrap.com/). 
 Para especificar um template personalizado, basta fornecer um quarto parâmetro com a view desejada e o 
 botão será renderizado com ela.
 
-```
+```html
 @acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário', 'meus-botoes.botao-de-edicao')
 ```
 
@@ -94,16 +93,22 @@ botão será renderizado com ela.
 
 São botões especiais, que só funcionam dentro de formulários. Por exemplo:
 
+```html
+<form action="users/update/2" meyhod="post">
+
+    <input type="text" name="username">
+
+    @acl_submit('users.create', 'Gravar Novo Usuário') 
+    
+</form>
 ```
-@acl_submit('users.create', 'Gravar Novo Usuário') 
-```
-No exemplo acima, 'users.create' verifica se a função 'users' possui acesso à habilidade 'create'.
+No exemplo acima, '***users.create***' verifica se a função '***users***' possui acesso à habilidade '***create***'.
 Caso seja positivo, o formulário será liberado para submissão e um botão será gerado com o texto 'Gravar Novo Usuário'. 
 Caso seja negativo, o formulário será bloqueado para submissão e um botão será gerado com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
-Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo '_sm' signifca um botão pequeno e o sufixo '_lg', um botão grande:
+Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo '***_sm***' signifca um botão pequeno e o sufixo '***_lg***', um botão grande:
 
-```
+```html
 @acl_submit('users.create', 'Gravar Novo Usuário') 
 @acl_submit_sm('users.create', 'Gravar Novo Usuário') 
 @acl_submit_lg('users.create', 'Gravar Novo Usuário') 
@@ -112,7 +117,7 @@ Da mesma forma que os botões de ação, existem variantes para tamanhos diferen
 Para especificar um template personalizado, basta fornecer um terceiro parâmetro com a view desejada e o 
 botão será renderizado com ela.
 
-```
+```html
 @acl_submit('users.create', 'Gravar Novo Usuário', 'meus-botoes.botao-de-criacao') 
 ```
 
@@ -120,15 +125,25 @@ botão será renderizado com ela.
 
 Também é possível restringir uma parte especifica de um layout, usando o invólucro de conteúdo, como no exemplo abaixo:
 
+```html
+<div>
+
+    @acl_content('users.show')
+
+        <p>
+        Conteudo html restrito!
+        </p>
+
+        <p>
+        Aparece apenas para usuários que tem permissão para leitura!
+        </p>
+
+    @end_acl_content
+    
+</div>
 ```
-@acl_content('users.show')
 
-    Conteudo html restrito!
-
-@end_acl_content
-```
-
-No exemplo acima, 'users.show' verifica se a função 'users' possui acesso à habilidade 'show'.
+No exemplo acima, '***users.show***' verifica se a função '***users***' possui acesso à habilidade '***show***'.
 Caso seja positivo, o conteúdo será renderizado normalmente no template. 
 Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
 
@@ -141,14 +156,14 @@ O método está disponível tanto no Blade como no ambiente PHP:
 
 A diretiva '@can' pode ser usada para efetuar verificações de acesso, bastando passar a função e a habilidade desejada como parâmetro:
 
-```
+```html
 @can('users.edit')
 
-    Parabéns, você pode editar!!
+    <h1>Parabéns, você pode editar!!</h1>
 
 @else
 
-    Desculpe, você não pode editar!!
+    <h1>Desculpe, você não pode editar!!</h1>
 
 @endif
 ```
@@ -168,7 +183,7 @@ else {
 
 ## Adicionando funções e habilidades
 
-Novas funções e habilidades devem ser adicionadas na seção 'roles' do arquivo de configuração.
+Novas funções e habilidades devem ser adicionadas na seção '***roles***' do arquivo de configuração.
 Cada habilidade deve possuir a sua slug, seguida de dois parâmetros, sendo:
 
 ```php
@@ -178,9 +193,9 @@ return [
 
     'roles' => [
 
-        'users' => [                                    <-- A slug da função
-            'label'       => 'Usuários',                <-- O nome para exibição
-            'permissions' => 'create,edit,show,delete', <-- As habilidades configuráveis
+        'users' => [                                    // <-- A slug da função
+            'label'       => 'Usuários',                // <-- O nome para exibição
+            'permissions' => 'create,edit,show,delete', // <-- As habilidades configuráveis
         ],
 
     ...
@@ -215,18 +230,17 @@ return [
 ### Visões Personalizadas
 
 Para personalizar a aparência dos CRUD's, basta publicar uma cópia dos templates padrões. 
-Usando o comando abaixo, as views personalizáveis serão geradas no diretório 
-'resources/views/laracl/cruds':
+Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/laracl/cruds':
 
 ```bash
 php artisan vendor:publish --tag=laracl-cruds
 ```
 
 > **Nota**:
-> As views publicadas, por se tratarem de cópias das views internas do Laracl, possuem chamadas para o pacote 'laracl::'. Para usar as mesmas views e componentes originais, mude as invocações 'laracl::' para 'laracl.cruds.', fazendo com que as chamadas sejam locais.
+> As views publicadas, por se tratarem de cópias das views internas do Laracl, possuem chamadas para o pacote 'laracl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'laracl::' para 'laracl.cruds.'.
 
 Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
-são configuradas manualmente na seção 'views' do arquivo de configuração:
+são configuradas manualmente na seção '***views***' do arquivo de configuração:
 
 ```php
 return [
@@ -236,9 +250,9 @@ return [
     'views' => [
 
         'users' => [
-            'index'  => 'laracl.cruds.index',   <-- view personalizada
-            'create' => 'laracl::users.create', <-- view do pacote laracl (::)
-            'edit'   => 'laracl::users.edit',   <-- view do pacote laracl (::)
+            'index'  => 'laracl.cruds.index',   // <-- view personalizada
+            'create' => 'laracl::users.create', // <-- view do pacote laracl (::)
+            'edit'   => 'laracl::users.edit',   // <-- view do pacote laracl (::)
         ],
 
         ...
@@ -259,7 +273,7 @@ return [
     ...
 
     'controllers'     => [
-        'users'              => 'App\Http\Controllers\MeuUsersController', <-- controlador personalizado
+        'users'              => 'App\Http\Controllers\MeuUsersController', // <-- controlador personalizado
         'users-permissions'  => 'Laracl\Http\Controllers\UsersPermissionsController',
         'groups'             => 'Laracl\Http\Controllers\GroupsController',
         'groups-permissions' => 'Laracl\Http\Controllers\GroupsPermissionsController',
