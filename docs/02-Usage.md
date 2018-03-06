@@ -69,11 +69,11 @@ São botões simples, que contém um determinando link. Por exemplo:
 ```html
 @acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
 ```
-No exemplo acima, '***users.edit***' diz ao Laracl para verificar se a função '***users***' possui acesso à habilidade '***edit***'.
+No exemplo acima, ***users.edit*** diz ao Laracl para verificar se a função ***users*** possui acesso à habilidade ***edit***.
 Caso seja positivo, um botão será gerado com o texto 'Editar Usuário' e conterá o link para '/admin/users/1/edit'. 
 Caso seja negativo, um botão será gerado sem o link e com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
-Existem variantes deste botão, para tamanhos diferentes, onde o sufixo '***_sm***' signifca um botão pequeno e o sufixo '***_lg***', um botão grande:
+Existem variantes deste botão, para tamanhos diferentes, onde o sufixo ***_sm*** signifca um botão pequeno e o sufixo ***_lg***, um botão grande:
 
 ```html
 @acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
@@ -102,11 +102,11 @@ São botões especiais, que só funcionam dentro de formulários. Por exemplo:
     
 </form>
 ```
-No exemplo acima, '***users.create***' verifica se a função '***users***' possui acesso à habilidade '***create***'.
+No exemplo acima, ***users.create*** verifica se a função ***users*** possui acesso à habilidade ***create***.
 Caso seja positivo, o formulário será liberado para submissão e um botão será gerado com o texto 'Gravar Novo Usuário'. 
 Caso seja negativo, o formulário será bloqueado para submissão e um botão será gerado com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
-Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo '***_sm***' signifca um botão pequeno e o sufixo '***_lg***', um botão grande:
+Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo ***_sm*** significa um botão pequeno e o sufixo ***_lg***, um botão grande:
 
 ```html
 @acl_submit('users.create', 'Gravar Novo Usuário') 
@@ -143,7 +143,7 @@ Também é possível restringir uma parte especifica de um layout, usando o inv�
 </div>
 ```
 
-No exemplo acima, '***users.show***' verifica se a função '***users***' possui acesso à habilidade '***show***'.
+No exemplo acima, ***users.show*** verifica se a função ***users*** possui acesso à habilidade ***show***.
 Caso seja positivo, o conteúdo será renderizado normalmente no template. 
 Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
 
@@ -183,7 +183,7 @@ else {
 
 ## Adicionando funções e habilidades
 
-Novas funções e habilidades devem ser adicionadas na seção '***roles***' do arquivo de configuração.
+Novas funções e habilidades devem ser adicionadas na seção ***roles*** do arquivo de configuração.
 Cada habilidade deve possuir a sua slug, seguida de dois parâmetros, sendo:
 
 ```php
@@ -240,7 +240,7 @@ php artisan vendor:publish --tag=laracl-cruds
 > As views publicadas, por se tratarem de cópias das views internas do Laracl, possuem chamadas para o pacote 'laracl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'laracl::' para 'laracl.cruds.'.
 
 Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
-são configuradas manualmente na seção '***views***' do arquivo de configuração:
+são configuradas manualmente na seção ***views*** do arquivo de configuração:
 
 ```php
 return [
