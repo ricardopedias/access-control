@@ -35,9 +35,9 @@ class GroupsController extends SortableGridController
     /**
      * Devolve a coleção que será usada para a busca.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    protected function getSearchableCollection()
+    protected function getSearchableBuilder()
     {
         return AclGroup::query();
     }
