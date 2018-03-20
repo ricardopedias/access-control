@@ -53,6 +53,12 @@ As seguintes migrações serão adicionadas ao diretório `database/migrations`:
 2018_02_14_000004_create_acl_groups_permissions_table.php
 ```
 
+Em seguida, basta rodar as migrações normalmente para gerar as tabelas:
+
+```bash
+$ php artisan migrate
+```
+
 ### Sem publicar as migrações
 
 ```bash
