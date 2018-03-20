@@ -28,11 +28,32 @@ Para instalar uma versão específica, basta substituir pelo comando:
 $ composer require plexi/laracl:1.1.5
 ```
 
-## Atualizando o banco de dados
+## Atualizando o banco de dados 
 
 O Laracl precisa de algumas tabelas adicionais no banco de dados para o gerenciamento das permissões.
 Para adicioná-las ao seu banco de dados será necessário executar as [Migrações](https://laravel.com/docs/5.6/migrations) 
-contidas no pacote plexi/laracl:
+contidas no pacote plexi/laracl.
+
+Existem duas maneiras de fazer isso, publicando as migrações ou rodando-as diretamente do pacote:
+
+### Publicando as migrações
+
+Para publicar as migrações, basta usar o comando abaixo:
+
+```bash
+$ php artisan vendor:publish --tag=laracl-migrations
+```
+As seguintes migrações serão adicionadas ao diretório `database/migrations`:
+
+```bash
+2018_02_14_000000_create_acl_groups_table.php
+2018_02_14_000001_update_users_acl_group_field.php
+2018_02_14_000002_create_acl_roles_table.php
+2018_02_14_000003_create_acl_users_permissions_table.php
+2018_02_14_000004_create_acl_groups_permissions_table.php
+```
+
+### Sem publicar as migrações
 
 ```bash
 $ php artisan migrate --path=vendor/plexi/laracl/src/database/migrations

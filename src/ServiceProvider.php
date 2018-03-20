@@ -26,6 +26,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // php artisan vendor:publish --tag=laracl-buttons
         $this->publishes([__DIR__.'/resources/views/buttons' => resource_path('views/laracl/buttons')], 'laracl-buttons');
 
+        // php artisan vendor:publish --tag=laracl-migrations
+        $this->publishes([__DIR__.'/database/migrations' => database_path('migrations')], 'laracl-migrations');
+
         // php artisan vendor:publish --tag=laracl-cruds
         $this->publishes([__DIR__.'/resources/views/users' => resource_path('views/laracl/cruds/users')], 'laracl-cruds');
         $this->publishes([__DIR__.'/resources/views/users-permissions' => resource_path('views/laracl/cruds/users-permissions')], 'laracl-cruds');
