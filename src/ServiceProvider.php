@@ -61,9 +61,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
      * Gera a estrutura para nomeamento de rotas para os CRUDs, 
      * com base nas urls especificadas na configuração.
      * 
-     * Por exemplo, no item ['users' => 'painel/usuarios'], 
-     * serão extraidos os indices e os nomes para as rotas dos CRUDs, 
-     * ficando assim:
+     * Por exemplo:
+     * 
+     * 'routes'     => [
+     *      'users'              => 'painel/users',
+     *      'users-permissions'  => 'painel/users-permissions',
+     *      'groups'             => 'painel/groups',
+     *      'groups-permissions' => 'painel/groups-permissions',
+     * ]
+     * 
+     * No item ['users' => 'painel/users'], serão extraidos 
+     * os indices e os nomes para as rotas dos CRUDs, ficando assim:
      * [
      *     laracl.routes.users.base  =>  users
      *     laracl.routes.users.index  => usuarios.index
@@ -77,6 +85,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     protected function normalizeConfig()
     {
         $config = config('laracl');
+
+        // A configuração só pode ser normalizada uma vez
+        // se a primeira rota já for um array, encerra a operação
+        $first_route = current($config['routes']);
+        if (is_array($first_route)) {
+            return false;
+        }
 
         foreach ($config['routes'] as $slug => $nulled) {
 
@@ -94,5 +109,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             ];
             config($route_params);
         }
+
+        return true;
     }
 }
