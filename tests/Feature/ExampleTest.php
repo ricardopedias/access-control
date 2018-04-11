@@ -10,45 +10,27 @@ use Faker;
 
 class ExampleTest extends TestCase
 {
-
-    /**
-     * Creates the application.
-     *
-     * @return \Illuminate\Foundation\Application
-     */
-    public function createApplication()
-    {
-        // Seta o arquivo de configuração para testes
-        $config_file = dirname(__DIR__) . '/Files/custom-config.php';
-        putenv("LARACL_CONFIG_FILE={$config_file}");
-        
-        $app = require __DIR__ . '/../../../../../bootstrap/app.php';
-
-        $kernel = $app->make(Kernel::class);
-
-        $kernel->bootstrap();
-
-        return $app;
-    }
-
-
-    protected function mergeConfigFrom($path, $key)
-    {
-        $config = $this->app['config']->get($key, []);
-
-        $this->app['config']->set($key, array_merge(require $path, $config));
-    }
-
     /**
      * A basic test example.
      *
      * @return void
      */
-    public function testBasicTest()
+    public function testAutentication()
     {
+        // Sobrescreve o arquivo de configuração
+        // $config = config('laracl');
+        // $custom_config = dirname(__DIR__) . '/Files/custom-config.php';
 
-        $config = config('database');
-        dd($config);
+
+
+
+        // //config('laracl', array_merge(require $custom_config, $config));
+        // //$config = config('laracl'); 
+
+        // $config = ['laracl' => require $custom_config];
+        // config($config);
+        // //$config = config('laracl'); 
+        // dd($config);
 
         $faker = Faker\Factory::create();
 
