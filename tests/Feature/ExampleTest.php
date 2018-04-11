@@ -6,10 +6,40 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Console\Kernel;
-use Faker;
 
 class ExampleTest extends TestCase
 {
+    // Limpa a base de dados depois de testar
+    use RefreshDatabase;
+
+    private function createUser($group_id = 1)
+    {
+        $faker = \Faker\Factory::create();
+
+        return \Laracl\Models\AclUser::create([
+            'name'           => $faker->name,
+            'email'          => $faker->unique()->safeEmail,
+            'password'       => bcrypt('secret'),
+            'remember_token' => str_random(10),
+            'acl_group_id'   => $group_id
+        ]);
+    }
+
+    /**
+     * No momento da migração, dois grupos padrões são gerados.
+     * ID 1 = admin e ID 2 = users, ambos como 'system = yes'
+     */
+    private function createGroup($group_id = 1)
+    {
+        $faker = \Faker\Factory::create();
+
+        return \Laracl\Models\AclGroup::create([
+            'name' => $faker->name,
+            'description' => $faker->paragraph(100),
+            'system' => 'no',
+        ]);
+    }
+
     /**
      * A basic test example.
      *
@@ -17,45 +47,65 @@ class ExampleTest extends TestCase
      */
     public function testAutentication()
     {
-        // Sobrescreve o arquivo de configuração
-        // $config = config('laracl');
-        // $custom_config = dirname(__DIR__) . '/Files/custom-config.php';
+        // Configuração padrão
+        $config = config('laracl');
+        $this->assertTrue(is_array($config['routes']['users'])); // Já normalizado
+
+        // Funções e Habilidades
+        $this->assertCount(4, $config['roles']);
+        $this->assertArrayHasKey('users', $config['roles']);
+        $this->assertArrayHasKey('users-permissions', $config['roles']);
+        $this->assertArrayHasKey('groups', $config['roles']);
+        $this->assertArrayHasKey('groups-permissions', $config['roles']);
+
+        // Rotas        
+        $this->assertTrue(is_array($config['routes']['users']));
+        $this->assertCount(4, $config['routes']);
+        $this->assertArrayHasKey('users', $config['routes']);
+        $this->assertArrayHasKey('users-permissions', $config['routes']);
+        $this->assertArrayHasKey('groups', $config['routes']);
+        $this->assertArrayHasKey('groups-permissions', $config['routes']);
+
+        $url_users = $config['routes']['users']['base'];
+        $url_groups = $config['routes']['groups']['base'];
 
 
+        // Acessar sem login, executa redirecionamento
+        $response = $this->get($url_users);
+        $response->assertStatus(302);
 
 
-        // //config('laracl', array_merge(require $custom_config, $config));
-        // //$config = config('laracl'); 
+        // Tipo root: (id 1)
+        // Grupo: Admin (group_id = 1)
+        $root = $this->createUser(1);
 
-        // $config = ['laracl' => require $custom_config];
-        // config($config);
-        // //$config = config('laracl'); 
-        // dd($config);
+        // Tipo normal: (id 1)
+        // Grupo: Admin (group_id = 1)
+        $admin = $this->createUser(1);
 
-        $faker = Faker\Factory::create();
-
-        $user = \Laracl\Models\AclUser::create([
-            'name'           => $faker->name,
-            'email'          => $faker->unique()->safeEmail,
-            'password'       => bcrypt('secret'),
-            'remember_token' => str_random(10),
-            'acl_group_id'   => 1
-        ]);
+        // Tipo normal: (id 1)
+        // Grupo: Users (group_id = 2)
+        $common = $this->createUser(2);
 
 
-        // dd($user);
+        \Laracl::registerPolicies();
 
-        $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->get('/laracl/users');
+
+        $this->actingAs($root)
+            ->assertAuthenticated('users.show')
+            ->get($url_users)
+            ->assertStatus(200);
+
+        $this->actingAs($admin)
+            ->get($url_users)
+            ->assertStatus(200);
+
+        $this->actingAs($common)
+            ->get($url_users)
+            ->assertStatus(200);
+
 
         $this->assertAuthenticated();
-
-        $response = $this->get('laracl/no-exists');
-        $response->assertStatus(404);
-
-        $response = $this->get('laracl/users');
-        $response->assertStatus(200);
 
         //$response->assertForbidden();
 
