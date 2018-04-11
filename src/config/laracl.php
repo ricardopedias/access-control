@@ -11,7 +11,7 @@ return [
     | O usuário setado aqui terá acesso total.
     */
 
-    'root_user' => 0,
+    'root_user' => 1,
 
     /*
     |--------------------------------------------------------------------------
