@@ -22,11 +22,6 @@ class Accessor
     protected $current_ability_origin = null;
 
     /**
-     * A localização do arquivo de configuração.
-     */ 
-    protected $config_file = null;
-
-    /**
      * Carrega e inclui os helpers do pacote
      * 
      * @return void
@@ -37,25 +32,59 @@ class Accessor
     }
 
     /**
-     * Carrega e registra as diretivas para o blade
+     * Gera a estrutura de nomeamento de rotas para os CRUDs, 
+     * com base nas urls especificadas na configuração.
      * 
-     * @return void
+     * Por exemplo:
+     * 
+     * 'routes'     => [
+     *      'users'              => 'painel/users',
+     *      'users-permissions'  => 'painel/users-permissions',
+     *      'groups'             => 'painel/groups',
+     *      'groups-permissions' => 'painel/groups-permissions',
+     * ]
+     * 
+     * No item ['users' => 'painel/users'], serão extraidos 
+     * os indices e os nomes para as rotas dos CRUDs, ficando assim:
+     * [
+     *     laracl.routes.users.base  =>  users
+     *     laracl.routes.users.index  => usuarios.index
+     *     laracl.routes.users.create => usuarios.create
+     *     laracl.routes.users.store  => usuarios.store
+     *     laracl.routes.users.edit   => usuarios.edit
+     *     laracl.routes.users.update => usuarios.update
+     *     laracl.routes.users.delete => usuarios.delete
+     * ]
      */
-    public function setConfigFile($filename = null)
+    public function normalizeConfig()
     {
-        $this->config_file = $filename;
-    }
+        $config = config('laracl');
 
-    /**
-     * Carrega e registra as diretivas para o blade
-     * 
-     * @return void
-     */
-    public function getConfigFile()
-    {
-        return $this->config_file == null 
-            ? __DIR__.'/config/laracl.php'
-            : $this->config_file;
+        // A configuração só pode ser normalizada uma vez
+        // se a primeira rota já for um array, encerra a operação
+        $first_route = current($config['routes']);
+        if (is_array($first_route)) {
+            return false;
+        }
+
+        foreach ($config['routes'] as $slug => $nulled) {
+
+            // admin/users -> 'users'
+            $route_base = preg_replace('#.*/#', '', $config['routes'][$slug]);
+
+            $route_params = [
+                "laracl.routes.{$slug}.base"   => $config['routes'][$slug],
+                "laracl.routes.{$slug}.index"  => $route_base . ".index",
+                "laracl.routes.{$slug}.create" => $route_base . ".create",
+                "laracl.routes.{$slug}.store"  => $route_base . ".store",
+                "laracl.routes.{$slug}.edit"   => $route_base . ".edit",
+                "laracl.routes.{$slug}.update" => $route_base . ".update",
+                "laracl.routes.{$slug}.delete" => $route_base . ".delete",
+            ];
+            config($route_params);
+        }
+
+        return true;
     }
 
     /**
