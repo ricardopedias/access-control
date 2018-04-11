@@ -22,6 +22,11 @@ class Accessor
     protected $current_ability_origin = null;
 
     /**
+     * A localização do arquivo de configuração.
+     */ 
+    protected $config_file = null;
+
+    /**
      * Carrega e inclui os helpers do pacote
      * 
      * @return void
@@ -29,6 +34,28 @@ class Accessor
     public function loadHelpers()
     {
         include('helpers.php');
+    }
+
+    /**
+     * Carrega e registra as diretivas para o blade
+     * 
+     * @return void
+     */
+    public function setConfigFile($filename = null)
+    {
+        $this->config_file = $filename;
+    }
+
+    /**
+     * Carrega e registra as diretivas para o blade
+     * 
+     * @return void
+     */
+    public function getConfigFile()
+    {
+        return $this->config_file == null 
+            ? __DIR__.'/config/laracl.php'
+            : $this->config_file;
     }
 
     /**

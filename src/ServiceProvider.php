@@ -3,6 +3,7 @@
 namespace Laracl;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use DB;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -50,8 +51,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function register()
     {
         // Adiciona as configurações padrões no namespace laracl
-        $this->mergeConfigFrom(__DIR__.'/config/laracl.php', 'laracl');
-        
+        $config_file = env('LARACL_CONFIG_FILE', __DIR__.'/config/laracl.php');
+        $this->mergeConfigFrom($config_file, 'laracl');
+
         $this->normalizeConfig();
     }
 
