@@ -16,11 +16,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     public function boot()
     {
         \Laracl::loadHelpers();
-        
+
         $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->loadMigrationsFrom(__DIR__.'/database/migrations');
         $this->loadViewsFrom(__DIR__.'/resources/views', 'laracl');
-        
+
         // php artisan vendor:publish --tag=laracl-config
         $this->publishes([__DIR__.'/config/laracl.php' => config_path('laracl.php')], 'laracl-config');
 

@@ -8,7 +8,7 @@ use Laracl\Models\AclUserPermission;
 use SortableGrid\Http\Controllers\SortableGridController;
 use Illuminate\Http\Request;
 
-class UsersController extends SortableGridController 
+class UsersController extends SortableGridController
 {
     protected $initial_field = 'users.id';
 
@@ -49,7 +49,7 @@ class UsersController extends SortableGridController
         $columns = [];
 
         // \App\User
-        // Adiciona o prefixo 'users' nos campos do modelo 
+        // Adiciona o prefixo 'users' nos campos do modelo
         $fillable_user = (new AclUser)->getFillableColumns();
         foreach($fillable_user as $field) {
             $columns["users.{$field}"] = "users.{$field}";
@@ -77,11 +77,12 @@ class UsersController extends SortableGridController
 
         // Faz o select devolvendo os campos de \App\User + \Laracl\Models\AclGroup
         return AclUser::select($columns)
-            ->leftJoin('acl_groups', 'users.acl_group_id', '=', 'acl_groups.id');
+            ->leftJoin('users', 'users.id', '=', 'acl_users.user_id')
+            ->leftJoin('acl_groups', 'acl_users.group_id', '=', 'acl_groups.id');
     }
 
     /**
-     * Display a listing of the resource. 
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -180,8 +181,8 @@ class UsersController extends SortableGridController
         $model = AclUser::find($id);
 
         // Se o password for preenchido, transforma em hash
-        $pass = $form->request->get('password') == null 
-            ? $model->password 
+        $pass = $form->request->get('password') == null
+            ? $model->password
             : bcrypt($form->request->get('password'));
         $form->request->set('password', $pass);
 
@@ -195,12 +196,12 @@ class UsersController extends SortableGridController
         if ($form->acl_group_id == 0) {
             $form->request->set('acl_group_id', null);
         }
-        // O grupo foi selecionado, 
+        // O grupo foi selecionado,
         // remove as permissões esclusivas
         elseif ($form->acl_group_id != 0 && AclUserPermission::collectByUser($id)->count()>0) {
             $result = AclUserPermission::removeByUser($id);
         }
-        
+
         $model->fill($form->all());
         $model->save();
 

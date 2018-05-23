@@ -4,8 +4,24 @@ namespace Laracl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AclUser extends \App\User
+class AclUserGroup extends Model
 {
+    protected $table = 'acl_users_relations';
+
+    protected $primaryKey = 'user_id';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'group_id',
+    ];
+
+    public $timestamps = false;
+
     public function getFillableColumns()
     {
         return $this->fillable;
@@ -14,6 +30,11 @@ class AclUser extends \App\User
     //
     // Relacionamentos
     //
+
+    public function user()
+    {
+        return $this->hasOne('App\User', 'id', 'user_id');
+    }
 
     public function group()
     {
