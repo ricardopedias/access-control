@@ -22,7 +22,7 @@
                 @acl_action('groups.show', route($route_groups), 'Grupos de Acesso')
 
             </div>
-            
+
         </div>
 
         @if($has_permissions == false)
@@ -32,8 +32,8 @@
                 <div class="col">
 
                     <div class="alert alert-info">
-                        
-                        <h4 class="alert-heading">Atenção, este usuário pertence ao grupo <strong>"{{ $user->group->name }}"</strong>!</h4>
+
+                        <h4 class="alert-heading">Atenção, este usuário pertence ao grupo <strong>"{{ optional($user->group)->name }}"</strong>!</h4>
 
                         <p>Atualmente o usuário possui as permissões do grupo. Clicando em <i>"Aplicar Permissões"</i>, este usuário possuirá <strong>Privilégios Personalizados</strong>. Você poderá remover estes privilégios personalizados a qualquer momento na tela de edição do usuário, bastando setar um grupo para ele.
                         </p>
@@ -54,7 +54,7 @@
 
                     {{ csrf_field() }}
 
-                    {{ method_field('PUT') }} 
+                    {{ method_field('PUT') }}
                     {{-- https://laravel.com/docs/5.5/controllers#resource-controllers --}}
 
                     <table class="table table-striped table-bordered">
@@ -62,7 +62,7 @@
                         <thead>
 
                             <th>Áreas de Acesso</th>
-                            
+
                             <th class="text-center" style="background:rgba(0,0,0,0.05)"><i class="fa fa-eye"></i> Ver</th>
 
                             <th class="text-center"><i class="fa fa-plus-circle"></i> Criar</th>
@@ -81,7 +81,7 @@
                                     <td>
                                         {{ $item['label'] }}
 
-                                        {{-- É necessário para que a função sempre exista na matriz, 
+                                        {{-- É necessário para que a função sempre exista na matriz,
                                         mesmo quando não existirem permissões ativas --}}
                                         <input type="hidden" name="roles[{{ $route }}]['exists']" value="1">
                                     </td>
@@ -97,10 +97,10 @@
                                         @else
                                         <td class="text-center" style="background:rgba(0,0,0,0.05)">
                                         @endif
-                                        
+
                                             @if($role_value != null)
 
-                                                <input type="checkbox" name="{{ $role_name }}" class="check-toggle" 
+                                                <input type="checkbox" name="{{ $role_name }}" class="check-toggle"
                                                        data-on-text="Sim" data-off-text="Não"
                                                        value="yes" {{ old_check($role_name, 'yes', $role_value) }}>
 
@@ -109,11 +109,11 @@
                                         </td>
 
                                     @endforeach
-                                    
+
                                 </tr>
 
                             @endforeach
-                            
+
                         </tbody>
                     </table>
 

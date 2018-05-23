@@ -4,6 +4,7 @@ namespace Laracl\Http\Controllers;
 
 use Laracl\Models\AclUser;
 use Laracl\Models\AclGroup;
+use Laracl\Models\AclUserGroup;
 use Laracl\Models\AclUserPermission;
 use SortableGrid\Http\Controllers\SortableGridController;
 use Illuminate\Http\Request;
@@ -77,8 +78,8 @@ class UsersController extends SortableGridController
 
         // Faz o select devolvendo os campos de \App\User + \Laracl\Models\AclGroup
         return AclUser::select($columns)
-            ->leftJoin('users', 'users.id', '=', 'acl_users.user_id')
-            ->leftJoin('acl_groups', 'acl_users.group_id', '=', 'acl_groups.id');
+            ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
+            ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
     }
 
     /**
@@ -139,6 +140,8 @@ class UsersController extends SortableGridController
         $model = new AclUser;
         $model->fill($form->all());
         $model->save();
+
+        $relation = new AclUserGroup;
 
         $route = config('laracl.routes.users.edit');
         return redirect()->route($route, $model);
@@ -204,6 +207,13 @@ class UsersController extends SortableGridController
 
         $model->fill($form->all());
         $model->save();
+
+        if($form->acl_group_id != 0) {
+            AclUserGroup::updateOrCreate(
+                ['group_id' => $form->acl_group_id],
+                ['user_id' => $id]
+            );
+        }
 
         return back();
     }

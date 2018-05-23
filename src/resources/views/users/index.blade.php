@@ -24,7 +24,7 @@
                 @sg_search
 
             </div>
-            
+
         </div>
 
         @sg_table
@@ -36,14 +36,14 @@
 
                     <td>{{ $item->name }}</td>
 
-                    <td>{{ $item->group_name }}</td>
+                    <td>{{ $item->group_name or "Sem Grupo" }}</td>
 
                     <td>{!! str_replace(['@', '.'], ['<wbr>@', '<wbr>.'], $item->email) !!}</td>
 
                     <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
 
                     <td class="text-center">
-                        
+
                         @acl_action_sm('users.edit', route($route_edit, $item->id ), 'Editar')
 
                         @acl_action_sm('users-permissions.edit', route($route_permissions, $item->id), 'Permissões')
@@ -52,7 +52,7 @@
                 </tr>
 
             @endforeach
-          
+
         @end_sg_table
 
         <div class="row">
@@ -60,7 +60,7 @@
             <div class="col">
 
                 @sg_info
-                    
+
             </div>
 
             <div class="col">
@@ -68,7 +68,7 @@
                 @sg_pagination
 
             </div>
-            
+
         </div>
 
     @end_acl_content

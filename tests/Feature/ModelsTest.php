@@ -3,21 +3,24 @@
 namespace Laracl\Tests\Feature;
 
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Console\Kernel;
+use Laracl\Models;
 
-class AccessTest extends TestCase
+class ModelsTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function setUp()
     {
         // Cria a aplicação e inicia o laravel
         parent::setUp();
 
-        $this->app['config']->set('database.default','sqlite'); 
-        $this->app['config']->set('database.connections.sqlite.database', ':memory:');
+        $data_file = tempnam(sys_get_temp_dir(), 'ModelsTest') . ".sqlite";
+        exec("touch " . $data_file);
+
+        $this->app['config']->set('database.connections.sqlite.driver', 'sqlite');
+        $this->app['config']->set('database.connections.sqlite.database', $data_file);
+
+        $this->app['config']->set('database.default','sqlite');
 
         \Artisan::call('migrate');
         \Artisan::call('migrate', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
@@ -29,24 +32,32 @@ class AccessTest extends TestCase
         \Artisan::call('migrate:reset');
     }
 
-    private function createUser($group_id = 1)
+    private function createUser($group_id = null)
     {
         $faker = \Faker\Factory::create();
 
-        return \Laracl\Models\AclUser::create([
+        $user = \Laracl\Models\AclUser::create([
             'name'           => $faker->name,
             'email'          => $faker->unique()->safeEmail,
             'password'       => bcrypt('secret'),
             'remember_token' => str_random(10),
-            'acl_group_id'   => $group_id
         ]);
+
+        if ($group_id != null) {
+            \Laracl\Models\AclUserGroup::create([
+                'user_id'  => $user->id,
+                'group_id' => $group_id,
+            ]);
+        }
+
+        return $user;
     }
 
     /**
      * No momento da migração, dois grupos padrões são gerados.
      * ID 1 = admin e ID 2 = users, ambos como 'system = yes'
      */
-    private function createGroup($group_id = 1)
+    private function createGroup()
     {
         $faker = \Faker\Factory::create();
 
@@ -57,11 +68,38 @@ class AccessTest extends TestCase
         ]);
     }
 
+    public function testUserNoRelations()
+    {
+        $user = $this->createUser();
+        $this->assertInstanceOf(Models\AclUser::class, $user);
+
+        $this->assertNull($user->groupRelation);
+        $this->assertNull($user->group);
+    }
+
+    public function testUserRelations()
+    {
+        $group = $this->createGroup();
+        $this->assertInstanceOf(Models\AclGroup::class, $group);
+
+        $user = $this->createUser($group->id);
+        $this->assertInstanceOf(Models\AclUser::class, $user);
+
+        $this->assertInstanceOf(Models\AclUserGroup::class, $user->groupRelation);
+        $this->assertInstanceOf(Models\AclGroup::class, $user->groupRelation->group);
+
+        //dd($user->group);
+        //$this->assertInstanceOf(Models\AclGroup::class, $user->group);
+
+
+    }
+
     /**
      * A basic test example.
      *
      * @return void
      */
+    /*
     public function testAutentication()
     {
         // Configuração padrão
@@ -75,7 +113,7 @@ class AccessTest extends TestCase
         $this->assertArrayHasKey('groups', $config['roles']);
         $this->assertArrayHasKey('groups-permissions', $config['roles']);
 
-        // Rotas        
+        // Rotas
         $this->assertTrue(is_array($config['routes']['users']));
         $this->assertCount(4, $config['routes']);
         $this->assertArrayHasKey('users', $config['routes']);
@@ -138,7 +176,7 @@ class AccessTest extends TestCase
         // $config = $this->app['config']->get('laracl');
 
         // $this->app->boot();
-        
+
         // dd($this->app);
         // dd($this->app['laracl']::getConfigFile());
 
@@ -151,4 +189,5 @@ class AccessTest extends TestCase
 
         // dd($config);
     }
+    */
 }

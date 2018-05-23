@@ -2,11 +2,11 @@
     @if ($errors->any())
 
         <div class="alert alert-warning">
-            
+
             @foreach ($errors->all() as $error)
                 <i class="fa fa-angle-right"></i> {{ $error }} <br>
             @endforeach
-            
+
         </div>
 
     @endif
@@ -38,7 +38,7 @@
                 @else
 
                     @foreach($groups as $item)
-                        <option value="{{ $item->id }}" {{ old_option('acl_group_id', $item->id, $model->acl_group_id) }}>{{ $item->name }}</option>
+                        <option value="{{ $item->id }}" {{ old_option('acl_group_id', $item->id, optional($model->group)->id) }}>{{ $item->name }}</option>
                     @endforeach
 
                 @endif
@@ -51,7 +51,7 @@
 
             <label>Email</label>
             <input name="email" type="email" value="{{ old('email', $model->email) }}"
-                   class="form-control" 
+                   class="form-control"
                    required>
             <small class="form-text text-muted">O endereço eletrônico</small>
         </div>
@@ -59,11 +59,10 @@
         <div class="col form-group">
 
             <label>Senha</label>
-            <input name="password" type="text" 
+            <input name="password" type="text"
                    class="form-control"
                    {{ $require_pass }}>
             <small class="form-text text-muted">A palavra chave de acesso</small>
         </div>
 
     </div>
-

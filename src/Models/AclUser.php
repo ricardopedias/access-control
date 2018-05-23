@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class AclUser extends \App\User
 {
+    protected $table = 'users';
+
     public function getFillableColumns()
     {
         return $this->fillable;
@@ -15,9 +17,15 @@ class AclUser extends \App\User
     // Relacionamentos
     //
 
+    public function groupRelation()
+    {
+        return $this->hasOne('Laracl\Models\AclUserGroup','user_id', 'id');
+    }
+
     public function group()
     {
-        return $this->hasOne('Laracl\Models\AclGroup', 'id', 'group_id');
+        $relation = $this->hasOne('Laracl\Models\AclUserGroup','user_id', 'id');
+        return isset($relation->group) ? $relation->group : $relation;
     }
 
     public function permissions()
