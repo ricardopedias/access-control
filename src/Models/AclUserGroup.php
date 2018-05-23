@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AclUserGroup extends Model
 {
-    protected $table = 'acl_users_relations';
+    protected $table = 'acl_users_groups';
 
     protected $primaryKey = 'user_id';
 
