@@ -24,8 +24,8 @@ class AclGroupPermission extends Model
         'role_id',
         'group_id',
         'create',
-        'edit',
-        'show',
+        'read',
+        'update',
         'delete',
     ];
 

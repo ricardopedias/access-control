@@ -3,12 +3,15 @@
 namespace Laracl\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laracl\Traits\HasCompositePrimaryKey;
 
 class AclUserGroup extends Model
 {
+    use HasCompositePrimaryKey;
+
     protected $table = 'acl_users_groups';
 
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = ['user_id', 'group_id'];
 
     /**
      * The attributes that are mass assignable.

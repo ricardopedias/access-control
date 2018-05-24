@@ -24,8 +24,8 @@ class AclUserPermission extends Model
         'role_id',
         'user_id',
         'create',
-        'edit',
-        'show',
+        'read',
+        'update',
         'delete',
     ];
 
@@ -119,7 +119,7 @@ class AclUserPermission extends Model
      * devolve o número de registros excluídos
      *
      * @param integer $user_id
-     * @return integer 
+     * @return integer
      */
     public static function removeByUser($user_id)
     {
