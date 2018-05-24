@@ -19,8 +19,8 @@ class CreateAclUsersPermissionsTable extends Migration
             $table->unsignedInteger('user_id')->index();
 
             $table->enum('create', ['yes', 'no']);
-            $table->enum('edit', ['yes', 'no']);
-            $table->enum('show', ['yes', 'no']);
+            $table->enum('read', ['yes', 'no']);
+            $table->enum('update', ['yes', 'no']);
             $table->enum('delete', ['yes', 'no']);
 
             $table->primary(['role_id', 'user_id']);

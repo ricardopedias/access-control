@@ -19,8 +19,8 @@ class CreateAclGroupsPermissionsTable extends Migration
             $table->unsignedInteger('group_id')->index();
 
             $table->enum('create', ['yes', 'no']);
-            $table->enum('edit', ['yes', 'no']);
-            $table->enum('show', ['yes', 'no']);
+            $table->enum('read', ['yes', 'no']);
+            $table->enum('update', ['yes', 'no']);
             $table->enum('delete', ['yes', 'no']);
 
             $table->primary(['role_id', 'group_id']);

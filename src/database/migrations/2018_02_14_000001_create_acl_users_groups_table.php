@@ -16,10 +16,10 @@ class CreateAclUsersGroupsTable extends Migration
         // Roles: visitantes, administradores, gerentes, etc
         Schema::create('acl_users_groups', function (Blueprint $table) {
 
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->index();
             $table->unsignedInteger('group_id')->index();
 
-            $table->primary(['user_id']);
+            $table->primary(['user_id', 'group_id']);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('group_id')->references('id')->on('acl_groups')->onDelete('cascade');
