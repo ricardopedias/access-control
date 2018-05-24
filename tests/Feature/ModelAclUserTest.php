@@ -2,96 +2,42 @@
 
 namespace Laracl\Tests\Feature;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laracl\Tests\Libs\IModelTestCase;
 use Laracl\Models;
 
-class ModelsTest extends TestCase
+class ModelAclUserTest extends IModelTestCase
 {
-    public function setUp()
-    {
-        // Cria a aplicação e inicia o laravel
-        parent::setUp();
-
-        $data_file = tempnam(sys_get_temp_dir(), 'ModelsTest') . ".sqlite";
-        exec("touch " . $data_file);
-
-        $this->app['config']->set('database.connections.sqlite.driver', 'sqlite');
-        $this->app['config']->set('database.connections.sqlite.database', $data_file);
-
-        $this->app['config']->set('database.default','sqlite');
-
-        \Artisan::call('migrate');
-        \Artisan::call('migrate', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
-    }
-
-    public function tearDown()
-    {
-        \Artisan::call('migrate:reset', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
-        \Artisan::call('migrate:reset');
-    }
-
-    private function createUser($group_id = null)
-    {
-        $faker = \Faker\Factory::create();
-
-        $user = \Laracl\Models\AclUser::create([
-            'name'           => $faker->name,
-            'email'          => $faker->unique()->safeEmail,
-            'password'       => bcrypt('secret'),
-            'remember_token' => str_random(10),
-        ]);
-
-        if ($group_id != null) {
-            \Laracl\Models\AclUserGroup::create([
-                'user_id'  => $user->id,
-                'group_id' => $group_id,
-            ]);
-        }
-
-        return $user;
-    }
-
-    /**
-     * No momento da migração, dois grupos padrões são gerados.
-     * ID 1 = admin e ID 2 = users, ambos como 'system = yes'
-     */
-    private function createGroup()
-    {
-        $faker = \Faker\Factory::create();
-
-        return \Laracl\Models\AclGroup::create([
-            'name' => $faker->name,
-            'description' => $faker->paragraph(100),
-            'system' => 'no',
-        ]);
-    }
+    use RefreshDatabase;
 
     public function testUserNoRelations()
     {
-        $user = $this->createUser();
-        $this->assertInstanceOf(Models\AclUser::class, $user);
+        $user = self::createUser();
 
+        // Atributos mágicos do modelo
         $this->assertNull($user->groupRelation);
         $this->assertNull($user->group);
+        $this->assertCount(0, $user->permissions);
+
     }
 
     public function testUserRelations()
     {
-        $group = $this->createGroup();
-        $this->assertInstanceOf(Models\AclGroup::class, $group);
+        $group = self::createGroup();
+        $user = self::createUser($group->id);
 
-        $user = $this->createUser($group->id);
-        $this->assertInstanceOf(Models\AclUser::class, $user);
+        $role = self::createRole();
+        $permissions = self::createUserPermissions($role->id, $user->id, true, true, true, true);
 
+        // Atributos mágicos do modelo
         $this->assertInstanceOf(Models\AclUserGroup::class, $user->groupRelation);
         $this->assertInstanceOf(Models\AclGroup::class, $user->groupRelation->group);
+        $this->assertCount(1, $user->permissions);
+        $this->assertInstanceOf(Models\AclUserPermission::class, $user->permissions[0]);
 
-        //dd($user->group);
-        //$this->assertInstanceOf(Models\AclGroup::class, $user->group);
-
-
+        dd($user->roles);
     }
 
     /**
