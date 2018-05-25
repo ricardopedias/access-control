@@ -32,33 +32,88 @@ class AclGroup extends Model
         return $this->fillable;
     }
 
-    //
-    // Relacionamentos
-    //
-
-    public function permissions()
-    {
-        return $this->hasOne('Laracl\Models\AclGroupPermission', 'id', 'group_id');
-    }
-
+    /**
+     * Devolve o modelo do grupo ao qual este usuário pertence.
+     * @return Illuminate\Database\Eloquent\Collection ou null
+     */
     public function users()
     {
-        return $this->hasMany('Laracl\Models\AclUsers', 'id', 'acl_group_id');
+        return $this->hasMany(AclUser::class, 'id', 'group_id');
     }
 
-    //
-    // Métodos Especiais
-    //
+    /**
+     * Devolve as funções deste grupo
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(AclRole::class,
+            'acl_groups_permissions', // inner join
+            'group_id', // acl_groups_permissions.group_id = chave primária de AclGroup
+            'role_id'  // acl_groups_permissions.role_id = chave primária de AclRole
+        );
+    }
 
     /**
-     * Devolve uma função a partir de sua slug
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $slug 
-     * @return \Laracl\Models\AclRole
+     * Devolve as permissões deste grupo
+     * @return Illuminate\Database\Eloquent\Collection
      */
-    public static function findBySlug($slug)
+    public function permissions()
     {
-        return (new static)->where('slug', $slug)->first();
+        return $this->hasMany(AclGroupPermission::class, 'group_id', 'id');
+    }
+
+    /**
+     * Verifica se o grupo possui permissão na função especificada
+     * @param  int $role_id    ID da função
+     * @param  string $permission create, read, update ou delete
+     * @return boolean
+     */
+    public function canCheck($role_id, $permission)
+    {
+        $model =  $this->permissions()->where('role_id', $role_id)->first();
+        return $model==null
+            ? false
+            : ($model->$permission == 'yes');
+    }
+
+    /**
+     * Verifica se o grupo pode criar na função especificada.
+     * @param  int $role_id    ID da função
+     * @return boolean
+     */
+    public function canCreate($role_id)
+    {
+        return $this->canCheck($role_id, 'create');
+    }
+
+    /**
+     * Verifica se o grupo pode ler na função especificada.
+     * @param  int $role_id    ID da função
+     * @return boolean
+     */
+    public function canRead($role_id)
+    {
+        return $this->canCheck($role_id, 'read');
+    }
+
+    /**
+     * Verifica se o grupo pode editar na função especificada.
+     * @param  int $role_id    ID da função
+     * @return boolean
+     */
+    public function canUpdate($role_id)
+    {
+        return $this->canCheck($role_id, 'update');
+    }
+
+    /**
+     * Verifica se o grupo pode excluir na função especificada.
+     * @param  int $role_id    ID da função
+     * @return boolean
+     */
+    public function canDelete($role_id)
+    {
+        return $this->canCheck($role_id, 'delete');
     }
 }
