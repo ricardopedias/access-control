@@ -21,13 +21,24 @@ class AclGroup extends Model
         'system',
     ];
 
-    public function setNameAttribute($value)
+    /**
+     * Quando um grupo for criado, a slug será
+     * gerada automaticamente com base na slug do nome.
+     * @param string $value
+     */
+    public function setNameAttribute(string $value)
     {
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function getFillableColumns()
+    /**
+     * Devolve os campos usados para atualização de dados.
+     * Serão necessários para a criação dos CRUDs que gerenciam
+     * as permissões dos grupos
+     * @return array
+     */
+    public function getFillableColumns() : array
     {
         return $this->fillable;
     }
@@ -38,7 +49,11 @@ class AclGroup extends Model
      */
     public function users()
     {
-        return $this->hasMany(AclUser::class, 'id', 'group_id');
+        return $this->belongsToMany(AclUser::class,
+            'acl_users_groups', // inner join
+            'group_id', // acl_users_groups.group_id = chave primária de AclGroup
+            'user_id'  // acl_users_groups.user_id = chave primária de AclUser
+        );
     }
 
     /**
