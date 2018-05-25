@@ -8,6 +8,12 @@ class AclUser extends \App\User
 {
     protected $table = 'users';
 
+    /**
+     * Devolve os campos usados para atualização de dados.
+     * Serão necessários para a criação dos CRUDs que gerenciam
+     * as permissões dos usuários
+     * @return array
+     */
     public function getFillableColumns()
     {
         return $this->fillable;
