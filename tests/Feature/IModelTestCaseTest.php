@@ -16,6 +16,7 @@ class IModelTestCaseTest extends IModelTestCase
     {
         $model = self::createGroup();
         $this->assertFalse(empty($model->name));
+        $this->assertFalse(empty($model->slug));
         $this->assertFalse(empty($model->description));
         $this->assertEquals('no', $model->system);
     }
