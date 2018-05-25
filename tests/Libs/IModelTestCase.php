@@ -15,7 +15,9 @@ class IModelTestCase extends TestCase
         // Cria a aplicação e inicia o laravel
         parent::setUp();
 
-        $data_file = tempnam(sys_get_temp_dir(), 'ModelsTest') . ".sqlite";
+        $path = explode('\\', get_called_class());
+        $class = array_pop($path);
+        $data_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $class . ".sqlite";
         exec("touch " . $data_file);
 
         $this->app['config']->set('database.connections.sqlite.driver', 'sqlite');
