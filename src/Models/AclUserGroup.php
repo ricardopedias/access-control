@@ -30,22 +30,21 @@ class AclUserGroup extends Model
         return $this->fillable;
     }
 
-    //
-    // Relacionamentos
-    //
-
+    /**
+     * Devolve o modelo do usuário ao qual este relacionamento pertence.
+     * @return Laracl\Models\AclUser ou null
+     */
     public function user()
     {
-        return $this->hasOne('App\User', 'id', 'user_id');
+        return $this->hasOne(AclUser::class, 'id', 'user_id');
     }
 
+    /**
+     * Devolve o modelo do grupo ao qual este relacionamento pertence.
+     * @return Laracl\Models\AclGroup ou null
+     */
     public function group()
     {
-        return $this->hasOne('Laracl\Models\AclGroup', 'id', 'group_id');
-    }
-
-    public function permissions()
-    {
-        return $this->hasMany('Laracl\Models\AclUserPermissions', 'user_id', 'id');
+        return $this->hasOne(AclGroup::class, 'id', 'group_id');
     }
 }
