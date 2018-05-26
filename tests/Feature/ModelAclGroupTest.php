@@ -17,6 +17,10 @@ class ModelAclGroupTest extends IModelTestCase
     {
         $group = self::createGroup();
 
+        $this->assertInstanceOf(Collection::class, $group->users);
+        $this->assertInstanceOf(Collection::class, $group->roles);
+        $this->assertInstanceOf(Collection::class, $group->permissions);
+
         $this->assertCount(0, $group->users);
         $this->assertCount(0, $group->roles);
         $this->assertCount(0, $group->permissions);
