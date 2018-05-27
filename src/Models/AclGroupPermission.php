@@ -16,8 +16,9 @@ class AclGroupPermission extends Model
     public $timestamps = false;
 
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser setados em massa
      *
+     * @see https://laravel.com/docs/5.6/eloquent#mass-assignment
      * @var array
      */
     protected $fillable = [
@@ -29,19 +30,24 @@ class AclGroupPermission extends Model
         'delete',
     ];
 
-    //
-    // Relacionamentos
-    //
+    /**
+     * Devolve o modelo com a função de acesso para estas permissões
+     * @return Laracl\Models\AclRole ou null
+     */
+    public function role()
+    {
+        return $this->hasOne(AclRole::class, 'id', 'role_id');
+    }
 
+    /**
+     * Devolve o modelo do grupo ao qual perntencem estas permissões
+     * @return Laracl\Models\AclGroup ou null
+     */
     public function group()
     {
         return $this->hasOne('Laracl\Models\AclGroup', 'id', 'group_id');
     }
 
-    public function role()
-    {
-        return $this->hasOne('Laracl\Models\AclRole', 'id', 'role_id');
-    }
 
     //
     // Métodos Especiais

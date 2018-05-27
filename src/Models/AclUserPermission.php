@@ -16,8 +16,9 @@ class AclUserPermission extends Model
     public $timestamps = false;
 
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser setados em massa
      *
+     * @see https://laravel.com/docs/5.6/eloquent#mass-assignment
      * @var array
      */
     protected $fillable = [
@@ -29,23 +30,25 @@ class AclUserPermission extends Model
         'delete',
     ];
 
-    //
-    // Relacionamentos
-    //
+    /**
+     * Devolve o modelo com a função de acesso para estas permissões
+     *
+     * @return Laracl\Models\AclRole ou null
+     */
+    public function role()
+    {
+        return $this->hasOne(AclRole::class, 'id', 'role_id');
+    }
 
+    /**
+     * Devolve o modelo do usuário ao qual perntencem estas permissões
+     *
+     * @return Laracl\Models\AclUser ou null
+     */
     public function user()
     {
         return $this->hasOne('Laracl\Models\AclUser', 'id', 'user_id');
     }
-
-    public function role()
-    {
-        return $this->hasOne('Laracl\Models\AclRole', 'id', 'role_id');
-    }
-
-    //
-    // Métodos Especiais
-    //
 
     /**
      * Devolve as permissões do usuário na função especificada

@@ -1,6 +1,6 @@
 <?php
 
-namespace Laracl\Tests\Feature;
+namespace Laracl\Tests\Unit;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Console\Kernel;

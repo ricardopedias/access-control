@@ -10,8 +10,9 @@ class AclGroup extends Model
     protected $primaryKey = 'id';
 
     /**
-     * The attributes that are mass assignable.
+     * Os atributos que podem ser setados em massa
      *
+     * @see https://laravel.com/docs/5.6/eloquent#mass-assignment
      * @var array
      */
     protected $fillable = [
