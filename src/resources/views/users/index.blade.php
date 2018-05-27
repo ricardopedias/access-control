@@ -9,13 +9,13 @@
 
         <div class="row">
 
-            <div class="col">
+            <div class="col-2">
 
                 @sg_perpage
 
             </div>
 
-            <div class="col text-right justify-content-end">
+            <div class="col-10 text-right justify-content-end">
 
                 @acl_action('users.create', route($route_create), 'Novo Usuário')
 
