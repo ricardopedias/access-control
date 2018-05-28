@@ -1,25 +1,23 @@
-#!/usr/bin/env php
-<?php
+#!/bin/bash
 
-    /*
-    |--------------------------------------------------------------------------
-    | PhpUnit
-    |--------------------------------------------------------------------------
-    |
-    | Para executar os testes de unidade em um pacote, é necessário invocar
-    | o phpunit que acompanha o laravel, especificando o caminho de forma
-    | relativa:
-    |
-    |     Ex:
-    |     $ cd /caminho/do/projeto/vendor/namespace/package
-    |     $ ../../../vendor/bin/phpunit .
-    |
-    | Este script é um atalho para este comando, permitindo que os testes
-    | sejam executados apenas através do comando:
-    |
-    |     Ex:
-    |     $ cd /caminho/do/projeto/vendor/namespace/package
-    |     $ ./phpunit
-    */
+    #
+    #--------------------------------------------------------------------------
+    # PhpUnit
+    #--------------------------------------------------------------------------
+    #
+    # Para executar os testes de unidade em um pacote, é necessário invocar
+    # o phpunit que acompanha o laravel, especificando o caminho de forma
+    # relativa:
+    #
+    #     Ex:
+    #     $ cd /caminho/do/projeto/vendor/namespace/package
+    #     $ ../../../vendor/bin/phpunit .
+    #
+    # Este script é um atalho para este comando, permitindo que os testes
+    # sejam executados apenas através do comando:
+    #
+    #     Ex:
+    #     $ cd /caminho/do/projeto/vendor/namespace/package
+    #     $ ./phpunit
 
-    echo shell_exec('../../../vendor/bin/phpunit .');
+../../../vendor/bin/phpunit .
