@@ -80,6 +80,7 @@ class UsersController extends SortableGridController
         return AclUser::select($columns)
             ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
             ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
+            //->groupBy('users.id');
     }
 
     /**
@@ -206,7 +207,7 @@ class UsersController extends SortableGridController
         ) {
             // Se grupo for setado como 0,
             // remove relacionamentos existentes com grupos
-            AclUserGroup::where('user_id', $id)->get()->first()->delete();
+            AclUserGroup::where('user_id', $id)->delete();
         }
 
         if (empty($form->request->get('acl_group_id')) == true
@@ -223,11 +224,11 @@ class UsersController extends SortableGridController
 
         if (empty($form->request->get('acl_group_id')) == false) {
             // Um grupo foi selecionado
-            // se existir atualiza, se não, cria
-            AclUserGroup::updateOrCreate(
-                ['group_id' => $form->request->get('acl_group_id')],
-                ['user_id'  => $id]
-            );
+            AclUserGroup::where('user_id', $id)->delete();
+            AclUserGroup::create([
+                'user_id'  => $id,
+                'group_id' => $form->request->get('acl_group_id')
+            ]);
         }
 
         return back();
