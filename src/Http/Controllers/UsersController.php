@@ -142,13 +142,11 @@ class UsersController extends SortableGridController
         $model->save();
 
         // Se acl_group_id = 0 ou null
-        if (empty($form->request->acl_group_id) == false) {
-            dd($form->request);
+        if (empty($form->request->get('acl_group_id')) == false) {
             $relation = new AclUserGroup;
             $relation->user_id = $model->id;
-            $relation->group_id = $form->request->acl_group_id;
+            $relation->group_id = $form->request->get('acl_group_id');
             $relation->save();
-            dd('hahah');
         }
 
         $route = config('laracl.routes.users.edit');
@@ -203,23 +201,32 @@ class UsersController extends SortableGridController
             'password'     => 'required',
         ]);
 
-        // Usuário possui permissões exclusivas
-        if ($form->acl_group_id == 0) {
-            $form->request->set('acl_group_id', null);
-        }
-        // O grupo foi selecionado,
-        // remove as permissões esclusivas
-        elseif ($form->acl_group_id != 0 && AclUserPermission::collectByUser($id)->count()>0) {
-            $result = AclUserPermission::removeByUser($id);
+        if (empty($form->request->get('acl_group_id')) == true
+         && AclUserGroup::where('user_id', $id)->get()->count() > 0
+        ) {
+            // Se grupo for setado como 0,
+            // remove relacionamentos existentes com grupos
+            AclUserGroup::where('user_id', $id)->get()->first()->delete();
         }
 
+        if (empty($form->request->get('acl_group_id')) == true
+         && AclUserPermission::where('user_id', $id)->get()->count() > 0
+        ) {
+            // Se um grupo for selecionado e o usuário possuir permissões exclusivas,
+            // elas serão removidas, pois as permissões do grupo serão usadas no lugar
+            AclUserPermission::where('user_id', $id)->get()->first()->delete();
+        }
+
+        // Atualiza os dados do usuário
         $model->fill($form->all());
         $model->save();
 
-        if($form->acl_group_id != 0) {
+        if (empty($form->request->get('acl_group_id')) == false) {
+            // Um grupo foi selecionado
+            // se existir atualiza, se não, cria
             AclUserGroup::updateOrCreate(
-                ['group_id' => $form->acl_group_id],
-                ['user_id' => $id]
+                ['group_id' => $form->request->get('acl_group_id')],
+                ['user_id'  => $id]
             );
         }
 
