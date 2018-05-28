@@ -272,6 +272,7 @@ class UsersControllerTest extends IControllerTestCase
 
         // Novo grupo relacionado
         $this->assertDatabaseHas('acl_users_groups', ['user_id' => $edited_user->id, 'group_id' => $group_two->id]);
+        $this->assertDatabaseMissing('acl_users_groups', ['user_id' => $edited_user->id, 'group_id' => $group_one->id]);
     }
 
     public function testUpdateNoGroupNoRelations()
