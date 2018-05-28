@@ -5,7 +5,14 @@
  * and open the template in the editor.
  */
 
-Auth::loginUsingId(1);
+// if (App\User::find(1) == null) {
+//     $u = new App\User;
+//     $u->name="Ricardo";
+//     $u->email="ricardo@bnw.com.br";
+//     $u->password = bcrypt('secret');
+//     $u->save();
+// }
+// Auth::loginUsingId(1);
 
 Route::middleware(['web', 'auth'])->group(function () {
 

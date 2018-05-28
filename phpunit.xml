@@ -8,7 +8,7 @@
          processIsolation="false"
          stopOnFailure="false"
          bootstrap="bootstrap.php">
-         
+
     <testsuites>
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
@@ -18,7 +18,7 @@
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
-    
+
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
