@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Http\Controllers;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -11,7 +11,7 @@ use Laracl\Tests\Libs\IControllerTestCase;
 //use Illuminate\Foundation\Testing\DatabaseMigrations;
 //use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ExampleTest extends IControllerTestCase
+class UsersControllerTest extends IControllerTestCase
 {
     use RefreshDatabase;
 
@@ -37,19 +37,17 @@ class ExampleTest extends IControllerTestCase
 
         $faker = \Faker\Factory::create();
         $user_email = $faker->unique()->safeEmail;
-        $response = $this->post('/laracl/users/store', [
+        $response = $this->post('/laracl/users', [
             'name'         => $faker->name,
             'email'        => $user_email,
             'password'     => bcrypt('secret'),
             'acl_group_id' => 1
         ]);
+
         $user = \App\User::where('email', $user_email)->first();
 
-        dd($user);
-
-
-        $response->assertRedirect("/laracl/users/edit/" . $user->id);
-        $response->assertStatus(200);
+        $response->assertStatus(302);
+        $response->assertRedirect("/laracl/users/" . $user->id . "/edit");
     }
 
     public function testUserEditTest()
