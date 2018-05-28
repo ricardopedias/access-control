@@ -3,21 +3,21 @@
 
     /*
     |--------------------------------------------------------------------------
-    | PhpUnit 
+    | PhpUnit
     |--------------------------------------------------------------------------
     |
     | Para executar os testes de unidade em um pacote, é necessário invocar
-    | o phpunit que acompanha o laravel, especificando o caminho de forma 
-    | relativa: 
+    | o phpunit que acompanha o laravel, especificando o caminho de forma
+    | relativa:
     |
-    |     Ex: 
+    |     Ex:
     |     $ cd /caminho/do/projeto/vendor/namespace/package
-    |     $ ../../../vendor/bin/phpunit . 
+    |     $ ../../../vendor/bin/phpunit .
     |
-    | Este script é um atalho para este comando, permitindo que os testes 
+    | Este script é um atalho para este comando, permitindo que os testes
     | sejam executados apenas através do comando:
     |
-    |     Ex: 
+    |     Ex:
     |     $ cd /caminho/do/projeto/vendor/namespace/package
     |     $ ./phpunit
     */

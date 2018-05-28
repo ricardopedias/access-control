@@ -10,29 +10,52 @@ use Illuminate\Support\Str;
 
 class IModelTestCase extends TestCase
 {
+    /**
+     * Creates the application.
+     *
+     * @return \Illuminate\Foundation\Application
+     */
+    public function createApplication()
+    {
+        // /laravel_path/tests/CreatesApplication.php
+        $app = parent::createApplication();
+
+        $path = explode('\\', get_called_class());
+        $class = array_pop($path);
+        $data_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $class . ".sqlite";
+        if (file_exists($data_file) == false) {
+            exec("touch " . $data_file);
+        }
+
+        config('database.connections.sqlite.driver', 'sqlite');
+        config('database.connections.sqlite.database', $data_file);
+        config('database.default','sqlite');
+
+        return $app;
+    }
+
     public function setUp()
     {
         // Cria a aplicação e inicia o laravel
         parent::setUp();
 
-        $path = explode('\\', get_called_class());
-        $class = array_pop($path);
-        $data_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $class . ".sqlite";
-        exec("touch " . $data_file);
-
-        $this->app['config']->set('database.connections.sqlite.driver', 'sqlite');
-        $this->app['config']->set('database.connections.sqlite.database', $data_file);
-
-        $this->app['config']->set('database.default','sqlite');
-
-        \Artisan::call('migrate');
+        //\Artisan::call('migrate');
         \Artisan::call('migrate', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
+
+        $faker = \Faker\Factory::create();
+
+        $user = Models\AclUser::create([
+            'name'           => $faker->name,
+            'email'          => $faker->unique()->safeEmail,
+            'password'       => bcrypt('secret'),
+            'remember_token' => str_random(10),
+        ]);
     }
 
     public function tearDown()
     {
         \Artisan::call('migrate:reset', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
-        \Artisan::call('migrate:reset');
+        //\Artisan::call('migrate:reset');
     }
 
     /**
