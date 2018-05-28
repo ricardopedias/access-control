@@ -141,7 +141,15 @@ class UsersController extends SortableGridController
         $model->fill($form->all());
         $model->save();
 
-        $relation = new AclUserGroup;
+        // Se acl_group_id = 0 ou null
+        if (empty($form->request->acl_group_id) == false) {
+            dd($form->request);
+            $relation = new AclUserGroup;
+            $relation->user_id = $model->id;
+            $relation->group_id = $form->request->acl_group_id;
+            $relation->save();
+            dd('hahah');
+        }
 
         $route = config('laracl.routes.users.edit');
         return redirect()->route($route, $model);
