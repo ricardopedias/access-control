@@ -1,6 +1,6 @@
 <?php
 
-namespace Laracl\Tests\Unit;
+namespace Laracl\Tests\Unit\Models;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Console\Kernel;
@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Laracl\Tests\Libs\IModelTestCase;
 use Laracl\Models;
 
-class ModelAclUserTest extends IModelTestCase
+class AclUserTest extends IModelTestCase
 {
     use RefreshDatabase;
 
