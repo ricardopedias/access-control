@@ -20,16 +20,11 @@ class IModelTestCase extends TestCase
         // /laravel_path/tests/CreatesApplication.php
         $app = parent::createApplication();
 
-        $path = explode('\\', get_called_class());
-        $class = array_pop($path);
-        $data_file = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $class . ".sqlite";
-        if (file_exists($data_file) == false) {
-            exec("touch " . $data_file);
+        if (\class_exists('NunoMaduro\Collision\Provider')) {
+            // Para exibir o erros e exceções de forma mais
+            // clara nos testes de funcionalidade
+            (new \NunoMaduro\Collision\Provider)->register();
         }
-
-        config('database.connections.sqlite.driver', 'sqlite');
-        config('database.connections.sqlite.database', $data_file);
-        config('database.default','sqlite');
 
         return $app;
     }
@@ -39,13 +34,13 @@ class IModelTestCase extends TestCase
         // Cria a aplicação e inicia o laravel
         parent::setUp();
 
-        //\Artisan::call('migrate');
+        \Artisan::call('migrate');
         \Artisan::call('migrate', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
 
         $faker = \Faker\Factory::create();
 
         $user = Models\AclUser::create([
-            'name'           => $faker->name,
+            'name'           => 'Teste',
             'email'          => $faker->unique()->safeEmail,
             'password'       => bcrypt('secret'),
             'remember_token' => str_random(10),
@@ -55,7 +50,7 @@ class IModelTestCase extends TestCase
     public function tearDown()
     {
         \Artisan::call('migrate:reset', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
-        //\Artisan::call('migrate:reset');
+        \Artisan::call('migrate:reset');
     }
 
     /**
