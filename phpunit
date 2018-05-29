@@ -20,4 +20,9 @@
     #     $ cd /caminho/do/projeto/vendor/namespace/package
     #     $ ./phpunit
 
-../../../vendor/bin/phpunit .
+if [ $# -gt 0 ]; then
+    echo "Testando $1";
+    ../../../vendor/bin/phpunit $1
+else
+    ../../../vendor/bin/phpunit .
+fi
