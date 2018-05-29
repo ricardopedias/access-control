@@ -21,14 +21,14 @@ class UsersPermissionsController extends Controller
      */
     public function edit($id)
     {
-        $db_permissions = AclUserPermission::where('user_id', $id);
+        $db_permissions = AclUserPermission::where('user_id', $id)->get();
         $has_permissions = ($db_permissions->count()>0);
 
         // Se o usuário não possuir permissões específicas
         // popula o formulário com as permissões do grupo
         // para facilitar a vida ;)
         if ($has_permissions==false) {
-            $db_permissions = AclGroupPermission::where('user_id', $id);
+            $db_permissions = AclGroupPermission::where('user_id', $id)->get();
         }
 
         // Aplica as permissões do banco na estrutura

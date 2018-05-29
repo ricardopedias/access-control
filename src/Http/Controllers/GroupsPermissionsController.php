@@ -24,7 +24,7 @@ class GroupsPermissionsController extends Controller
     {
         // Aplica as permissões do banco na estrutura
         // de permissões do formulário
-        $db_permissions = AclGroupPermission::where('group_id', $id);
+        $db_permissions = AclGroupPermission::where('group_id', $id)->get();
         $this->populateStructure($db_permissions);
 
         $group = AclGroup::find($id);
