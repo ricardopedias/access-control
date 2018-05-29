@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class UsersPermissionsController extends Controller
 {
-    use HasRolesStructure; 
+    use HasRolesStructure;
 
     /**
      * Exibe o formulário de configuração das permissões de acesso.
@@ -21,14 +21,14 @@ class UsersPermissionsController extends Controller
      */
     public function edit($id)
     {
-        $db_permissions = AclUserPermission::collectByUser($id);
+        $db_permissions = AclUserPermission::where('user_id', $id);
         $has_permissions = ($db_permissions->count()>0);
 
         // Se o usuário não possuir permissões específicas
-        // popula o formulário com as permissões do grupo 
+        // popula o formulário com as permissões do grupo
         // para facilitar a vida ;)
         if ($has_permissions==false) {
-            $db_permissions = AclGroupPermission::collectByUser($id);
+            $db_permissions = AclGroupPermission::where('user_id', $id);
         }
 
         // Aplica as permissões do banco na estrutura
@@ -69,10 +69,10 @@ class UsersPermissionsController extends Controller
                 ]);
 
             $model->fill([
-                'show'    => ($perms['show'] ?? 'no'),
-                'create'  => ($perms['create'] ?? 'no'),
-                'edit'    => ($perms['edit'] ?? 'no'),
-                'delete'  => ($perms['delete'] ?? 'no'),
+                'create' => ($perms['create'] ?? 'no'),
+                'read'   => ($perms['read'] ?? 'no'),
+                'update' => ($perms['update'] ?? 'no'),
+                'delete' => ($perms['delete'] ?? 'no'),
                 ]);
 
             $model->save();
