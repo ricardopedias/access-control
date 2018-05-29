@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Laracl;
 
@@ -11,7 +11,7 @@ class Accessor
 {
     /**
      * Dados das permissões atualmente invocadas
-     * 
+     *
      * @var array
      */
     protected $current_ability = null;
@@ -19,32 +19,81 @@ class Accessor
     /**
      * Origem das permissões atualmente invocadas
      */
-    protected $current_ability_origin = null;
+    protected $current_ability_origin = 'none';
 
     /**
-     * Carrega e inclui os helpers do pacote
-     * 
+     * Carrega e registra as diretivas para o blade
+     *
      * @return void
      */
-    public function loadHelpers()
+    public function loadBladeDirectives()
     {
-        include('helpers.php');
+        include('directives.php');
     }
 
     /**
-     * Gera a estrutura de nomeamento de rotas para os CRUDs, 
+     * Salva os dados da última verificação por privilégios
+     * Na verificação: users.edit = {$role}.{$permission}
+     *
+     * @param string $role
+     * @param string $permission
+     * @param boolean $granted
+     */
+    public function setCurrentAbility(string $role, string $permission, bool $granted)
+    {
+        $this->current_ability = [
+            'role'       => $role,
+            'permission' => $permission,
+            'granted'    => $granted,
+            ];
+    }
+
+    /**
+     * Devolve os dados da última verificação por privilégios
+     *
+     * @return array ou null
+     */
+    public function getCurrentAbility()
+    {
+        return $this->current_ability;
+    }
+
+    /**
+     * Salva a origem da última verificação por privilégios.
+     * Útil para verificações de debug e testes de unidade.
+     *
+     * @param string $origin Possibilidades: config, callback, user, group
+     */
+    public function setCurrentAbilityOrigin(string $origin)
+    {
+        $this->current_ability_origin = $origin;
+    }
+
+    /**
+     * Devolve a origem da última verificação por privilégios
+     * As possibilidades são: config, callback, user, group
+     *
+     * @return string
+     */
+    public function getCurrentAbilityOrigin() : string
+    {
+        return $this->current_ability_origin;
+    }
+
+    /**
+     * Gera a estrutura de nomeamento de rotas para os CRUDs,
      * com base nas urls especificadas na configuração.
-     * 
+     *
      * Por exemplo:
-     * 
+     *
      * 'routes'     => [
      *      'users'              => 'painel/users',
      *      'users-permissions'  => 'painel/users-permissions',
      *      'groups'             => 'painel/groups',
      *      'groups-permissions' => 'painel/groups-permissions',
      * ]
-     * 
-     * No item ['users' => 'painel/users'], serão extraidos 
+     *
+     * No item ['users' => 'painel/users'], serão extraidos
      * os indices e os nomes para as rotas dos CRUDs, ficando assim:
      * [
      *     laracl.routes.users.base  =>  users
@@ -88,18 +137,66 @@ class Accessor
     }
 
     /**
-     * Carrega e registra as diretivas para o blade
-     * 
-     * @return void
+     * Devolve as permissões para o usuário na função de acesso especificada
+     * O formato procede assim: users.edit = {$role_slug}.edit
+
+     * @param  int $user_id
+     * @param  string $role_slug
+     * @return Collection
      */
-    public function loadBladeDirectives()
+    public function getUserPermissions($user_id, string $role_slug)
     {
-        include('directives.php');
+        if (session('user.abilities') == null) {
+
+            // Gera um cache de permissões
+            // para evitar consultas ao banco de dados
+
+            $cache_all   = [];
+            $cache_slugs = [];
+            $roles = \Laracl\Models\AclRole::all();
+            foreach($roles as $item) {
+                $cache_all[$item->slug] = $item->toArray();
+                $cache_slugs[$item->id] = $item->slug;
+            }
+
+            // As permissões setadas para o usuário tem precedência
+            $user_permissions = \Laracl\Models\AclUserPermission::collectByUser($user_id);
+            if ($user_permissions->count() > 0) {
+                foreach($user_permissions as $item) {
+                    if (isset($cache_slugs[$item->role_id])) {
+                        $slug = $cache_slugs[$item->role_id];
+                        $cache_all[$slug]['permissions'] = $item->toArray();
+                    }
+                }
+
+                $this->setCurrentAbilityOrigin('user');
+            }
+            // Quando não existem permissões setadas para o usuário,
+            // as permissões do grupo são usadas no lugar
+            else {
+
+                $group_permissions = \Laracl\Models\AclGroupPermission::collectByUser($user_id);
+                foreach($group_permissions as $item) {
+                    if (isset($cache_slugs[$item->role_id])) {
+                        $slug = $cache_slugs[$item->role_id];
+                        $cache_all[$slug]['permissions'] = $item->toArray();
+                    }
+                }
+
+                $this->setCurrentAbilityOrigin('group');
+            }
+
+            session([ 'user.abilities' => collect($cache_all) ]);
+        }
+
+        $user_abilities = session('user.abilities');
+
+        return $user_abilities[$role_slug] ?? null;
     }
 
     /**
-     * Regitra os verificadores de acesso com base na configuração
-     * 
+     * Registra os verificadores de acesso com base na configuração
+     *
      * @return void
      */
     public function registerPolicies()
@@ -117,8 +214,8 @@ class Accessor
 
             foreach ($allowed_permissions as $permission) {
 
-                Gate::define("{$role}.{$permission}", function ($user, $callback = null) 
-                                                           use ($role, $permission) 
+                Gate::define("{$role}.{$permission}", function ($user, $callback = null)
+                                                           use ($role, $permission)
                 {
                     // Usuário permamentemente liberado
                     $root_user = config('laracl.root_user');
@@ -151,109 +248,7 @@ class Accessor
         }
     }
 
-    /**
-     * Salva os dados da última verificação por privilégios 
-     * O formato procede assim: users.edit = {$role}.{$permission}
-     * 
-     * @return boolean
-     */
-    public function setCurrentAbility($role, $permission, $granted)
-    {
-        $this->current_ability = [
-            'role'       => $role,
-            'permission' => $permission,
-            'granted'    => $granted,
-            ];
 
-        return $granted;
-    }
 
-    /**
-     * Devolve os dados da última verificação por privilégios 
-     * 
-     * @return array
-     */
-    public function getCurrentAbility()
-    {
-        return $this->current_ability;
-    }
 
-    /**
-     * Salva a origem da última verificação por privilégios 
-     * 
-     * @param string $origin Possibilidades: config, callback, user, group
-     * @return boolean
-     */
-    public function setCurrentAbilityOrigin($origin)
-    {
-        $this->current_ability_origin = $origin;
-    }
-
-    /**
-     * Devolve a origem da última verificação por privilégios 
-     * As possibilidades são: config, callback, user, group
-     * 
-     * @return string 
-     */
-    public function getCurrentAbilityOrigin()
-    {
-        return $this->current_ability_origin;
-    }
-
-    /**
-     * Devolve as permissões para o usuário n função especificada
-     * O formato procede assim: users.edit = {$role_slug}.edit
-     * 
-     * @return booelan
-     */
-    public function getUserPermissions($user_id, $role_slug)
-    {
-        if (session('user.abilities') == null) {
-
-            // Gera um cache de permissões
-            // para evitar consultas ao banco de dados
-            $roles = \Laracl\Models\AclRole::all();
-
-            $cache_all   = [];
-            $cache_slugs = [];
-
-            foreach($roles as $item) {
-                $cache_all[$item->slug] = $item->toArray();
-                $cache_slugs[$item->id] = $item->slug;
-            }
-
-            // As permissões setadas para o usuário tem precedencia
-            $user_permissions = \Laracl\Models\AclUserPermission::collectByUser($user_id);
-            if ($user_permissions->count() > 0) {
-                foreach($user_permissions as $item) {
-                    if (isset($cache_slugs[$item->role_id])) {
-                        $slug = $cache_slugs[$item->role_id];
-                        $cache_all[$slug]['permissions'] = $item->toArray();
-                    }
-                }
-
-                $this->setCurrentAbilityOrigin('user');
-            }
-            // Quando não existem permissões setadas para o usuário, 
-            // as permissões do grupo são usadas no lugar
-            else {
-
-                $group_permissions = \Laracl\Models\AclGroupPermission::collectByUser($user_id);
-                foreach($group_permissions as $item) {
-                    if (isset($cache_slugs[$item->role_id])) {
-                        $slug = $cache_slugs[$item->role_id];
-                        $cache_all[$slug]['permissions'] = $item->toArray();
-                    }
-                }
-
-                $this->setCurrentAbilityOrigin('group');
-            }
-
-            session([ 'user.abilities' => collect($cache_all) ]);
-        }
-
-        $user_abilities = session('user.abilities');
-
-        return $user_abilities[$role_slug] ?? null;
-    }
 }
