@@ -5,7 +5,7 @@
 
     <hr>
 
-    @acl_content('users.show')
+    @acl_content('users.read')
 
         <div class="row">
 
@@ -19,7 +19,7 @@
 
                 @acl_action('users.create', route($route_create), 'Novo Usuário')
 
-                @acl_action('groups.show', route($route_groups), 'Grupos de Acesso')
+                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso')
 
                 @sg_search
 
@@ -44,9 +44,9 @@
 
                     <td class="text-center">
 
-                        @acl_action_sm('users.edit', route($route_edit, $item->id ), 'Editar')
+                        @acl_action_sm('users.update', route($route_edit, $item->id ), 'Editar')
 
-                        @acl_action_sm('users-permissions.edit', route($route_permissions, $item->id), 'Permissões')
+                        @acl_action_sm('users-permissions.update', route($route_permissions, $item->id), 'Permissões')
 
                     </td>
                 </tr>

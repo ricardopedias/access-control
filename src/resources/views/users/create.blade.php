@@ -5,13 +5,13 @@
 
     <hr>
 
-    @acl_content('users.show')
+    @acl_content('users.read')
 
         <div class="row mb-3">
 
             <div class="col">
 
-                @acl_action('users.show', route($route_index), 'Lista de Usuários')
+                @acl_action('users.read', route($route_index), 'Lista de Usuários')
 
             </div>
 
@@ -20,7 +20,7 @@
                 {{-- ... --}}
 
             </div>
-            
+
         </div>
 
         <hr>
@@ -35,14 +35,14 @@
 
                 <div class="col">
 
-                    @acl_submit_lg('users.create', 'Novo Usuário')   
+                    @acl_submit_lg('users.create', 'Novo Usuário')
 
                 </div>
 
             </div>
 
         </form>
-        
+
     @end_acl_content
 
 @endcomponent

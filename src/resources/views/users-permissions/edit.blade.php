@@ -5,21 +5,21 @@
 
     <hr>
 
-    @acl_content('users-permissions.show')
+    @acl_content('users-permissions.read')
 
         <div class="row mb-3">
 
             <div class="col">
 
-                @acl_action('users.show', route($route_index), 'Lista de Usuários')
+                @acl_action('users.read', route($route_index), 'Lista de Usuários')
 
             </div>
 
             <div class="col text-right">
 
-                @acl_action('users.edit', route($route_user, $user->id), 'Editar Usuário')
+                @acl_action('users.update', route($route_user, $user->id), 'Editar Usuário')
 
-                @acl_action('groups.show', route($route_groups), 'Grupos de Acesso')
+                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso')
 
             </div>
 
@@ -125,7 +125,7 @@
 
                 <div class="col text-right">
 
-                    @acl_submit_lg('users-permissions.edit', 'Aplicar Permissões')
+                    @acl_submit_lg('users-permissions.update', 'Aplicar Permissões')
 
                 </div>
 

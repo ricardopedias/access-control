@@ -5,13 +5,13 @@
 
     <hr>
 
-    @acl_content('groups.show')
+    @acl_content('groups.read')
 
         <div class="row mb-3">
 
             <div class="col">
 
-                @acl_action('groups.show', route($route_index), 'Lista de Grupos')
+                @acl_action('groups.read', route($route_index), 'Lista de Grupos')
 
             </div>
 
@@ -19,17 +19,17 @@
 
                 @acl_action('groups.create', route($route_create), 'Novo Grupo')
 
-                @acl_action('groups-permissions.edit', route($route_permissions, $model->id), 'Permissões')
+                @acl_action('groups-permissions.update', route($route_permissions, $model->id), 'Permissões')
 
             </div>
-            
+
         </div>
 
         <form method="post" action="{{ route($route_update, $model->id) }}">
 
             {{ csrf_field() }}
 
-            {{ method_field('PUT') }} 
+            {{ method_field('PUT') }}
             {{-- https://laravel.com/docs/5.5/controllers#resource-controllers --}}
 
             @include('laracl::groups.form')
@@ -38,7 +38,7 @@
 
                 <div class="col">
 
-                    @acl_submit_lg('groups.edit', 'Atualizar Grupo')   
+                    @acl_submit_lg('groups.update', 'Atualizar Grupo')
 
                 </div>
 

@@ -4,14 +4,14 @@
     @slot('title') {{ $title }} @endslot
 
     <hr>
-    
-    @acl_content('users.show')
+
+    @acl_content('users.read')
 
         <div class="row mb-3">
 
             <div class="col">
 
-                @acl_action('users.show', route($route_index), 'Lista de Usuários')
+                @acl_action('users.read', route($route_index), 'Lista de Usuários')
 
             </div>
 
@@ -19,10 +19,10 @@
 
                 @acl_action('users.create', route($route_create), 'Novo Usuário')
 
-                @acl_action('users-permissions.edit', route($route_permissions, $model->id), 'Permissões')
+                @acl_action('users-permissions.update', route($route_permissions, $model->id), 'Permissões')
 
             </div>
-            
+
         </div>
 
         <hr>
@@ -31,7 +31,7 @@
 
             {{ csrf_field() }}
 
-            {{ method_field('PUT') }} 
+            {{ method_field('PUT') }}
             {{-- https://laravel.com/docs/5.5/controllers#resource-controllers --}}
 
             @include('laracl::users.form')
@@ -40,7 +40,7 @@
 
                 <div class="col">
 
-                    @acl_submit_lg('users.edit', 'Atualizar Usuário')
+                    @acl_submit_lg('users.update', 'Atualizar Usuário')
 
                 </div>
 
