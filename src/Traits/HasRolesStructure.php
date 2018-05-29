@@ -9,12 +9,12 @@ use Laracl\Models\AclRole;
 
 trait HasRolesStructure
 {
-    protected $roles = null; 
+    protected $roles = null;
 
     /**
      * Este método gera uma lista de opções para o formulário.
      * A fonte de rotas é obtida diretamente do Gate do Laravel.
-     * 
+     *
      * @return array
      */
     protected function getRolesStructure()
@@ -40,9 +40,9 @@ trait HasRolesStructure
 
             if ( !isset($this->roles[$route]['roles']) ) {
                 $this->roles[$route]['roles'] = [
-                    'show'   => null,
                     'create' => null,
-                    'edit'   => null,
+                    'read'   => null,
+                    'update' => null,
                     'delete' => null,
                 ];
             }
@@ -56,9 +56,9 @@ trait HasRolesStructure
     }
 
     /**
-     * Este método preenche a estrutura de rotas com as 
+     * Este método preenche a estrutura de rotas com as
      * informações armazenadas no banco de dados.
-     * 
+     *
      * @param \Illuminate\Database\Eloquent\Collection $collection
      * @return array
      */
@@ -67,9 +67,9 @@ trait HasRolesStructure
         $permissions = [];
         foreach ($collection as $item) {
             $permissions[$item->role->slug] = [
-                'show'   => $item->show,
                 'create' => $item->create,
-                'edit'   => $item->edit,
+                'read'   => $item->read,
+                'update' => $item->update,
                 'delete' => $item->delete,
             ];
         }
@@ -88,9 +88,9 @@ trait HasRolesStructure
 
     /**
      * Devolce uma função a partir de ssua slug
-     * No processo, sincroniza as informações do arquivo de 
+     * No processo, sincroniza as informações do arquivo de
      * configuração com o banco de dados.
-     * 
+     *
      * @param string $slug
      * @return \Laracl\Models\AclRole
      */
@@ -98,9 +98,9 @@ trait HasRolesStructure
     {
         $info = config("laracl.roles.{$slug}");
 
-        $role = AclRole::findBySlug($slug);
-        
-        // Se a função nunca foi setada, 
+        $role = AclRole::where('slug', $slug)->first();
+
+        // Se a função nunca foi setada,
         // deve ser criada
         if ($role == NULL) {
 
