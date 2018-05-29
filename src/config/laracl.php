@@ -18,8 +18,8 @@ return [
     | Rotas
     |--------------------------------------------------------------------------
     |
-    | Estas são as rotas usadas pelos CRUS's do mecanismo de configuração de 
-    | permissões. Para adequer as rotas ao seu projeto do Laravel, 
+    | Estas são as rotas usadas pelos CRUS's do mecanismo de configuração de
+    | permissões. Para adequer as rotas ao seu projeto do Laravel,
     | basta especificá-las aqui.
     */
 
@@ -27,7 +27,7 @@ return [
         'users'              => 'laracl/users',
         'users-permissions'  => 'laracl/users-permissions',
         'groups'             => 'laracl/groups',
-        'groups-permissions' => 'laracl/groups-permissions', 
+        'groups-permissions' => 'laracl/groups-permissions',
     ],
 
     /*
@@ -36,10 +36,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | Os controladores podem ser personalizados, configurando-os nesta seção.
-    | Uma forma limpa de implementar controladores personalizados é estendendo 
+    | Uma forma limpa de implementar controladores personalizados é estendendo
     | suas funcionalidades originas e mudando apenas o necessário:
     |
-    | Por exemplo: 
+    | Por exemplo:
     | class PersonalController extends Laracl\Http\Controllers\UsersController {
     |    ...
     | }
@@ -48,7 +48,7 @@ return [
     'controllers'     => [
         'users'              => 'Laracl\Http\Controllers\UsersController',
         'users-permissions'  => 'Laracl\Http\Controllers\UsersPermissionsController',
-        
+
         'groups'             => 'Laracl\Http\Controllers\GroupsController',
         'groups-permissions' => 'Laracl\Http\Controllers\GroupsPermissionsController',
     ],
@@ -72,7 +72,7 @@ return [
         'users-permissions' => [
             'edit' => 'laracl::users-permissions.edit',
         ],
-        
+
         'groups' => [
             'index'            => 'laracl::groups.index',
             'create'           => 'laracl::groups.create',
@@ -89,13 +89,13 @@ return [
     | Habilidades
     |--------------------------------------------------------------------------
     |
-    | As habilidades gerenciáveis nos CRUD's do mecanismo de configuração de 
-    | permissões devem ser adicionadas aqui. Cada habilidade deve ser adicionada 
+    | As habilidades gerenciáveis nos CRUD's do mecanismo de configuração de
+    | permissões devem ser adicionadas aqui. Cada habilidade deve ser adicionada
     | com sua slug, seguida de dois parâmetros, sendo:
     |
-    | 'users' => [                                    <-- A slug da função
-    |    'label'       => 'Usuários',                 <-- O nome para exibição da função
-    |    'permissions' => 'create,edit,show,delete',  <-- As habilidades configuráveis
+    | 'users' => [                                      <-- A slug da função
+    |    'label'       => 'Usuários',                   <-- O nome para exibição da função de acesso
+    |    'permissions' => 'create,read,update,delete',  <-- As habilidades configuráveis
     | ],
     */
 
@@ -103,22 +103,22 @@ return [
 
         'users' => [
             'label' => 'Usuários',
-            'permissions' => 'create,edit,show,delete',
+            'permissions' => 'create,read,update,delete',
             ],
 
         'users-permissions' => [
             'label' => 'Permissões de Usuários',
-            'permissions' => 'create,edit,show',
+            'permissions' => 'create,read,update',
             ],
 
         'groups' => [
             'label' => 'Grupos de Acesso',
-            'permissions' => 'create,edit,show,delete',
+            'permissions' => 'create,read,update,delete',
             ],
 
         'groups-permissions' => [
             'label' => 'Permissões de Grupos',
-            'permissions' => 'create,edit,show',
+            'permissions' => 'create,read,update',
             ],
     ]
 ];
