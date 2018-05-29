@@ -224,11 +224,13 @@ class UsersController extends SortableGridController
 
         if (empty($form->request->get('acl_group_id')) == false) {
             // Um grupo foi selecionado
-            AclUserGroup::where('user_id', $id)->delete();
-            AclUserGroup::create([
-                'user_id'  => $id,
-                'group_id' => $form->request->get('acl_group_id')
-            ]);
+            $group = AclUserGroup::find($id);
+            if ($group == null) {
+                $group = new AclUserGroup;
+                $group->user_id = $id;
+            }
+            $group->group_id = $form->request->get('acl_group_id');
+            $group->save();
         }
 
         return back();

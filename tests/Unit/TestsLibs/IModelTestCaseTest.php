@@ -69,7 +69,7 @@ class IModelTestCaseTest extends IModelTestCase
         $this->assertFalse(empty($user->email));
         $this->assertFalse(empty($user->password));
 
-        $relation = Models\AclUserGroup::find([$user->id, $group->id]);
+        $relation = Models\AclUserGroup::find($user->id);
         $this->assertEquals($user->id, $relation->user_id);
         $this->assertEquals($group->id, $relation->group_id);
     }
