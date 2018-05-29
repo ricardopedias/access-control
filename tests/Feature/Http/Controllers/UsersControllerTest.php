@@ -132,7 +132,7 @@ class UsersControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        // Dados enviados por POST
+        // Dados enviados por PUT
         $faker = \Faker\Factory::create();
         $user_email = $faker->unique()->safeEmail;
         $put = [
@@ -141,7 +141,7 @@ class UsersControllerTest extends IControllerTestCase
             // 'password'     => bcrypt('secret'), // Ausência de campo obrigatório
         ];
 
-        // Requisição POST
+        // Requisição PUT
         $original_user = self::createUser();
         $response = $this->put("/laracl/users/" . $original_user->id, $put, [
             'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
