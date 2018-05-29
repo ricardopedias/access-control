@@ -19,8 +19,8 @@ return [
     |--------------------------------------------------------------------------
     |
     | Estas são as rotas usadas pelos CRUS's do mecanismo de configuração de
-    | permissões. Para adequer as rotas ao seu projeto do Laravel,
-    | basta especificá-las aqui.
+    | permissões. Para adequar as rotas ao seu projeto do Laravel,
+    | basta especificar os valores aqui.
     */
 
     'routes'     => [
