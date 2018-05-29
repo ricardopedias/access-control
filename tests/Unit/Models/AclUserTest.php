@@ -19,7 +19,6 @@ class AclUserTest extends IModelTestCase
 
         // Atributos mágicos do modelo
         $this->assertNull($user->groupRelation);
-        $this->assertNull($user->group);
 
         $this->assertInstanceOf(Collection::class, $user->permissions);
         $this->assertCount(0, $user->permissions);

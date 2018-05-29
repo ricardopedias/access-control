@@ -37,8 +37,10 @@
 
                 @else
 
+
+
                     @foreach($groups as $item)
-                        <option value="{{ $item->id }}" {{ old_option('acl_group_id', $item->id, optional($model->group)->id) }}>{{ $item->name }}</option>
+                        <option value="{{ $item->id }}" {{ old_option('acl_group_id', $item->id, optional($model->groupRelation)->group_id) }}>{{ $item->name }}</option>
                     @endforeach
 
                 @endif

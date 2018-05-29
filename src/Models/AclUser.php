@@ -29,18 +29,6 @@ class AclUser extends \App\User
     }
 
     /**
-     * Devolve o modelo do grupo ao qual este usuário pertence.
-     * @return Laracl\Models\AclGroup ou null
-     */
-    public function group()
-    {
-        $relation = $this->hasOne(AclUserGroup::class,'user_id', 'id');
-        return isset($relation->group)
-            ? $relation->group // chama a propriedade dinâmica de AclUserGroup
-            : $relation;       // relation que resultará em null
-    }
-
-    /**
      * Devolve as funções deste usuário
      * @return Illuminate\Database\Eloquent\Collection
      */
