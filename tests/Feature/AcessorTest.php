@@ -1,12 +1,13 @@
 <?php
 
-namespace Laracl\Tests\Unit;
+namespace Laracl\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Console\Kernel;
 use Laracl\Tests\Libs\IModelTestCase;
+use Illuminate\Database\Eloquent\Collection;
 
 class AcessorTest extends IModelTestCase
 {
@@ -70,14 +71,95 @@ class AcessorTest extends IModelTestCase
 
         // A configuração não é normalizada se já estiver ok
         $this->assertFalse(\Laracl::normalizeConfig());
+
     }
 
     public function testSetCurrentAbility()
     {
-        $this->assertTrue(true);
+        \Laracl::setCurrentAbility('posts', 'read', true);
+        $this->assertEquals(\Laracl::getCurrentAbility(), [
+            'role'       => 'posts',
+            'permission' => 'read',
+            'granted'    => true,
+        ]);
     }
 
-    public function testGetUserPermissions()
+    public function testGetUserPermissionsNull()
+    {
+        $user = self::createUser();
+        $role = self::createRole();
+
+        $this->assertEquals('none', \Laracl::getCurrentAbilityOrigin());
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = \Laracl::getUserPermissions($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do usuário
+        $this->assertNull($permissions);
+        $this->assertEquals('none', \Laracl::getCurrentAbilityOrigin());
+    }
+
+    public function testGetUserPermissionsFromUser()
+    {
+        $user = self::createUser();
+        $role = self::createRole();
+        $permissions = self::createUserPermissions($role->id, $user->id, true, false, true, true);
+
+        $this->assertEquals('none', \Laracl::getCurrentAbilityOrigin());
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = \Laracl::getUserPermissions($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do usuário
+        $this->assertNotNull($permissions);
+        $this->assertTrue(is_array($permissions));
+        $this->assertEquals('user', \Laracl::getCurrentAbilityOrigin());
+    }
+
+    public function testGetUserPermissionsFromGroup()
+    {
+        $group = self::createGroup();
+        $user = self::createUser($group->id);
+        $role = self::createRole();
+        $permissions = self::createGroupPermissions($role->id, $group->id, true, false, true, true);
+
+        $this->assertEquals('none', \Laracl::getCurrentAbilityOrigin());
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = \Laracl::getUserPermissions($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do grupo
+        $this->assertNotNull($permissions);
+        $this->assertTrue(is_array($permissions));
+        $this->assertEquals('group', \Laracl::getCurrentAbilityOrigin());
+    }
+
+    public function testGetUserPermissionsFromUsePrecedence()
+    {
+        $group = self::createGroup();
+        $user = self::createUser($group->id);
+        $role = self::createRole();
+
+        // Existem permissãoes de grupo e de usuário para este usuário
+        self::createGroupPermissions($role->id, $group->id, true, false, true, true);
+        self::createUserPermissions($role->id, $user->id, true, false, true, true);
+
+        $this->assertEquals('none', \Laracl::getCurrentAbilityOrigin());
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = \Laracl::getUserPermissions($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do usuário por precedência
+        $this->assertNotNull($permissions);
+        $this->assertTrue(is_array($permissions));
+        $this->assertEquals('user', \Laracl::getCurrentAbilityOrigin());
+    }
+
+    public function testUserCan()
     {
         $this->assertTrue(true);
     }

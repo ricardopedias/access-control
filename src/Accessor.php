@@ -160,7 +160,7 @@ class Accessor
             }
 
             // As permissões setadas para o usuário tem precedência
-            $user_permissions = \Laracl\Models\AclUserPermission::collectByUser($user_id);
+            $user_permissions = \Laracl\Models\AclUserPermission::where('user_id', $user_id)->get();
             if ($user_permissions->count() > 0) {
                 foreach($user_permissions as $item) {
                     if (isset($cache_slugs[$item->role_id])) {
@@ -175,7 +175,13 @@ class Accessor
             // as permissões do grupo são usadas no lugar
             else {
 
-                $group_permissions = \Laracl\Models\AclGroupPermission::collectByUser($user_id);
+                $group_relation = \Laracl\Models\AclUser::find($user_id)->groupRelation;
+                if($group_relation != null) {
+                    $group_id = $group_relation->group_id;
+                    $group_permissions = \Laracl\Models\AclGroupPermission::where('group_id', $group_id)->get();
+                } else {
+                    $group_permissions = collect([]);
+                }
                 foreach($group_permissions as $item) {
                     if (isset($cache_slugs[$item->role_id])) {
                         $slug = $cache_slugs[$item->role_id];
@@ -183,7 +189,9 @@ class Accessor
                     }
                 }
 
-                $this->setCurrentAbilityOrigin('group');
+                if(isset($cache_all[$role_slug]) && isset($cache_all[$role_slug]['permissions'])) {
+                    $this->setCurrentAbilityOrigin('group');
+                }
             }
 
             session([ 'user.abilities' => collect($cache_all) ]);
@@ -191,7 +199,49 @@ class Accessor
 
         $user_abilities = session('user.abilities');
 
-        return $user_abilities[$role_slug] ?? null;
+        if (isset($user_abilities[$role_slug]) && isset($user_abilities[$role_slug]['permissions'])) {
+            return $user_abilities[$role_slug];
+        } else{
+            return null;
+        }
+    }
+
+    /**
+     * Verifica se o usuário tem direcito a executar a função de acesso
+     * @param  int    $user_id
+     * @param  string $role
+     * @param  string $permission
+     * @param  callable $callback
+     * @return bool
+     */
+    public function userCan(int $user_id, string $role, string $permission, $callback) : bool
+    {
+        // Usuário permamentemente liberado
+        $root_user = config('laracl.root_user');
+        if ($user_id == $root_user) {
+            $this->setCurrentAbilityOrigin('config');
+            $this->setCurrentAbility($role, $permission, true);
+            return true;
+        }
+
+        // Passou na verificação adicional?
+        if ($callback != null && is_callable($callback) && $callback() !== true) {
+            $this->setCurrentAbilityOrigin('callback');
+            $this->setCurrentAbility($role, $permission, false);
+            return false;
+        }
+
+        // Existem permissões setadas?
+        $user_abilities = $this->getUserPermissions($user_id, $role);
+        if ($user_abilities === null) {
+            $this->setCurrentAbility($role, $permission, false);
+            return false;
+        }
+
+        // create,read,update ou delete == yes?
+        $result = (isset($user_abilities['permissions']) && $user_abilities['permissions'][$permission] == 'yes');
+        $this->setCurrentAbility($role, $permission, $result);
+        return $result;
     }
 
     /**
@@ -211,44 +261,15 @@ class Accessor
 
             $label = $info['label'];
             $allowed_permissions = explode(',', trim($info['permissions'], ',') );
-
             foreach ($allowed_permissions as $permission) {
 
-                Gate::define("{$role}.{$permission}", function ($user, $callback = null)
-                                                           use ($role, $permission)
+                Gate::define("{$role}.{$permission}",
+                    function ($user, $callback = null)
+                    use ($role, $permission)
                 {
-                    // Usuário permamentemente liberado
-                    $root_user = config('laracl.root_user');
-                    if ( $user->id == $root_user) {
-                        $this->setCurrentAbilityOrigin('config');
-                        $this->setCurrentAbility($role, $permission, true);
-                        return true;
-                    }
-
-                    // Passou na verificação adicional?
-                    if ($callback != null && is_callable($callback) && $callback() !== true) {
-                        $this->setCurrentAbilityOrigin('callback');
-                        $this->setCurrentAbility($role, $permission, false);
-                        return false;
-                    }
-
-                    // Existem permissões setadas?
-                    $user_abilities = $this->getUserPermissions($user->id, $role);
-                    if ($user_abilities === null) {
-                        $this->setCurrentAbility($role, $permission, false);
-                        return false;
-                    }
-
-                    // create,edit,show ou delete == yes?
-                    $result = (isset($user_abilities['permissions']) && $user_abilities['permissions'][$permission] == 'yes');
-                    $this->setCurrentAbility($role, $permission, $result);
-                    return $result;
+                    return \Laracl::userCan($user->id, $role, $permission, $callback);
                 });
             }
         }
     }
-
-
-
-
 }
