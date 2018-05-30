@@ -2,12 +2,12 @@
 
 namespace Laracl\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Laracl\Models\AclUser;
 use Laracl\Models\AclRole;
 use Laracl\Models\AclUserPermission;
 use Laracl\Models\AclGroupPermission;
 use Laracl\Traits\HasRolesStructure;
-use Illuminate\Http\Request;
 
 class UsersPermissionsController extends Controller
 {
@@ -27,8 +27,14 @@ class UsersPermissionsController extends Controller
         // Se o usuário não possuir permissões específicas
         // popula o formulário com as permissões do grupo
         // para facilitar a vida ;)
-        if ($has_permissions==false) {
-            $db_permissions = AclGroupPermission::where('user_id', $id)->get();
+        if ($has_permissions == false) {
+            $group_relation = AclUser::find($id)->groupRelation;
+            if($group_relation != null) {
+                $group_id = $group_relation->group_id;
+                $db_permissions = AclGroupPermission::where('group_id', $group_id)->get();
+            } else {
+                $db_permissions = collect([]);
+            }
         }
 
         // Aplica as permissões do banco na estrutura
