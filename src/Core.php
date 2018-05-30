@@ -4,31 +4,42 @@ namespace Laracl;
 
 use Gate;
 
-/**
- * ...
- */
-class Accessor
+class Core
 {
-    /**
-     * Dados das permissões atualmente invocadas
-     *
-     * @var array
-     */
-    protected $current_ability = null;
-
-    /**
-     * Origem das permissões atualmente invocadas
-     */
-    protected $current_ability_origin = 'none';
+    /** @var array */
+    protected static $debug = [];
 
     /**
      * Carrega e registra as diretivas para o blade
      *
      * @return void
      */
-    public function loadBladeDirectives()
+    public static function loadBladeDirectives()
     {
         include('directives.php');
+    }
+
+    public static function getDebug($param = null)
+    {
+        if ($param == null) {
+            $value = self::$debug;
+            self::$debug = [];
+        } else {
+            $value = self::$debug[$param] ?? null;
+            self::$debug[$param] = null;
+        }
+
+        return $value;
+    }
+
+    public static function setDebug($param, $value)
+    {
+        self::$debug[$param] = $value;
+    }
+
+    public static function resetDebug()
+    {
+        self::$debug = [];
     }
 
     /**
@@ -39,23 +50,13 @@ class Accessor
      * @param string $permission
      * @param boolean $granted
      */
-    public function setCurrentAbility(string $role, string $permission, bool $granted)
+    public static function traceCurrentAbility(string $role, string $permission, bool $granted)
     {
-        $this->current_ability = [
+        self::$debug['current_ability'] = [
             'role'       => $role,
             'permission' => $permission,
             'granted'    => $granted,
             ];
-    }
-
-    /**
-     * Devolve os dados da última verificação por privilégios
-     *
-     * @return array ou null
-     */
-    public function getCurrentAbility()
-    {
-        return $this->current_ability;
     }
 
     /**
@@ -64,20 +65,27 @@ class Accessor
      *
      * @param string $origin Possibilidades: config, callback, user, group
      */
-    public function setCurrentAbilityOrigin(string $origin)
+    public static function traceCurrentAbilityOrigin(string $origin)
     {
-        $this->current_ability_origin = $origin;
+        self::$debug['current_ability_origin'] = $origin;
     }
 
     /**
-     * Devolve a origem da última verificação por privilégios
-     * As possibilidades são: config, callback, user, group
+     * Salva os dados dos registros de funções de acesso
      *
-     * @return string
+     * @param string $role
+     * @param string $permission
      */
-    public function getCurrentAbilityOrigin() : string
+    public static function traceRegisteredPolices(string $role, string $permission)
     {
-        return $this->current_ability_origin;
+        if(isset(self::$debug['registered_polices']) == false) {
+            self::$debug['registered_polices'] = [];
+        }
+
+        self::$debug['registered_polices'][] = [
+            'role'       => $role,
+            'permission' => $permission
+        ];
     }
 
     /**
@@ -105,7 +113,7 @@ class Accessor
      *     laracl.routes.users.delete => usuarios.delete
      * ]
      */
-    public function normalizeConfig()
+    public static function normalizeConfig()
     {
         $config = config('laracl');
 
@@ -144,7 +152,7 @@ class Accessor
      * @param  string $role_slug
      * @return Collection
      */
-    public function getUserPermissions($user_id, string $role_slug)
+    public static function getUserPermissions($user_id, string $role_slug)
     {
         if (session('user.abilities') == null) {
 
@@ -171,7 +179,7 @@ class Accessor
 
                 if(isset($cache_all[$role_slug]) && isset($cache_all[$role_slug]['permissions'])) {
                     // A função de acesso foi encontrada nas permissões de usuário
-                    $this->setCurrentAbilityOrigin('user');
+                    self::traceCurrentAbilityOrigin('user');
                 }
             }
             // Quando não existem permissões setadas para o usuário,
@@ -194,7 +202,7 @@ class Accessor
 
                 if(isset($cache_all[$role_slug]) && isset($cache_all[$role_slug]['permissions'])) {
                     // A função de acesso foi encontrada nas permissões de grupo
-                    $this->setCurrentAbilityOrigin('group');
+                    self::traceCurrentAbilityOrigin('group');
                 }
             }
 
@@ -207,7 +215,6 @@ class Accessor
             // A função de acesso foi encontrada
             return $user_abilities[$role_slug];
         } else {
-            $this->setCurrentAbilityOrigin('none');
             return null;
         }
     }
@@ -220,20 +227,20 @@ class Accessor
      * @param  callable $callback
      * @return bool
      */
-    public function userCan(int $user_id, string $role, string $permission, $callback = null) : bool
+    public static function userCan(int $user_id, string $role, string $permission, $callback = null) : bool
     {
         // Usuário permamentemente liberado
         $root_user = config('laracl.root_user');
         if ($user_id == $root_user) {
-            $this->setCurrentAbilityOrigin('config');
-            $this->setCurrentAbility($role, $permission, true);
+            self::traceCurrentAbilityOrigin('config');
+            self::traceCurrentAbility($role, $permission, true);
             return true;
         }
 
         // Existem permissões setadas?
-        $user_abilities = $this->getUserPermissions($user_id, $role);
+        $user_abilities = self::getUserPermissions($user_id, $role);
         if ($user_abilities === null) {
-            $this->setCurrentAbility($role, $permission, false);
+            self::traceCurrentAbility($role, $permission, false);
             return false;
         }
 
@@ -242,12 +249,12 @@ class Accessor
 
         // Existe uma verificação adicional
         if ($result == true && $callback != null && is_callable($callback) && $callback() !== true) {
-            $this->setCurrentAbilityOrigin('callback');
-            $this->setCurrentAbility($role, $permission, false);
+            self::traceCurrentAbilityOrigin('callback');
+            self::traceCurrentAbility($role, $permission, false);
             return false;
         }
 
-        $this->setCurrentAbility($role, $permission, $result);
+        self::traceCurrentAbility($role, $permission, $result);
 
         return $result;
     }
@@ -257,25 +264,40 @@ class Accessor
      *
      * @return void
      */
-    public function registerPolicies()
+    public static function registerPolicies()
     {
         $roles_list = config('laracl.roles');
 
-        if ($roles_list === null) {
-            throw new \Exception("You need to add the 'roles' in the Laracl configuration", 1);
+        if (is_array($roles_list) == false) {
+            throw new \OutOfRangeException("You need to add the 'roles' in the Laracl configuration");
         }
 
         foreach ($roles_list as $role => $info) {
 
             $label = $info['label'];
+
+            if (isset($info['permissions']) == false || is_string($info['permissions']) == false) {
+                throw new \InvalidArgumentException(
+                    "You need to add comma separated 'permissions' in the Laracl '{$role}' configuration");
+            }
+
             $allowed_permissions = explode(',', trim($info['permissions'], ',') );
+
             foreach ($allowed_permissions as $permission) {
+
+                $valid_permissions = ['create', 'read', 'update', 'delete'];
+                if (in_array($permission, $valid_permissions) == false) {
+                    throw new \UnexpectedValueException(
+                        "Invalid permission '$permission'. The accepted values are: " . implode(',', $valid_permissions));
+                }
+
+                self::traceRegisteredPolices($role, $permission);
 
                 Gate::define("{$role}.{$permission}",
                     function ($user, $callback = null)
                     use ($role, $permission)
                 {
-                    return \Laracl::userCan($user->id, $role, $permission, $callback);
+                    return \Laracl\Core::userCan($user->id, $role, $permission, $callback);
                 });
             }
         }

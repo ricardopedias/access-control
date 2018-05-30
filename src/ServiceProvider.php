@@ -36,9 +36,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([__DIR__.'/resources/views/messages' => resource_path('views/laracl/cruds/messages')], 'laracl-cruds');
         $this->publishes([__DIR__.'/resources/views/document.blade.php' => resource_path('views/laracl/cruds/document.blade.php')], 'laracl-cruds');
 
-        \Laracl::registerPolicies();
+        \Laracl\Core::registerPolicies();
 
-        \Laracl::loadBladeDirectives();
+        \Laracl\Core::loadBladeDirectives();
     }
 
     /**
@@ -52,6 +52,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $config_file = env('LARACL_CONFIG_FILE', __DIR__.'/config/laracl.php');
         $this->mergeConfigFrom($config_file, 'laracl');
 
-        \Laracl::normalizeConfig();
+        \Laracl\Core::normalizeConfig();
     }
 }
