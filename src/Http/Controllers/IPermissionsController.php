@@ -62,6 +62,10 @@ class IPermissionsController extends Controller
      */
     protected function populateStructure($collection)
     {
+        if (is_array($collection)){
+            $collection = collect($collection);
+        }
+        
         $permissions = [];
         foreach ($collection as $item) {
             $permissions[$item->role->slug] = [
