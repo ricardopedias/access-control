@@ -311,6 +311,7 @@ class CoreTest extends IModelTestCase
 
     public function testRegisterPoliciesRolesException()
     {
+        \Laracl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\OutOfRangeException::class);
 
         // é obrigatória a existencia de Roles na configuração
@@ -320,6 +321,7 @@ class CoreTest extends IModelTestCase
 
     public function testRegisterPoliciesNoPermissionsException()
     {
+        \Laracl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\InvalidArgumentException::class);
 
         // É obrigatória a existencia do indice 'permissions' na configuração de Roles
@@ -330,6 +332,7 @@ class CoreTest extends IModelTestCase
 
     public function testRegisterPoliciesInvalidPermissionsParamExceptionOne()
     {
+        \Laracl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\InvalidArgumentException::class);
 
         // O indice 'permissions' na configuração de Roles deve ser uma string
@@ -343,6 +346,7 @@ class CoreTest extends IModelTestCase
 
     public function testRegisterPoliciesInvalidPermissionsParamExceptionTwo()
     {
+        \Laracl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\InvalidArgumentException::class);
 
         // O indice 'permissions' na configuração de Roles deve ser uma string
@@ -356,6 +360,7 @@ class CoreTest extends IModelTestCase
 
     public function testRegisterPoliciesInvalidPermissionsValueExceptionTwo()
     {
+        \Laracl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\UnexpectedValueException::class);
 
         // Apenas create,read,update e delete são permissões válidas
@@ -369,7 +374,9 @@ class CoreTest extends IModelTestCase
 
     public function testRegisterPolicies()
     {
+        \Laracl\Core::resetCore(); // limpa todos os lazy loads
         $system_roles = config('laracl.roles');
+
         \Laracl\Core::registerPolicies();
 
         $registered = \Laracl\Core::getDebug('registered_polices');
