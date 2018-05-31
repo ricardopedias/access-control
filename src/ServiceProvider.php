@@ -2,10 +2,6 @@
 
 namespace Laracl;
 
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
-use DB;
-
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
