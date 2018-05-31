@@ -2,18 +2,11 @@
 
 namespace Laracl\Http\Controllers;
 
-use Laracl\Models\AclGroup;
-use Laracl\Models\AclRole;
-use Laracl\Models\AclGroupPermission;
-use Laracl\Traits\HasRolesStructure;
+use Laracl\Models;
 use Illuminate\Http\Request;
-use Gate;
-use DB;
 
-class GroupsPermissionsController extends Controller
+class GroupsPermissionsController extends IPermissionsController
 {
-    use HasRolesStructure;
-
     /**
      * Exibe o formulário de configuração das permissões de acesso.
      *
@@ -24,10 +17,10 @@ class GroupsPermissionsController extends Controller
     {
         // Aplica as permissões do banco na estrutura
         // de permissões do formulário
-        $db_permissions = AclGroupPermission::where('group_id', $id)->get();
+        $db_permissions = Models\AclGroupPermission::where('group_id', $id)->get();
         $this->populateStructure($db_permissions);
 
-        $group = AclGroup::find($id);
+        $group = Models\AclGroup::find($id);
         $view = config('laracl.views.groups-permissions.edit');
         return view($view)->with([
             'title'        => "Permissões para \"{$group->name}\"",
@@ -54,7 +47,7 @@ class GroupsPermissionsController extends Controller
             $role = $this->getSyncedRole($slug);
 
             // Aplica as permissões para o grupo
-            $model = AclGroupPermission::firstOrNew([
+            $model = Models\AclGroupPermission::firstOrNew([
                 'role_id' => $role->id,
                 'group_id' => $id,
                 ]);

@@ -1,13 +1,11 @@
 <?php
 
-namespace Laracl\Traits;
+namespace Laracl\Http\Controllers;
 
-use Gate;
-use Exception;
-use Illuminate\Database\Eloquent\Builder;
-use Laracl\Models\AclRole;
+use Illuminate\Http\Request;
+use Laracl\Models;
 
-trait HasRolesStructure
+class IPermissionsController extends Controller
 {
     protected $roles = null;
 
@@ -26,7 +24,7 @@ trait HasRolesStructure
         $abilities = config('laracl.roles');
 
         // Habilidades resistradas
-        foreach (Gate::abilities() as $ability => $closure) {
+        foreach (\Gate::abilities() as $ability => $closure) {
 
             $nodes = explode('.', $ability);
             $route = $nodes[0];
@@ -52,7 +50,7 @@ trait HasRolesStructure
             $this->roles[$route]['roles'][$role] = '';
         }
 
-        return $this->roles;
+        return $this->roles ?? [];
     }
 
     /**
@@ -98,13 +96,13 @@ trait HasRolesStructure
     {
         $info = config("laracl.roles.{$slug}");
 
-        $role = AclRole::where('slug', $slug)->first();
+        $role = Models\AclRole::where('slug', $slug)->first();
 
         // Se a função nunca foi setada,
         // deve ser criada
         if ($role == NULL) {
 
-            $role = AclRole::create([
+            $role = Models\AclRole::create([
                 'name'        => $info['label'],
                 'slug'        => $slug,
                 'description' => $info['description'] ?? ''

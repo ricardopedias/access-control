@@ -3,16 +3,10 @@
 namespace Laracl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laracl\Models\AclUser;
-use Laracl\Models\AclRole;
-use Laracl\Models\AclUserPermission;
-use Laracl\Models\AclGroupPermission;
-use Laracl\Traits\HasRolesStructure;
+use Laracl\Models;
 
-class UsersPermissionsController extends Controller
+class UsersPermissionsController extends IPermissionsController
 {
-    use HasRolesStructure;
-
     /**
      * Exibe o formulário de configuração das permissões de acesso.
      *
@@ -21,17 +15,17 @@ class UsersPermissionsController extends Controller
      */
     public function edit($id)
     {
-        $db_permissions = AclUserPermission::where('user_id', $id)->get();
+        $db_permissions = Models\AclUserPermission::where('user_id', $id)->get();
         $has_permissions = ($db_permissions->count()>0);
 
         // Se o usuário não possuir permissões específicas
         // popula o formulário com as permissões do grupo
         // para facilitar a vida ;)
         if ($has_permissions == false) {
-            $group_relation = AclUser::find($id)->groupRelation;
+            $group_relation = Models\AclUser::find($id)->groupRelation;
             if($group_relation != null) {
                 $group_id = $group_relation->group_id;
-                $db_permissions = AclGroupPermission::where('group_id', $group_id)->get();
+                $db_permissions = Models\AclGroupPermission::where('group_id', $group_id)->get();
             } else {
                 $db_permissions = collect([]);
             }
@@ -41,7 +35,7 @@ class UsersPermissionsController extends Controller
         // de permissões do formulário
         $this->populateStructure($db_permissions);
 
-        $user = AclUser::find($id);
+        $user = Models\AclUser::find($id);
         $view = config('laracl.views.users-permissions.edit');
         return view($view)->with([
             'title'           => "Permissões Específicas para \"{$user->name}\"",
@@ -69,7 +63,7 @@ class UsersPermissionsController extends Controller
             $role = $this->getSyncedRole($slug);
 
             // Aplica as permissões para o usuário
-            $model = AclUserPermission::firstOrNew([
+            $model = Models\AclUserPermission::firstOrNew([
                 'user_id' => $id,
                 'role_id' => $role->id,
                 ]);
