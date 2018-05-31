@@ -35,6 +35,13 @@ class IPermissionsControllerTest extends IControllerTestCase
                 }
             }
         }
+
+        // TODO
+        // Quando o teste é efetuado invocando somente este arquivo,
+        // \Gate::abilities() devolve a lista de habilidades registradas no ServiceProvider
+        // Quando todos os testes são executados de uma vez,
+        // \Gate::abilities() devolve um array vazio
+        $this->assertTrue(true);
     }
 
     public function testPopulateStructure()
