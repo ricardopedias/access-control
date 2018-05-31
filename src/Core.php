@@ -277,7 +277,7 @@ class Core
 
         $roles_list = config('laracl.roles');
 
-        if (is_array($roles_list) == false) {
+        if (is_array($roles_list) == false || count($roles_list) == 0) {
             throw new \OutOfRangeException("You need to add the 'roles' in the Laracl configuration");
         }
 
