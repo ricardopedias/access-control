@@ -9,6 +9,9 @@ class Core
     /** @var array */
     protected static $debug = [];
 
+    /** @var boolean */
+    protected static $registered = false;
+
     /**
      * Carrega e registra as diretivas para o blade
      *
@@ -37,9 +40,10 @@ class Core
         self::$debug[$param] = $value;
     }
 
-    public static function resetDebug()
+    public static function resetCore()
     {
         self::$debug = [];
+        self::$registered = false;
     }
 
     /**
@@ -262,10 +266,15 @@ class Core
     /**
      * Registra os verificadores de acesso com base na configuração
      *
-     * @return void
+     * @return bool
      */
     public static function registerPolicies()
     {
+        if (self::$registered == true) {
+            // As funções de acesso são registradas apenas uma vez
+            return false;
+        }
+
         $roles_list = config('laracl.roles');
 
         if (is_array($roles_list) == false) {
@@ -282,7 +291,6 @@ class Core
             }
 
             $allowed_permissions = explode(',', trim($info['permissions'], ',') );
-
             foreach ($allowed_permissions as $permission) {
 
                 $valid_permissions = ['create', 'read', 'update', 'delete'];
@@ -301,5 +309,8 @@ class Core
                 });
             }
         }
+
+        self::$registered = true;
+        return true;
     }
 }
