@@ -17,6 +17,7 @@ class UsersPermissionsController extends IPermissionsController
     {
         $user = Models\AclUser::find($id);
         $group_label = null;
+        $populated   = false;
 
         $user_permissions = Models\AclUserPermission::where('user_id', $id)->get();
         $has_user_permissions = ($user_permissions->count()>0);
@@ -24,10 +25,9 @@ class UsersPermissionsController extends IPermissionsController
             // Usuário possui permissões exclusivas
             // preeche o formulário com elas
             $this->populateStructure($user_permissions);
+            $populated = true;
 
         } else {
-
-            dd($user->groupRelation);
 
             // O usuário não possui permissões exclusivas
             // tenta preecher o formulário com as permissões do grupo
@@ -35,14 +35,19 @@ class UsersPermissionsController extends IPermissionsController
 
                 $group_id = $user->groupRelation->group_id;
                 $group_permissions = Models\AclGroupPermission::where('group_id', $group_id)->get();
-                dd($group_permissions->first());
-                $group_label = $group_permissions->first()->group->label;
 
-                $this->populateStructure($group_permissions);
-
-            } else {
-                $this->populateStructure([]);
+                if($group_permissions->first() != null) {
+                    $group_label = $group_permissions->first()->group->label;
+                    $this->populateStructure($group_permissions);
+                    $populated = true;
+                } else {
+                    $group_label = Models\AclGroup::find($group_id)->label;
+                }
             }
+        }
+
+        if($populated == false) {
+            $this->populateStructure([]);
         }
 
         $view = config('laracl.views.users-permissions.edit');

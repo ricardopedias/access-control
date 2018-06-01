@@ -5,6 +5,7 @@ namespace Laracl\Http\Controllers;
 use Illuminate\Http\Request;
 use SortableGrid\Http\Controllers\SortableGridController;
 use Laracl\Models;
+use Laracl\Repositories\AclUsersRepository;
 
 class UsersController extends SortableGridController
 {
@@ -134,17 +135,7 @@ class UsersController extends SortableGridController
         $pass = bcrypt($form->password);
         $form->request->set('password', $pass);
 
-        $model = new Models\AclUser;
-        $model->fill($form->all());
-        $model->save();
-
-        // Se acl_group_id = 0 ou null
-        if (empty($form->request->get('acl_group_id')) == false) {
-            $relation = new Models\AclUserGroup;
-            $relation->user_id = $model->id;
-            $relation->group_id = $form->request->get('acl_group_id');
-            $relation->save();
-        }
+        AclUsersRepository::create($form->all());
 
         $route = config('laracl.routes.users.edit');
         return redirect()->route($route, $model);

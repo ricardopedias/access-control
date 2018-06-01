@@ -30,7 +30,6 @@ class UsersPermissionsControllerTest extends IControllerTestCase
         $this->actingAs($user);
 
         // Dados enviados por PUT
-        /*
         $faker = \Faker\Factory::create();
         $user_email = $faker->unique()->safeEmail;
         $put = [
@@ -57,7 +56,7 @@ class UsersPermissionsControllerTest extends IControllerTestCase
         // @see https://laravel.com/docs/5.6/eloquent-serialization#hiding-attributes-from-json
         $user = collect(\DB::select('select password from users where id = ' . $original_user->id))->first();
         $this->assertEquals($original_user->password, $user->password);
-        */
+        
        $this->assertTrue(true);
     }
 
