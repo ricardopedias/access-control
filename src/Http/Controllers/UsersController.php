@@ -2,12 +2,9 @@
 
 namespace Laracl\Http\Controllers;
 
-use Laracl\Models\AclUser;
-use Laracl\Models\AclGroup;
-use Laracl\Models\AclUserGroup;
-use Laracl\Models\AclUserPermission;
-use SortableGrid\Http\Controllers\SortableGridController;
 use Illuminate\Http\Request;
+use SortableGrid\Http\Controllers\SortableGridController;
+use Laracl\Models;
 
 class UsersController extends SortableGridController
 {
@@ -20,7 +17,7 @@ class UsersController extends SortableGridController
     protected $fields = [
         'users.id'         => 'ID',
         'users.name'       => 'Nome',
-        'acl_groups.name'  => 'Grupo de Acesso',
+        'acl_groups.name'  => 'Permissões',
         'users.email'      => 'E-mail',
         'users.created_at' => 'Criação',
         'Ações'
@@ -51,7 +48,7 @@ class UsersController extends SortableGridController
 
         // \App\User
         // Adiciona o prefixo 'users' nos campos do modelo
-        $fillable_user = (new AclUser)->getFillableColumns();
+        $fillable_user = (new Models\AclUser)->getFillableColumns();
         foreach($fillable_user as $field) {
             $columns["users.{$field}"] = "users.{$field}";
         }
@@ -69,7 +66,7 @@ class UsersController extends SortableGridController
 
         // \Laracl\Models\AclUser
         // O campo com o grupo de acesso
-        $fillable_group = (new AclGroup)->getFillableColumns();
+        $fillable_group = (new Models\AclGroup)->getFillableColumns();
         foreach($fillable_group as $field) {
             $columns[] = "acl_groups.{$field} as group_{$field}";
         }
@@ -77,7 +74,7 @@ class UsersController extends SortableGridController
         $columns[] = "acl_groups.updated_at as group_updated_at";
 
         // Faz o select devolvendo os campos de \App\User + \Laracl\Models\AclGroup
-        return AclUser::select($columns)
+        return Models\AclUser::select($columns)
             ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
             ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
             //->groupBy('users.id');
@@ -110,9 +107,8 @@ class UsersController extends SortableGridController
         $view = config('laracl.views.users.create');
 
         return view($view)->with([
-            'model'           => new AclUser,
-            'groups'          => AclGroup::all(),
-            'has_permissions' => false,
+            'model'           => new Models\AclUser,
+            'groups'          => Models\AclGroup::all(),
             'title'           => 'Novo Usuário',
             'require_pass'    => 'required',
             'route_index'     => config('laracl.routes.users.index'),
@@ -138,13 +134,13 @@ class UsersController extends SortableGridController
         $pass = bcrypt($form->password);
         $form->request->set('password', $pass);
 
-        $model = new AclUser;
+        $model = new Models\AclUser;
         $model->fill($form->all());
         $model->save();
 
         // Se acl_group_id = 0 ou null
         if (empty($form->request->get('acl_group_id')) == false) {
-            $relation = new AclUserGroup;
+            $relation = new Models\AclUserGroup;
             $relation->user_id = $model->id;
             $relation->group_id = $form->request->get('acl_group_id');
             $relation->save();
@@ -162,14 +158,13 @@ class UsersController extends SortableGridController
      */
     public function edit($id)
     {
-        $db_permissions = AclUserPermission::collectByUser($id);
+        $db_permissions = Models\AclUserPermission::collectByUser($id);
 
         $view = config('laracl.views.users.edit');
 
         return view($view)->with([
-            'model'             => AclUser::find($id),
-            'groups'            => AclGroup::all(),
-            'has_permissions'   => ($db_permissions->count()>0),
+            'model'             => Models\AclUser::find($id),
+            'groups'            => Models\AclGroup::all(),
             'require_pass'      => '',
             'title'             => 'Editar Usuário',
             'route_index'       => config('laracl.routes.users.index'),
@@ -188,7 +183,7 @@ class UsersController extends SortableGridController
      */
     public function update(Request $form, $id)
     {
-        $model = AclUser::find($id);
+        $model = Models\AclUser::find($id);
 
         // Se o password for preenchido, transforma em hash
         $pass = $form->request->get('password') == null
@@ -202,20 +197,16 @@ class UsersController extends SortableGridController
             'password'     => 'required',
         ]);
 
-        if (empty($form->request->get('acl_group_id')) == true
-         && AclUserGroup::where('user_id', $id)->get()->count() > 0
-        ) {
+        if (empty($form->request->get('acl_group_id')) == true) {
             // Se grupo for setado como 0,
             // remove relacionamentos existentes com grupos
-            AclUserGroup::where('user_id', $id)->delete();
+            Models\AclUserGroup::where('user_id', $id)->delete();
         }
 
-        if (empty($form->request->get('acl_group_id')) == true
-         && AclUserPermission::where('user_id', $id)->get()->count() > 0
-        ) {
+        if (empty($form->request->get('acl_group_id')) == false) {
             // Se um grupo for selecionado e o usuário possuir permissões exclusivas,
             // elas serão removidas, pois as permissões do grupo serão usadas no lugar
-            AclUserPermission::where('user_id', $id)->get()->first()->delete();
+            Models\AclUserPermission::where('user_id', $id)->delete();
         }
 
         // Atualiza os dados do usuário
@@ -224,9 +215,9 @@ class UsersController extends SortableGridController
 
         if (empty($form->request->get('acl_group_id')) == false) {
             // Um grupo foi selecionado
-            $group = AclUserGroup::find($id);
+            $group = Models\AclUserGroup::where('user_id', $id)->first();
             if ($group == null) {
-                $group = new AclUserGroup;
+                $group = new Models\AclUserGroup;
                 $group->user_id = $id;
             }
             $group->group_id = $form->request->get('acl_group_id');

@@ -24,29 +24,15 @@
 
         <div class="col form-group">
 
-            <label>Grupo de Acesso</label>
-            <select name="acl_group_id"
-                   class="form-control" required>
-
-                @if($has_permissions)
-
-                    <option value="0" selected>Personalizado</option>
-                    @foreach($groups as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                    @endforeach
-
-                @else
-
-
-
-                    @foreach($groups as $item)
-                        <option value="{{ $item->id }}" {{ old_option('acl_group_id', $item->id, optional($model->groupRelation)->group_id) }}>{{ $item->name }}</option>
-                    @endforeach
-
-                @endif
-
+            <label>Permissões</label>
+            <select name="acl_group_id" class="form-control" required>
+                <option value="0" selected>Exclusivas deste Usuário</option>
+                @foreach($groups as $item)
+                    <option value="{{ $item->id }}" {{ old_option('acl_group_id', $item->id, optional($model->groupRelation)->group_id) }}>Grupo {{ $item->name }}</option>
+                @endforeach
             </select>
-            <small class="form-text text-muted">O grupo deste usuário</small>
+            <small class="form-text text-muted">Origem das permissões</small>
+
         </div>
 
         <div class="col form-group">

@@ -36,7 +36,13 @@
 
                     <td>{{ $item->name }}</td>
 
-                    <td>{{ $item->group_name or "Sem Grupo" }}</td>
+                    <td>
+                        @if ($item->group_name)
+                            Grupo {{ $item->group_name }}
+                        @else
+                            Exclusivas
+                        @endif
+                    </td>
 
                     <td>{!! str_replace(['@', '.'], ['<wbr>@', '<wbr>.'], $item->email) !!}</td>
 

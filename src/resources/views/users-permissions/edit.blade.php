@@ -25,7 +25,7 @@
 
         </div>
 
-        @if($has_permissions == false)
+        @if($group_label != null)
 
             <div class="row">
 
@@ -33,9 +33,10 @@
 
                     <div class="alert alert-info">
 
-                        <h4 class="alert-heading">Atenção, este usuário pertence ao grupo <strong>"{{ optional($user->group)->name }}"</strong>!</h4>
+                        <h4 class="alert-heading">Atenção, este usuário pertence ao grupo <strong>"{{ $group_label }}"</strong>!</h4>
 
-                        <p>Atualmente o usuário possui as permissões do grupo. Clicando em <i>"Aplicar Permissões"</i>, este usuário possuirá <strong>Privilégios Personalizados</strong>. Você poderá remover estes privilégios personalizados a qualquer momento na tela de edição do usuário, bastando setar um grupo para ele.
+                        <p>
+                            Atualmente {{ $user->name }} possui as permissões do grupo. Clicando em <i>"Aplicar Permissões"</i>, este usuário possuirá <strong>Privilégios Exclusivos</strong>. Você poderá remover estes privilégios personalizados a qualquer momento na tela de edição do usuário, bastando setar um grupo para ele.
                         </p>
 
                     </div>

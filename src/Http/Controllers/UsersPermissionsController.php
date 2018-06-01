@@ -15,37 +15,46 @@ class UsersPermissionsController extends IPermissionsController
      */
     public function edit($id)
     {
-        $db_permissions = Models\AclUserPermission::where('user_id', $id)->get();
-        $has_permissions = ($db_permissions->count()>0);
+        $user = Models\AclUser::find($id);
+        $group_label = null;
 
-        // Se o usuário não possuir permissões específicas
-        // popula o formulário com as permissões do grupo
-        // para facilitar a vida ;)
-        if ($has_permissions == false) {
-            $group_relation = Models\AclUser::find($id)->groupRelation;
-            if($group_relation != null) {
-                $group_id = $group_relation->group_id;
-                $db_permissions = Models\AclGroupPermission::where('group_id', $group_id)->get();
+        $user_permissions = Models\AclUserPermission::where('user_id', $id)->get();
+        $has_user_permissions = ($user_permissions->count()>0);
+        if($has_user_permissions == true) {
+            // Usuário possui permissões exclusivas
+            // preeche o formulário com elas
+            $this->populateStructure($user_permissions);
+
+        } else {
+
+            dd($user->groupRelation);
+
+            // O usuário não possui permissões exclusivas
+            // tenta preecher o formulário com as permissões do grupo
+            if ($user->groupRelation != null) {
+
+                $group_id = $user->groupRelation->group_id;
+                $group_permissions = Models\AclGroupPermission::where('group_id', $group_id)->get();
+                dd($group_permissions->first());
+                $group_label = $group_permissions->first()->group->label;
+
+                $this->populateStructure($group_permissions);
+
             } else {
-                $db_permissions = collect([]);
+                $this->populateStructure([]);
             }
         }
 
-        // Aplica as permissões do banco na estrutura
-        // de permissões do formulário
-        $this->populateStructure($db_permissions);
-
-        $user = Models\AclUser::find($id);
         $view = config('laracl.views.users-permissions.edit');
         return view($view)->with([
-            'title'           => "Permissões Específicas para \"{$user->name}\"",
-            'user'            => $user,
-            'has_permissions' => $has_permissions,
-            'roles'           => $this->getRolesStructure(),
-            'route_index'     => config('laracl.routes.users.index'),
-            'route_user'      => config('laracl.routes.users.edit'),
-            'route_update'    => config('laracl.routes.users-permissions.update'),
-            'route_groups'    => config('laracl.routes.groups.index'),
+            'title'                => "Permissões Específicas para \"{$user->name}\"",
+            'user'                 => $user,
+            'group_label'          => $group_label,
+            'roles'                => $this->getRolesStructure(),
+            'route_index'          => config('laracl.routes.users.index'),
+            'route_user'           => config('laracl.routes.users.edit'),
+            'route_update'         => config('laracl.routes.users-permissions.update'),
+            'route_groups'         => config('laracl.routes.groups.index'),
         ]);
     }
 
