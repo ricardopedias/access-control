@@ -35,7 +35,7 @@ abstract class IRepository
      *
      * @return EloquentCollection|Paginator
      */
-    protected function doQuery($query = null, $take = 15, $paginate = true)
+    protected function doQuery($query = null, $take = 15, bool $paginate = true)
     {
         if (is_null($query)) {
             $query = $this->newQuery();
@@ -53,6 +53,17 @@ abstract class IRepository
     }
 
     /**
+    * Devolve um novo modelo
+    *
+    * @return Model
+    */
+    public function newModel()
+    {
+        return $this->newQuery()->newModelInstance();
+    }
+
+
+    /**
      * Devolve todos os registros.
      * Se $take for false então devolve todos os registros
      * Se $paginate for true retorna uma instânca do Paginator
@@ -62,7 +73,7 @@ abstract class IRepository
      *
      * @return EloquentCollection|Paginator
      */
-    public function getAll($take = 15, $paginate = true)
+    public function getAll($take = 15, bool $paginate = true)
     {
         return $this->doQuery(null, $take, $paginate);
     }
@@ -87,12 +98,31 @@ abstract class IRepository
     *
     * @return Model
     */
-    public function findByID($id, $fail = true)
+    public function findByID(int $id, bool $fail = true)
     {
         if ($fail == true) {
             return $this->newQuery()->findOrFail($id);
         }
 
         return $this->newQuery()->find($id);
+    }
+
+    /**
+    * Devolve um registro com base em seu ID
+    * Se $fail for true, falhas vão disparar ModelNotFoundException.
+    *
+    * @param  string  $field
+    * @param  mixed  $value
+    * @param  bool $fail
+    *
+    * @return Model
+    */
+    public function findBy(string $field, $value, bool $fail = true)
+    {
+        if ($fail == true) {
+            return $this->newQuery()->where($field, $value)->firstOrFail();
+        }
+
+        return $this->newQuery()->where($field, $value)->first();
     }
 }
