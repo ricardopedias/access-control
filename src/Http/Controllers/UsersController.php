@@ -1,5 +1,4 @@
 <?php
-
 namespace Laracl\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -39,17 +38,17 @@ class UsersController extends SortableGridController
     ];
 
     /**
-     * Devolve a coleção que será usada para a busca.
+     * Devolve a instância do builder que será usada para a busca.
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     protected function getSearchableBuilder()
     {
-        return (new AclUsersRepository)->getAllSearcheable();
+        return (new AclUsersRepository)->getSearcheable();
     }
 
     /**
-     * Display a listing of the resource.
+     * Exibe a lista de registros.
      *
      * @return \Illuminate\Http\Response
      */
@@ -66,7 +65,7 @@ class UsersController extends SortableGridController
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para a criação de registros.
      *
      * @return \Illuminate\Http\Response
      */
@@ -75,7 +74,7 @@ class UsersController extends SortableGridController
         $view = config('laracl.views.users.create');
 
         return view($view)->with([
-            'model'           => (new AclUsersRepository)->newModel(),
+            'model'           => (new AclUsersRepository)->read(),
             'groups'          => (new AclGroupsRepository)->getAll(false),
             'title'           => 'Novo Usuário',
             'require_pass'    => 'required',
@@ -85,7 +84,7 @@ class UsersController extends SortableGridController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena no banco de dados o novo registro criado.
      *
      * @param  \Illuminate\Http\Request $form
      * @return \Illuminate\Http\Response
@@ -105,7 +104,7 @@ class UsersController extends SortableGridController
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para edição do registro especificado.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -114,7 +113,7 @@ class UsersController extends SortableGridController
     {
         $view = config('laracl.views.users.edit');
         return view($view)->with([
-            'model'             => (new AclUsersRepository)->findByID($id),
+            'model'             => (new AclUsersRepository)->read($id),
             'groups'            => (new AclGroupsRepository)->getAll(false),
             'require_pass'      => '',
             'title'             => 'Editar Usuário',
@@ -141,6 +140,18 @@ class UsersController extends SortableGridController
 
         $updated = (new AclUsersRepository)->update($id, $form->all());
 
+        return back();
+    }
+
+    /**
+     * Remove o registro especificado do banco de dados.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $updated = (new AclUsersRepository)->delete($id);
         return back();
     }
 }

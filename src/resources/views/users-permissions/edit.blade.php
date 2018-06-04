@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title') {{ $title }} @endslot
+    @slot('title') Permissões Específicas para {{ $user->name }} @endslot
 
     <hr>
 
@@ -25,7 +25,7 @@
 
         </div>
 
-        @if($group_label != null)
+        @if($user->groupRelation != null)
 
             <div class="row">
 
@@ -33,10 +33,12 @@
 
                     <div class="alert alert-info">
 
-                        <h4 class="alert-heading">Atenção, este usuário pertence ao grupo <strong>"{{ $group_label }}"</strong>!</h4>
+                        <h4 class="alert-heading">Atenção, este usuário pertence ao grupo <strong>"{{ $user->groupRelation->group->name }}"</strong>!</h4>
 
                         <p>
-                            Atualmente {{ $user->name }} possui as permissões do grupo. Clicando em <i>"Aplicar Permissões"</i>, este usuário possuirá <strong>Privilégios Exclusivos</strong>. Você poderá remover estes privilégios personalizados a qualquer momento na tela de edição do usuário, bastando setar um grupo para ele.
+                            Atualmente {{ $user->name }} possui as permissões do grupo "{{ $user->groupRelation->group->name }}".
+                            Clicando em <i>"Aplicar Permissões"</i>, este usuário possuirá <strong>Privilégios Exclusivos</strong>.
+                            Você poderá remover estes privilégios, recolocando {{ $user->name }} novamente em um grupo na tela de edição do usuário, bastando setar um grupo para ele.
                         </p>
 
                     </div>
@@ -76,21 +78,21 @@
 
                         <tbody>
 
-                            @foreach($roles as $route => $item)
+                            @foreach($structure as $role => $item)
 
                                 <tr>
                                     <td>
                                         {{ $item['label'] }}
 
-                                        {{-- É necessário para que a função sempre exista na matriz,
+                                        {{-- É necessário para que a função de acesso sempre exista na matriz,
                                         mesmo quando não existirem permissões ativas --}}
-                                        <input type="hidden" name="roles[{{ $route }}]['exists']" value="1">
+                                        <input type="hidden" name="permissions[{{ $role }}][exists]" value="1">
                                     </td>
 
-                                    @foreach($item['roles'] as $role => $role_value)
+                                    @foreach($item['permissions'] as $perm => $perm_value)
 
                                         @php
-                                        $role_name = "roles[{$route}][{$role}]";
+                                        $perm_name = "permissions[{$role}][{$perm}]";
                                         @endphp
 
                                         @if($loop->iteration%2 == 0)
@@ -99,11 +101,11 @@
                                         <td class="text-center" style="background:rgba(0,0,0,0.05)">
                                         @endif
 
-                                            @if($role_value != null)
+                                            @if($perm_value != null)
 
-                                                <input type="checkbox" name="{{ $role_name }}" class="check-toggle"
+                                                <input type="checkbox" name="{{ $perm_name }}" class="check-toggle"
                                                        data-on-text="Sim" data-off-text="Não"
-                                                       value="yes" {{ old_check($role_name, 'yes', $role_value) }}>
+                                                       value="yes" {{ old_check($perm_name, 'yes', $perm_value) }}>
 
                                             @endif
 

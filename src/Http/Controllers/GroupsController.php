@@ -1,10 +1,9 @@
 <?php
-
 namespace Laracl\Http\Controllers;
 
-use Laracl\Models\AclGroup;
 use Illuminate\Http\Request;
 use SortableGrid\Http\Controllers\SortableGridController;
+use Laracl\Repositories\AclGroupsRepository;
 
 class GroupsController extends SortableGridController
 {
@@ -33,17 +32,17 @@ class GroupsController extends SortableGridController
     ];
 
     /**
-     * Devolve a coleção que será usada para a busca.
+     * Devolve a instância do builder que será usada para a busca.
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     protected function getSearchableBuilder()
     {
-        return AclGroup::query();
+        return (new AclGroupsRepository)->newQuery();
     }
 
     /**
-     * Display a listing of the resource. 
+     * Exibe a lista de registros.
      *
      * @return \Illuminate\Http\Response
      */
@@ -60,7 +59,7 @@ class GroupsController extends SortableGridController
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário para a criação de registros.
      *
      * @return \Illuminate\Http\Response
      */
@@ -69,7 +68,7 @@ class GroupsController extends SortableGridController
         $view = config('laracl.views.groups.create');
 
         return view($view)->with([
-            'model'       => new AclGroup,
+            'model'       => (new AclGroupsRepository)->read(),
             'title'       => 'Novo Grupo de Acesso',
             'route_index' => config('laracl.routes.groups.index'),
             'route_store' => config('laracl.routes.groups.store'),
@@ -78,7 +77,7 @@ class GroupsController extends SortableGridController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena no banco de dados o novo registro criado.
      *
      * @param  \Illuminate\Http\Request $form
      * @return \Illuminate\Http\Response
@@ -89,16 +88,14 @@ class GroupsController extends SortableGridController
             'name' => 'required|max:100'
         ]);
 
-        $model = new AclGroup;
-        $model->fill($form->all());
-        $model->save();
+        $model = (new AclGroupsRepository)->create($form->all());
 
         $route = config('laracl.routes.groups.edit');
         return redirect()->route($route, $model);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário para edição do registro especificado.
      *
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -108,7 +105,7 @@ class GroupsController extends SortableGridController
         $view = config('laracl.views.groups.edit');
 
         return view($view)->with([
-            'model'             => AclGroup::find($id),
+            'model'             => (new AclGroupsRepository)->read($id),
             'title'             => 'Editar Grupo de Acesso',
             'route_index'       => config('laracl.routes.groups.index'),
             'route_update'      => config('laracl.routes.groups.update'),
@@ -118,7 +115,7 @@ class GroupsController extends SortableGridController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza o registro especificado no banco de dados.
      *
      * @param  \Illuminate\Http\Request $form
      * @param  int $id
@@ -130,10 +127,20 @@ class GroupsController extends SortableGridController
             'name'         => 'required|max:100'
         ]);
 
-        $model = AclGroup::find($id);
-        $model->fill($form->all());
-        $model->save();
+        $updated = (new AclGroupsRepository)->update($id, $form->all());
 
+        return back();
+    }
+
+    /**
+     * Remove o registro especificado do banco de dados.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $updated = (new AclGroupsRepository)->delete($id);
         return back();
     }
 }

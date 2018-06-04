@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title') {{ $title }} @endslot
+    @slot('title') Permissões para "{{ $group->name }}" @endslot
 
     <hr>
 
@@ -52,21 +52,21 @@
 
                         <tbody>
 
-                            @foreach($roles as $route => $item)
+                            @foreach($structure as $role => $item)
 
                                 <tr>
                                     <td>
                                         {{ $item['label'] }}
 
-                                        {{-- É necessário para que a função sempre exista na matriz,
+                                        {{-- É necessário para que a função de acesso sempre exista na matriz,
                                         mesmo quando não existirem permissões ativas --}}
-                                        <input type="hidden" name="roles[{{ $route }}][exists]" value="1">
+                                        <input type="hidden" name="permissions[{{ $role }}]['exists']" value="1">
                                     </td>
 
-                                    @foreach($item['roles'] as $role => $role_value)
+                                    @foreach($item['permissions'] as $perm => $perm_value)
 
                                         @php
-                                        $role_name = "roles[{$route}][{$role}]";
+                                        $perm_name = "permissions[{$role}][{$perm}]";
                                         @endphp
 
                                         @if($loop->iteration%2 == 0)
@@ -75,11 +75,11 @@
                                         <td class="text-center" style="background:rgba(0,0,0,0.05)">
                                         @endif
 
-                                            @if($role_value != null)
+                                            @if($perm_value != null)
 
-                                                <input type="checkbox" name="{{ $role_name }}" class="check-toggle"
+                                                <input type="checkbox" name="{{ $perm_name }}" class="check-toggle"
                                                        data-on-text="Sim" data-off-text="Não"
-                                                       value="yes" {{ old_check($role_name, 'yes', $role_value) }}>
+                                                       value="yes" {{ old_check($perm_name, 'yes', $perm_value) }}>
 
                                             @endif
 
