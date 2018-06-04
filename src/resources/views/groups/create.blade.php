@@ -11,8 +11,8 @@
 
             <div class="col">
 
-                @acl_action('groups.read', route($route_index), 'Lista de Grupos')
-                @acl_action('users.read', route($route_users), 'Lista de Usuários')
+                @acl_action('groups.read', route($route_index), 'Lista de Grupos',  'laracl::buttons.groups.read')
+                @acl_action('users.read', route($route_users), 'Lista de Usuários', 'laracl::buttons.users.read')
 
             </div>
 

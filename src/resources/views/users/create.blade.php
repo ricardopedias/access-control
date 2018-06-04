@@ -11,7 +11,7 @@
 
             <div class="col">
 
-                @acl_action('users.read', route($route_index), 'Lista de Usuários')
+                @acl_action('users.read', route($route_index), 'Lista de Usuários', 'laracl::buttons.users.read')
 
             </div>
 

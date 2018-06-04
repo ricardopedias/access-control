@@ -11,15 +11,15 @@
 
             <div class="col">
 
-                @acl_action('users.read', route($route_index), 'Lista de Usuários')
+                @acl_action('users.read', route($route_index), 'Lista de Usuários', 'laracl::buttons.users.read')
 
             </div>
 
             <div class="col text-right">
 
-                @acl_action('users.update', route($route_user, $user->id), 'Editar Usuário')
+                @acl_action('users.update', route($route_user, $user->id), 'Editar Usuário', 'laracl::buttons.users.update')
 
-                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso')
+                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso', 'laracl::buttons.groups.read')
 
             </div>
 

@@ -11,13 +11,13 @@
 
             <div class="col">
 
-                @acl_action('groups.read', route($route_index), 'Grupos de Acesso')
+                @acl_action('groups.read', route($route_index), 'Grupos de Acesso',  'laracl::buttons.groups.read')
 
             </div>
 
             <div class="col text-right">
 
-                @acl_action('groups.create', route($route_create), 'Novo Grupo')
+                @acl_action('groups.create', route($route_create), 'Novo Grupo',  'laracl::buttons.groups.create')
 
             </div>
 

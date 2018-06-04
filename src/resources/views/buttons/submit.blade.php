@@ -1,11 +1,11 @@
-    
+
     @if ($status==false)
 
         <a href="javascript:void(0)" class="acl-submit btn btn-info disabled {{ $size != 'none' ? "btn-{$size}" : '' }}"
            title="Você não tem permissão para '{{ $label }}'">
-            <i class="fa fa-save"></i>
+            <i class="{{ $icon or 'fas fa-save' }}"></i>
             <span class="d-none d-lg-inline">{{ $label }}</span>
-        </a>    
+        </a>
 
         <script>
 
@@ -13,7 +13,7 @@
             // por isso, executa ao terminar
 
             var acl_form_block = function(){
-                
+
                 // Desativa a submissão do formulário através da tecla 'Enter'
                 $('.acl-submit').closest("form").submit(function(){
                     return false;
@@ -24,16 +24,16 @@
                 window.onload = acl_form_block;
             }
             else {
-                $(document).ready(acl_form_block);    
+                $(document).ready(acl_form_block);
             }
 
         </script>
 
     @else
-    
+
         <button type="submit" class="btn btn-info {{ $size != 'none' ? "btn-{$size}" : '' }}"
            title="{{ $label }}">
-            <i class="fa fa-save"></i>
+            <i class="{{ $icon or 'fas fa-save' }}"></i>
             <span class="d-none d-lg-inline">{{ $label }}</span>
         </button>
 

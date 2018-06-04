@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title') {{ $title }} @endslot
+    @slot('title') Gerenciamento de Usuários @endslot
 
     <hr>
 
@@ -17,9 +17,9 @@
 
             <div class="col-10 text-right justify-content-end">
 
-                @acl_action('users.create', route($route_create), 'Novo Usuário')
+                @acl_action('users.create', route($route_create), '', 'laracl::buttons.users.create')
 
-                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso')
+                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso', 'laracl::buttons.groups.read')
 
                 @sg_search
 
@@ -34,9 +34,9 @@
                 <tr>
                     <td class="text-center">{{ $item->id }}</td>
 
-                    <td>{{ $item->name }}</td>
+                    <td class="text-center">{{ $item->name }}</td>
 
-                    <td>
+                    <td class="text-center">
                         @if ($item->group_name)
                             Grupo {{ $item->group_name }}
                         @else
@@ -44,15 +44,17 @@
                         @endif
                     </td>
 
-                    <td>{!! str_replace(['@', '.'], ['<wbr>@', '<wbr>.'], $item->email) !!}</td>
+                    <td class="text-center">{!! str_replace(['@', '.'], ['<wbr>@', '<wbr>.'], $item->email) !!}</td>
 
-                    <td>{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
+                    <td class="text-center">{{ $item->created_at->format('d/m/Y H:i:s') }}</td>
 
                     <td class="text-center">
 
                         @acl_action_sm('users.update', route($route_edit, $item->id ), 'Editar')
 
-                        @acl_action_sm('users-permissions.update', route($route_permissions, $item->id), 'Permissões')
+                        @acl_action_sm('users-permissions.update', route($route_permissions, $item->id), 'Permissões', 'laracl::buttons.permissions')
+
+                        @acl_action_sm('users.delete', route($route_destroy, $item->id), 'Excluir')
 
                     </td>
                 </tr>

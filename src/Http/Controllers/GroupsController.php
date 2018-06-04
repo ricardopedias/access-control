@@ -50,9 +50,9 @@ class GroupsController extends SortableGridController
     {
         $view = config('laracl.views.groups.index');
         return $this->searchableView($view)->with([
-            'title'             => 'Grupos de Acesso',
             'route_create'      => config('laracl.routes.groups.create'),
             'route_edit'        => config('laracl.routes.groups.edit'),
+            'route_destroy'     => config('laracl.routes.groups.destroy'),
             'route_permissions' => config('laracl.routes.groups-permissions.edit'),
             'route_users'       => config('laracl.routes.users.index'),
             ]);

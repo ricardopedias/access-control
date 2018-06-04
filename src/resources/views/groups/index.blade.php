@@ -1,7 +1,7 @@
 
 @component('laracl::document')
 
-    @slot('title') {{ $title }} @endslot
+    @slot('title') Grupos de Acesso @endslot
 
     <hr>
 
@@ -13,14 +13,14 @@
 
                 @sg_perpage
 
-                @acl_action('users.read', route($route_users), 'Usuários')
+                @acl_action('users.read', route($route_users), 'Usuários', 'laracl::buttons.users.read')
 
 
             </div>
 
             <div class="col text-right">
 
-                @acl_action('groups.create', route($route_create), 'Novo Grupo')
+                @acl_action('groups.create', route($route_create), 'Novo Grupo', 'laracl::buttons.groups.create')
 
                 @sg_search
 
@@ -48,7 +48,9 @@
 
                         @acl_action_sm('groups.update', route($route_edit, $item->id ), 'Editar')
 
-                        @acl_action_sm('groups-permissions.update', route($route_permissions, $item->id ), 'Permissões')
+                        @acl_action_sm('groups-permissions.update', route($route_permissions, $item->id ), 'Permissões', 'laracl::buttons.permissions')
+
+                        @acl_action_sm('groups.delete', route($route_destroy, $item->id), 'Excluir')
 
                     </td>
                 </tr>

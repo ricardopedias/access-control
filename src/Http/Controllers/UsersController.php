@@ -56,9 +56,9 @@ class UsersController extends SortableGridController
     {
         $view = config('laracl.views.users.index');
         return $this->searchableView($view)->with([
-            'title'             => 'Gerenciamento de Usuários',
             'route_create'      => config('laracl.routes.users.create'),
             'route_edit'        => config('laracl.routes.users.edit'),
+            'route_destroy'     => config('laracl.routes.users.destroy'),
             'route_permissions' => config('laracl.routes.users-permissions.edit'),
             'route_groups'      => config('laracl.routes.groups.index'),
             ]);

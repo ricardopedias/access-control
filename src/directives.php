@@ -4,7 +4,7 @@ use Illuminate\Contracts\Auth\Access\Gate;
 
 /**
  * Para Mais informações sobre a criação de diretivas:
- * 
+ *
  * https://laravel.com/docs/5.5/blade#extending-blade
  * https://scotch.io/tutorials/all-about-writing-custom-blade-directives
  */
@@ -73,15 +73,15 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
                 $end = strpos($expression, ')', $start);
                 $route_origin = substr($expression, $start, ($end-$start));
                 $route_fix    = str_replace(',', '#|#|#', $route_origin);
-                $expression = str_replace($route_origin, $route_fix, $expression);
+                $expression   = str_replace($route_origin, $route_fix, $expression);
             }
 
             $args = explode(',', $expression);
 
-            $args[0] = $args[0] ?? '';
-            $args[1] = $args[1] ?? '';
-            $args[2] = $args[2] ?? '';
-            $args[3] = $args[3] ?? '';
+            $args[0] = $args[0] ?? ''; // ability.permission
+            $args[1] = $args[1] ?? ''; // url
+            $args[2] = $args[2] ?? ''; // label
+            $args[3] = $args[3] ?? ''; // view
 
             // url (apenas action)
             $args[1] = trim($args[1]);
@@ -91,11 +91,11 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
                 $args[$index] = str_replace("'", "", $args[$index]);
                 $args[$index] = trim($args[$index]);
             }
-            
+
             $ability = $args[0];
             $url     = $args[1];
             $label   = $args[2];
-            $view    = $args[3];    
+            $view    = $args[3];
 
             $perm = preg_replace('#.*\.#', '', $ability);
             if (empty($view)) {
@@ -112,7 +112,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
 
             $open = "?php";
             $close = "?";
-
+            
             return "<{$open} echo view('$view')->with(['size' => '$size', 'status' => $status, 'url' => $url, 'label'  => '$label' ])->render(); {$close}>";
         }
     }
@@ -136,7 +136,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
     |
     | Botões do tipo submit.
     | @acl_submit('role', 'label', 'view opcional')
-    | 
+    |
     | Ex:
     | @acl_submit('users.create', 'Gravar Registro', 'users.btn-submit')
     | @acl_submit('users.create', 'Gravar Registro')
@@ -161,10 +161,10 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
                 $args[$index] = str_replace("'", "", $args[$index]);
                 $args[$index] = trim($args[$index]);
             }
-            
+
             $ability = $args[0];
             $label   = $args[1];
-            $view    = $args[2];    
+            $view    = $args[2];
 
             $perm = preg_replace('#.*\.#', '', $ability);
             if (empty($view)) {
@@ -197,7 +197,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
     | Bloqueio de conteudo restrito
     |--------------------------------------------------------------------------
     |
-    | Se o usuário não possuir credenciais, exibe uma mensagem de 
+    | Se o usuário não possuir credenciais, exibe uma mensagem de
     | acesso não autorizado no lugar do conteudo.
     |
     | @acl_content('role', 'callback opcional')
@@ -226,7 +226,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
     });
 
     \Blade::directive('end_acl_content', function ($expression) {
-        
+
         $open = "?php";
         $close = "?";
 

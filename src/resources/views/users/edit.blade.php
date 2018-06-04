@@ -11,15 +11,15 @@
 
             <div class="col">
 
-                @acl_action('users.read', route($route_index), 'Lista de Usuários')
+                @acl_action('users.read', route($route_index), 'Lista de Usuários', 'laracl::buttons.users.read')
 
             </div>
 
             <div class="col text-right justify-content-end">
 
-                @acl_action('users.create', route($route_create), 'Novo Usuário')
+                @acl_action('users.create', route($route_create), 'Novo Usuário', 'laracl::buttons.users.create')
 
-                @acl_action('users-permissions.update', route($route_permissions, $model->id), 'Permissões')
+                @acl_action('users-permissions.update', route($route_permissions, $model->id), 'Permissões', 'laracl::buttons.users.permissions')
 
             </div>
 

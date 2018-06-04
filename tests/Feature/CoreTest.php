@@ -59,7 +59,7 @@ class CoreTest extends IModelTestCase
         $this->assertTrue(is_array($config['routes']['groups-permissions']));
 
         // users - padrão
-        $route_params = ['base', 'index', 'create', 'store', 'edit', 'update', 'delete'];
+        $route_params = ['base', 'index', 'create', 'store', 'edit', 'update', 'destroy'];
         foreach ($route_params as $param) {
             $this->assertArrayHasKey($param, $config['routes']['users']);
             if ($param == 'base') {
@@ -70,7 +70,7 @@ class CoreTest extends IModelTestCase
         }
 
         // groups -> personalizado
-        $route_params = ['base', 'index', 'create', 'store', 'edit', 'update', 'delete'];
+        $route_params = ['base', 'index', 'create', 'store', 'edit', 'update', 'destroy'];
         foreach ($route_params as $param) {
             $this->assertArrayHasKey($param, $config['routes']['groups']);
             if ($param == 'base') {
