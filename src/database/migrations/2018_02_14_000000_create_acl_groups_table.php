@@ -23,6 +23,8 @@ class CreateAclGroupsTable extends Migration
             $table->text('description')->nullable();
             $table->enum('system', ['yes', 'no'])->default('no');
             $table->timestamps();
+
+            $table->softDeletes();
         });
 
         AclGroup::create([
