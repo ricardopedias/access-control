@@ -1,5 +1,4 @@
 <?php
-
 namespace Laracl;
 
 use Gate;
@@ -11,6 +10,27 @@ class Core
 
     /** @var boolean */
     protected static $registered = false;
+
+    /** @var array */
+    protected static $policies = [];
+
+    /**
+     * Devolve as informações das funções de acesso regotsradas.
+     *
+     * @return array
+     */
+    public static function getPolicies()
+    {
+        return self::$policies;
+    }
+
+    public static function setPolice(string $role, string $permission)
+    {
+        self::$policies[] = (object) [
+            'role'       => $role,
+            'permission' => $permission
+        ];
+    }
 
     /**
      * Carrega e registra as diretivas para o blade
@@ -300,6 +320,8 @@ class Core
                 }
 
                 self::traceRegisteredPolices($role, $permission);
+
+                self::setPolice($role, $permission);
 
                 Gate::define("{$role}.{$permission}",
                     function ($user, $callback = null)
