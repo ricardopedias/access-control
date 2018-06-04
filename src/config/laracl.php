@@ -67,6 +67,7 @@ return [
             'index'             => 'laracl::users.index',
             'create'            => 'laracl::users.create',
             'edit'              => 'laracl::users.edit',
+            'delete'            => 'laracl::users.delete',
         ],
 
         'users-permissions' => [
@@ -77,6 +78,7 @@ return [
             'index'            => 'laracl::groups.index',
             'create'           => 'laracl::groups.create',
             'edit'             => 'laracl::groups.edit',
+            'delete'           => 'laracl::groups.delete',
         ],
 
         'groups-permissions' => [
