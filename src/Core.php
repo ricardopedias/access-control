@@ -135,6 +135,7 @@ class Core
      *     laracl.routes.users.edit   => usuarios.edit
      *     laracl.routes.users.update => usuarios.update
      *     laracl.routes.users.delete => usuarios.delete
+     *     laracl.routes.users.destroy => usuarios.destroy
      * ]
      */
     public static function normalizeConfig()
@@ -154,13 +155,14 @@ class Core
             $route_base = preg_replace('#.*/#', '', $config['routes'][$slug]);
 
             $route_params = [
-                "laracl.routes.{$slug}.base"   => $config['routes'][$slug],
-                "laracl.routes.{$slug}.index"  => $route_base . ".index",
-                "laracl.routes.{$slug}.create" => $route_base . ".create",
-                "laracl.routes.{$slug}.store"  => $route_base . ".store",
-                "laracl.routes.{$slug}.edit"   => $route_base . ".edit",
-                "laracl.routes.{$slug}.update" => $route_base . ".update",
-                "laracl.routes.{$slug}.delete" => $route_base . ".delete",
+                "laracl.routes.{$slug}.base"    => $config['routes'][$slug],
+                "laracl.routes.{$slug}.index"   => $route_base . ".index",
+                "laracl.routes.{$slug}.create"  => $route_base . ".create",
+                "laracl.routes.{$slug}.store"   => $route_base . ".store",
+                "laracl.routes.{$slug}.edit"    => $route_base . ".edit",
+                "laracl.routes.{$slug}.update"  => $route_base . ".update",
+                "laracl.routes.{$slug}.delete"  => $route_base . ".delete",
+                "laracl.routes.{$slug}.destroy" => $route_base . ".destroy",
             ];
             config($route_params);
         }
