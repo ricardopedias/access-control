@@ -53,6 +53,11 @@ class IModelTestCase extends TestCase
         \Artisan::call('migrate:reset');
     }
 
+    protected static function faker()
+    {
+        return \Faker\Factory::create();
+    }
+
     /**
      * No momento da migração, dois grupos padrões são gerados.
      * ID 1 = admin e ID 2 = users, ambos como 'system = yes'
@@ -63,7 +68,7 @@ class IModelTestCase extends TestCase
 
         return Models\AclGroup::create([
             'name' => $faker->name,
-            'description' => $faker->paragraph(30),
+            'description' => $faker->paragraph(1),
             'system' => 'no',
         ]);
     }
