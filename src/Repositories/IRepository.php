@@ -23,9 +23,19 @@ abstract class IRepository
      *
      * @return EloquentQueryBuilder|QueryBuilder
      */
-    protected function newQuery()
+    public function newQuery()
     {
         return app($this->model_class)->newQuery();
+    }
+
+    /**
+    * Devolve um novo modelo
+    *
+    * @return Model
+    */
+    public function newModel()
+    {
+        return $this->newQuery()->newModelInstance();
     }
 
     /**
@@ -51,17 +61,6 @@ abstract class IRepository
 
         return $query->get();
     }
-
-    /**
-    * Devolve um novo modelo
-    *
-    * @return Model
-    */
-    public function newModel()
-    {
-        return $this->newQuery()->newModelInstance();
-    }
-
 
     /**
      * Devolve todos os registros.
@@ -91,16 +90,16 @@ abstract class IRepository
 
     /**
     * Devolve um registro com base em seu ID
-    * Se $fail for true, falhas vão disparar ModelNotFoundException.
+    * Se $failable for true, falhas vão disparar ModelNotFoundException.
     *
     * @param int  $id
-    * @param bool $fail
+    * @param bool $failable
     *
     * @return Model
     */
-    public function findByID(int $id, bool $fail = true)
+    public function findByID(int $id, bool $failable = true)
     {
-        if ($fail == true) {
+        if ($failable == true) {
             return $this->newQuery()->findOrFail($id);
         }
 
@@ -109,20 +108,79 @@ abstract class IRepository
 
     /**
     * Devolve um registro com base em seu ID
-    * Se $fail for true, falhas vão disparar ModelNotFoundException.
+    * Se $failable for true, falhas vão disparar ModelNotFoundException.
     *
     * @param  string  $field
     * @param  mixed  $value
-    * @param  bool $fail
+    * @param  bool $failable
     *
     * @return Model
     */
-    public function findBy(string $field, $value, bool $fail = true)
+    public function findBy(string $field, $value, bool $failable = true)
     {
-        if ($fail == true) {
+        if ($failable == true) {
             return $this->newQuery()->where($field, $value)->firstOrFail();
         }
 
         return $this->newQuery()->where($field, $value)->first();
+    }
+
+    /**
+     * Cria um novo registro
+     *
+     * @param  array  $data
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function create(array $data)
+    {
+        return $this->newQuery()->create($data);
+    }
+
+    /**
+     * Devolve os dados do registro especificado.
+     * Se $id estiver presente, devolve os dados do registro
+     * especificado, se ausente, devolve um modelo novo
+     *
+     * @param  int  $id
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function read($id = null)
+    {
+        return ($id != null)
+            ? $this->findByID($id)
+            : $this->newModel();
+    }
+
+    /**
+     * Atualiza os dados de um usuário existente.
+     *
+     * @param  int    $id
+     * @param  array  $data
+     * @return bool
+     */
+    public function update($id, array $data)
+    {
+        $model = $this->read($id)->fill($data);
+        return $model->save();
+    }
+
+    /**
+     * Remove o registro especificado do banco de dados.
+     * Se $force for true, força a remoão o registro do banco
+     * Isso é putil apenas para modelos com softdelete
+     * @see https://laravel.com/docs/5.6/eloquent#soft-deleting
+     *
+     * @param  int  $id
+     * @param  boolean $force
+     * @return bool
+     */
+    public function delete($id, $force = false)
+    {
+        $register =  $this->read($id);
+        if ($force == true) {
+            return $register->forceDelete();
+        } else {
+            return $register->delete();
+        }
     }
 }

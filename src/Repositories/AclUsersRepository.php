@@ -4,7 +4,6 @@ namespace Laracl\Repositories;
 use Laracl\Models\AclUser;
 use Laracl\Models\AclUserGroup;
 use Laracl\Models\AclUserPermission;
-use Carbon\Carbon;
 
 class AclUsersRepository extends IRepository
 {
@@ -18,14 +17,14 @@ class AclUsersRepository extends IRepository
      */
     public function create(array $data)
     {
-        $data['password'] = isset($data['password'])
+        $data['password'] = isset($data['password']) && !empty($data['password'])
             ? bcrypt($data['password'])
-            : null;
+            : bcrypt(uniqid());
 
-        $model = $this->newQuery()->create($data);
+        $model = parent::create($data);
 
-        // Se acl_group_id = 0 ou null
-        if (isset($data['acl_group_id']) && intval($data['acl_group_id']) > 0) {
+        if (isset($data['acl_group_id']) && !empty($data['acl_group_id'])) {
+            // Se acl_group_id for diferente de 0 ou null
             $relation = AclUserGroup::create([
                 'user_id'  => $model->id,
                 'group_id' => $data['acl_group_id']
@@ -78,7 +77,7 @@ class AclUsersRepository extends IRepository
         return $model->save();
     }
 
-    public function getAllSearcheable()
+    public function getSearcheable()
     {
         $columns = [];
 
@@ -113,18 +112,5 @@ class AclUsersRepository extends IRepository
         return $this->newQuery()->select($columns)
             ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
             ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
-    }
-
-
-    public function getPaying($limit = 15, $paginate = true)
-    {
-
-        $now = Carbon::now();
-        $query = $this->newQuery();
-        $query->where('is_subscriber', true);
-        $query->where('subscription_ends_in', '<=', $now);
-        $query->orderBy('name');
-
-        return $this->doQuery($query, $limit, $paginate);
     }
 }
