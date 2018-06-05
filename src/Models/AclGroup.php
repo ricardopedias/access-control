@@ -3,11 +3,26 @@
 namespace Laracl\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class AclGroup extends Model
 {
+    use SoftDeletes;
+
     protected $primaryKey = 'id';
+
+    /**
+     * Os atributos que devem ser mudados para datas
+     *
+     * @see https://laravel.com/docs/5.6/eloquent#soft-deleting
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     /**
      * Os atributos que podem ser setados em massa

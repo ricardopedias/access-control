@@ -3,10 +3,25 @@
 namespace Laracl\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AclUser extends \App\User
 {
+    use SoftDeletes;
+
     protected $table = 'users';
+
+    /**
+     * Os atributos que devem ser mudados para datas
+     *
+     * @see https://laravel.com/docs/5.6/eloquent#soft-deleting
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     /**
      * Devolve os campos usados para atualização de dados.
