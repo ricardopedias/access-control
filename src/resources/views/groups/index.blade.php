@@ -50,7 +50,7 @@
 
                         @acl_action_sm('groups-permissions.update', route($route_permissions, $item->id ), 'Permissões', 'laracl::buttons.permissions')
 
-                        @acl_action_sm('groups.delete', route($route_destroy, $item->id), 'Excluir')
+                        @acl_action_sm('groups.delete', route($route_destroy, $item->id), 'Excluir', null, true)
 
                     </td>
                 </tr>
