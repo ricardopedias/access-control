@@ -24,7 +24,7 @@
                     Por favor, tente novamente mais tarde!
                 </p>
 
-                <div id="acl-delete-confirm-message-confirm" class="text-danger" style="display: none">
+                <div id="acl-delete-confirm-message-confirm" class="text-danger text-center" style="display: none">
                     <p>
                         Esta operação não tem volta!
                         Tem certeza disso?
@@ -92,6 +92,8 @@
 
         remove_row: false,
 
+        btn_elem: null,
+
         /**
          * Ativa/desativa o modo de debug.
          * Quando ativo, as mensagens de log e erros de servidor serão exibidos,
@@ -123,6 +125,7 @@
         removeGridRow: function(remove)
         {
             this.remove_row = remove;
+            this.trace('Remove Grid Row: ' + remove);
         },
 
         /**
@@ -142,7 +145,7 @@
         reset: function()
         {
             // zera os valores de progresso
-            $.each(["w-25", "w-50", "w-75"], function(k, class_name){
+            $.each(['w-25', 'w-50', 'w-75', 'w-100'], function(k, class_name){
                 $('#acl-delete-confirm-message-progress .progress-bar').removeClass(class_name);
             });
 
@@ -218,28 +221,7 @@
 
                       $('#acl-delete-confirm-message-progress .progress-bar').addClass('w-100');
 
-                      setTimeout(function(){
-
-                            $('#acl-delete-confirm-message-progress .progress-bar')
-                                .removeClass('bg-danger')
-                                .addClass('bg-success');
-
-                            $('#acl-delete-confirm').animate({ opacity: 0 }, 500, function(){
-
-                                setTimeout(function(){
-
-                                    $('#acl-delete-confirm')
-                                        .removeClass('fade')
-                                        .modal('hide')
-                                        .css({ opacity: 1 });
-
-                                    self.afterDelete();
-
-                                }, 1000);
-
-                            });
-
-                      }, 500);
+                      self.afterDelete();
                   },
                   error: function(jq_xhr, text_status, error_thrown) {
 
@@ -254,12 +236,31 @@
             });
         },
 
+        /**
+         * Este método é chamado quando um registro for excluido com sucesso.
+         * Se o parâmetro remove_row for passado como true na diretiva do blade
+         * a linha do grid será removida. caso contrário, a página será recarregada
+         */
         afterDelete: function()
         {
-            if(self.remove_row === true) {
-                self.trace('Remove Row: ' + self.remove_row);
+            var self = this;
+
+            if(this.remove_row === true) {
+
+                this.trace('Remove Row: ' + this.remove_row);
+                var row = $(self.btn_elem).parents('tr').slideUp(200, function(){
+                    this.remove();
+                });
+
+                setTimeout(function(){
+                    $('#acl-delete-confirm').modal('hide');
+                }, 1000);
+
             } else {
-                window.location.reload();
+                this.trace('Reload Page: true');
+                setTimeout(function(){
+                    window.location.reload();
+                }, 500);
             }
         },
 
@@ -273,6 +274,7 @@
         {
             var self = this;
 
+            this.btn_elem = $(btn_elem);
             self.trace('Attach: ' + $(btn_elem).attr('id'));
 
             $(btn_elem).click(function(event){

@@ -36,41 +36,48 @@
 
     @if($acl_delete_confirm_modal == true)
 
-        @include('laracl::modal-delete')
+        <div id="js-acl-delete-confirm-modal-logic">
 
-        <script>
+            @include('laracl::modal-delete')
 
-            /*
-            Ao final do carregamento do documento, instancia o objeto AclConfirmDelete
-            e aplica o evento de clique em todos os botões 'delete'.
-            O AclConfirmDelete é carregado em laracl/src/resources/views/modal-delete.blade.php
-            */
+            <script>
 
-            function acl_attach_confirm(elem) {
-                var confirm = new AclConfirmDelete();
-                confirm.debugMode({{ var_export(env('APP_DEBUG') || env('APP_ENV') === 'local') }});
-                confirm.setToken('{{ csrf_token() }}');
-                confirm.removeGridRow('{{ $delete_row }}');
-                confirm.attach(elem);
-            }
+                /*
+                Ao final do carregamento do documento:
+                1. Move a logica do modal de confirmação para o final do documento
+                2. Gera uma instancia do objeto AclConfirmDelete e aplica o evento
+                   de clique em todos os botões 'delete'.
+                   O AclConfirmDelete é carregado em laracl/src/resources/views/modal-delete.blade.php
+                */
 
-            if (undefined === window.$) {
-                // Se jQuery ainda não estiver carregado
-                window.onload = function(){
-                    $('.acl-action-delete').each(function(){
-                        acl_attach_confirm(this);
+                function acl_attach_confirm(elem) {
+                    var confirm = new AclConfirmDelete();
+                    confirm.debugMode({{ var_export(env('APP_DEBUG') || env('APP_ENV') === 'local') }});
+                    confirm.setToken('{{ csrf_token() }}');
+                    confirm.removeGridRow({{ $delete_row }});
+                    confirm.attach(elem);
+                }
+
+                if (undefined === window.$) {
+                    // Se jQuery ainda não estiver carregado
+                    window.onload = function(){
+                        $('#js-acl-delete-confirm-modal-logic').appendTo("body");
+                        $('.acl-action-delete').each(function(){
+                            acl_attach_confirm(this);
+                        });
+                    };
+                } else {
+                    // se jQuery já estiver disponível
+                    $(document).ready(function(){
+                        $('#js-acl-delete-confirm-modal-logic').appendTo("body");
+                        $('.acl-action-delete').each(function(){
+                            acl_attach_confirm(this);
+                        });
                     });
-                };
-            } else {
-                // se jQuery já estiver disponível
-                $(document).ready(function(){
-                    $('.acl-action-delete').each(function(){
-                        acl_attach_confirm(this);
-                    });
-                });
-            }
+                }
 
-        </script>
+            </script>
+        </div>
     @endif
 
 @endif
