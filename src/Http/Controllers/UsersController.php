@@ -99,7 +99,7 @@ class UsersController extends SortableGridController
 
         $model = (new AclUsersRepository)->create($form->all());
 
-        $route = config('laracl.routes.users.edit');
+        $route = config('laracl.routes.users.index');
         return redirect()->route($route, $model);
     }
 

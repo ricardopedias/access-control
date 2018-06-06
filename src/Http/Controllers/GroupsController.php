@@ -90,7 +90,7 @@ class GroupsController extends SortableGridController
 
         $model = (new AclGroupsRepository)->create($form->all());
 
-        $route = config('laracl.routes.groups.edit');
+        $route = config('laracl.routes.groups.index');
         return redirect()->route($route, $model);
     }
 
@@ -138,9 +138,14 @@ class GroupsController extends SortableGridController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy(Request $form, $id)
     {
-        $updated = (new AclGroupsRepository)->delete($id);
-        return back();
+        if ($form->request->get('mode') == 'soft') {
+            $deleted = (new AclGroupsRepository)->delete($id);
+        } else {
+            $deleted = (new AclGroupsRepository)->delete($id, true);
+        }
+
+        return response()->json(['deleted' => $deleted]);
     }
 }
