@@ -81,21 +81,33 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
             $args[0] = $args[0] ?? ''; // ability.permission
             $args[1] = $args[1] ?? ''; // url
             $args[2] = $args[2] ?? ''; // label
-            $args[3] = $args[3] ?? ''; // view
+            $args[3] = $args[3] ?? 'null'; // view
+            $args[4] = $args[4] ?? 'false'; // delete_row
 
             // url (apenas action)
             $args[1] = trim($args[1]);
 
+            // view (string ou null)
+            $args[3] = trim($args[3]);
+            $args[3] = ($args[3] !== 'null')
+                ? str_replace("'", "", $args[3])
+                : '';
+
+            // delete_row (booleano)
+            $args[4] = trim($args[4]);
+            $args[4] = var_export($args[4], true);
+
             // demais parâmetros
-            foreach([0,2,3] as $index) {
+            foreach([0,2] as $index) {
                 $args[$index] = str_replace("'", "", $args[$index]);
                 $args[$index] = trim($args[$index]);
             }
 
-            $ability = $args[0];
-            $url     = $args[1];
-            $label   = $args[2];
-            $view    = $args[3];
+            $ability    = $args[0];
+            $url        = $args[1];
+            $label      = $args[2];
+            $view       = $args[3];
+            $delete_row = $args[4];
 
             $perm = preg_replace('#.*\.#', '', $ability);
             if (empty($view)) {
@@ -112,8 +124,8 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
 
             $open = "?php";
             $close = "?";
-            
-            return "<{$open} echo view('$view')->with(['size' => '$size', 'status' => $status, 'url' => $url, 'label'  => '$label' ])->render(); {$close}>";
+
+            return "<{$open} echo view('$view')->with(['size' => '$size', 'status' => $status, 'url' => $url, 'label'  => '$label', 'delete_row' => $delete_row ])->render(); {$close}>";
         }
     }
 
