@@ -28,8 +28,18 @@ class AlterUsersDeletedAt extends Migration
      */
     public function down()
     {
+        /*
+        O campo não será removido!
+        Motivo: caso o projeto anterior, sem o LarACL já utilize softdeletes,
+        esta rotina removeria uma informação importante.
+        O fato de existir um campo chamado 'deleted_at' não altera em nada o funcionmento
+        de um projeto. Podendo ser removido posteriormente de forma manual.
+        */
+
+        /*
         Schema::table('users', function (Blueprint $table) {
             $table->dropSoftDeletes();
         });
+        */
     }
 }
