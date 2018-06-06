@@ -85,7 +85,7 @@ class GroupsController extends SortableGridController
     public function store(Request $form)
     {
         $form->validate([
-            'name' => 'required|max:100'
+            'name' => 'required|max:100|unique:acl_groups,name',
         ]);
 
         $model = (new AclGroupsRepository)->create($form->all());
@@ -124,7 +124,7 @@ class GroupsController extends SortableGridController
     public function update(Request $form, $id)
     {
         $form->validate([
-            'name'         => 'required|max:100'
+            'name' => "required|max:100|unique:acl_groups,name,{$id}"
         ]);
 
         $updated = (new AclGroupsRepository)->update($id, $form->all());
