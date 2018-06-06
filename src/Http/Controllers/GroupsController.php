@@ -135,6 +135,7 @@ class GroupsController extends SortableGridController
     /**
      * Remove o registro especificado do banco de dados.
      *
+     * @param Request $form
      * @param  int $id
      * @return \Illuminate\Http\Response
      */

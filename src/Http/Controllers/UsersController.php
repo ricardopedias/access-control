@@ -146,12 +146,18 @@ class UsersController extends SortableGridController
     /**
      * Remove o registro especificado do banco de dados.
      *
+     * @param Request $form
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id)
+    public function destroy(Request $form, $id)
     {
-        $updated = (new AclUsersRepository)->delete($id);
-        return back();
+        if ($form->request->get('mode') == 'soft') {
+            $deleted = (new AclUsersRepository)->delete($id);
+        } else {
+            $deleted = (new AclUsersRepository)->delete($id, true);
+        }
+
+        return response()->json(['deleted' => $deleted]);
     }
 }
