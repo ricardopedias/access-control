@@ -2,44 +2,12 @@
 namespace Laracl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use SortableGrid\Http\Controllers\SortableGridController;
+use SortableGrid\Traits\HasSortableGrid;
 use Laracl\Repositories\AclGroupsRepository;
 
-class GroupsController extends SortableGridController
+class GroupsController extends Controller
 {
-    protected $initial_field = 'id';
-
-    protected $initial_order = 'desc';
-
-    protected $initial_perpage = 10;
-
-    protected $fields = [
-        'id'         => 'ID',
-        'name'       => 'Nome',
-        'created_at' => 'Criação',
-        'Ações'
-    ];
-
-    protected $searchable_fields = [
-        'id',
-        'name',
-    ];
-
-    protected $orderly_fields = [
-        'id',
-        'name',
-        'created_at',
-    ];
-
-    /**
-     * Devolve a instância do builder que será usada para a busca.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function getSearchableBuilder()
-    {
-        return (new AclGroupsRepository)->newQuery();
-    }
+    use HasSortableGrid;
 
     /**
      * Exibe a lista de registros.
@@ -48,8 +16,24 @@ class GroupsController extends SortableGridController
      */
     public function index(Request $request)
     {
+        $this->setInitials('id', 'desc', 10);
+
+        $this->addGridField('ID', 'id');
+        $this->addGridField('Nome', 'name');
+        $this->addGridField('Criação', 'created_at');
+        $this->addGridField('Ações');
+
+        $this->addSearchField('id');
+        $this->addSearchField('name');
+
+        $this->addOrderlyField('id');
+        $this->addOrderlyField('name');
+        $this->addOrderlyField('created_at');
+
+        $this->setDataProvider((new AclGroupsRepository)->newQuery());
+
         $view = config('laracl.views.groups.index');
-        return $this->searchableView($view)->with([
+        return $this->gridView($view)->with([
             'route_create'      => config('laracl.routes.groups.create'),
             'route_edit'        => config('laracl.routes.groups.edit'),
             'route_destroy'     => config('laracl.routes.groups.destroy'),

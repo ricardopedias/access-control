@@ -2,50 +2,13 @@
 namespace Laracl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use SortableGrid\Http\Controllers\SortableGridController;
+use SortableGrid\Traits\HasSortableGrid;
 use Laracl\Repositories\AclUsersRepository;
 use Laracl\Repositories\AclGroupsRepository;
 
-class UsersController extends SortableGridController
+class UsersController extends Controller
 {
-    protected $initial_field = 'users.id';
-
-    protected $initial_order = 'desc';
-
-    protected $initial_perpage = 10;
-
-    protected $fields = [
-        'users.id'         => 'ID',
-        'users.name'       => 'Nome',
-        'acl_groups.name'  => 'Permissões',
-        'users.email'      => 'E-mail',
-        'users.created_at' => 'Criação',
-        'Ações'
-    ];
-
-    protected $searchable_fields = [
-        'users.id',
-        'users.name',
-        'users.email',
-    ];
-
-    protected $orderly_fields = [
-        'users.id',
-        'users.name',
-        'acl_groups.name',
-        'users.email',
-        'users.created_at',
-    ];
-
-    /**
-     * Devolve a instância do builder que será usada para a busca.
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function getSearchableBuilder()
-    {
-        return (new AclUsersRepository)->getSearcheable();
-    }
+    use HasSortableGrid;
 
     /**
      * Exibe a lista de registros.
@@ -54,8 +17,29 @@ class UsersController extends SortableGridController
      */
     public function index(Request $request)
     {
+        $this->setInitials('users.id', 'desc', 10);
+
+        $this->addGridField('ID', 'users.id');
+        $this->addGridField('Nome', 'users.name');
+        $this->addGridField('Permissões', 'acl_groups.name');
+        $this->addGridField('E-mail', 'users.email');
+        $this->addGridField('Criação', 'users.created_at');
+        $this->addGridField('Ações');
+
+        $this->addSearchField('users.id');
+        $this->addSearchField('users.name');
+        $this->addSearchField('users.email');
+
+        $this->addOrderlyField('users.id');
+        $this->addOrderlyField('users.name');
+        $this->addOrderlyField('acl_groups.name');
+        $this->addOrderlyField('users.email');
+        $this->addOrderlyField('users.created_at');
+
+        $this->setDataProvider((new AclUsersRepository)->getSearcheable());
+
         $view = config('laracl.views.users.index');
-        return $this->searchableView($view)->with([
+        return $this->gridView($view)->with([
             'route_create'      => config('laracl.routes.users.create'),
             'route_edit'        => config('laracl.routes.users.edit'),
             'route_destroy'     => config('laracl.routes.users.destroy'),

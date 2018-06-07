@@ -25,6 +25,8 @@
 
                 @sg_search
 
+                @acl_action('users.delete', route($route_trash), '', 'laracl::buttons.trash')
+
             </div>
 
         </div>
