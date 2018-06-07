@@ -128,14 +128,14 @@ class Core
      * No item ['users' => 'painel/users'], serão extraidos
      * os indices e os nomes para as rotas dos CRUDs, ficando assim:
      * [
-     *     laracl.routes.users.base  =>  users
-     *     laracl.routes.users.index  => usuarios.index
-     *     laracl.routes.users.create => usuarios.create
-     *     laracl.routes.users.store  => usuarios.store
-     *     laracl.routes.users.edit   => usuarios.edit
-     *     laracl.routes.users.update => usuarios.update
-     *     laracl.routes.users.delete => usuarios.delete
-     *     laracl.routes.users.destroy => usuarios.destroy
+     *     laracl.routes.users.base   =>  'painel/users'
+     *     laracl.routes.users.index  => 'users.index'
+     *     laracl.routes.users.create => 'users.create'
+     *     laracl.routes.users.store  => 'users.store'
+     *     laracl.routes.users.edit   => 'users.edit'
+     *     laracl.routes.users.update => 'users.update'
+     *     laracl.routes.users.delete => 'users.delete'
+     *     laracl.routes.users.destroy => 'users.destroy'
      * ]
      */
     public static function normalizeConfig()
@@ -163,6 +163,8 @@ class Core
                 "laracl.routes.{$slug}.update"  => $route_base . ".update",
                 "laracl.routes.{$slug}.delete"  => $route_base . ".delete",
                 "laracl.routes.{$slug}.destroy" => $route_base . ".destroy",
+                "laracl.routes.{$slug}.trash"   => $route_base . ".trash",
+                "laracl.routes.{$slug}.restore" => $route_base . ".restore",
             ];
             config($route_params);
         }
