@@ -3,27 +3,11 @@
 
     @slot('title') {{ $title }} @endslot
 
+    @include('laracl::breadcrumb')
+
     <hr>
 
     @acl_content('users.read')
-
-        <div class="row mb-3">
-
-            <div class="col">
-
-                @acl_action('users.read', route($route_index), 'Lista de Usuários', 'laracl::buttons.users.read')
-
-            </div>
-
-            <div class="col text-right justify-content-end">
-
-                {{-- ... --}}
-
-            </div>
-
-        </div>
-
-        <hr>
 
         <form method="post" action="{{ route($route_store) }}">
 

@@ -3,17 +3,13 @@
 
     @slot('title') Permissões Específicas para {{ $user->name }} @endslot
 
+    @include('laracl::breadcrumb')
+
     <hr>
 
     @acl_content('users-permissions.read')
 
         <div class="row mb-3">
-
-            <div class="col">
-
-                @acl_action('users.read', route($route_index), 'Lista de Usuários', 'laracl::buttons.users.read')
-
-            </div>
 
             <div class="col text-right">
 

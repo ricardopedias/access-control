@@ -61,6 +61,10 @@ class UsersController extends SortableGridController
             'route_destroy'     => config('laracl.routes.users.destroy'),
             'route_permissions' => config('laracl.routes.users-permissions.edit'),
             'route_groups'      => config('laracl.routes.groups.index'),
+            'route_trash'       => config('laracl.routes.users.trash'),
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários'
+            ]
             ]);
     }
 
@@ -78,9 +82,12 @@ class UsersController extends SortableGridController
             'groups'          => (new AclGroupsRepository)->getAll(false),
             'title'           => 'Novo Usuário',
             'require_pass'    => 'required',
-            'route_index'     => config('laracl.routes.users.index'),
             'route_store'     => config('laracl.routes.users.store'),
-            ]);
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                'Novo Usuário'
+            ]
+        ]);
     }
 
     /**
@@ -113,15 +120,18 @@ class UsersController extends SortableGridController
     {
         $view = config('laracl.views.users.edit');
         return view($view)->with([
-            'model'             => (new AclUsersRepository)->read($id),
+            'model'             => ($user = (new AclUsersRepository)->read($id)),
             'groups'            => (new AclGroupsRepository)->getAll(false),
             'require_pass'      => '',
             'title'             => 'Editar Usuário',
-            'route_index'       => config('laracl.routes.users.index'),
             'route_update'      => config('laracl.routes.users.update'),
             'route_create'      => config('laracl.routes.users.create'),
             'route_permissions' => config('laracl.routes.users-permissions.edit'),
-            ]);
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                $user->name
+            ]
+        ]);
     }
 
     /**

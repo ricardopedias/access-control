@@ -3,27 +3,24 @@
 
     @slot('title') Grupos de Acesso @endslot
 
+    @include('laracl::breadcrumb')
+
     <hr>
 
     @acl_content('groups.read')
 
-        <div class="row">
+        <div class="row justify-content-end align-items-start pl-3 pr-3">
 
-            <div class="col">
-
+            <div class="mr-auto">
                 @sg_perpage
-
-                @acl_action('users.read', route($route_users), 'Usuários', 'laracl::buttons.users.read')
-
-
             </div>
 
-            <div class="col text-right">
-
+            <div>
                 @acl_action('groups.create', route($route_create), 'Novo Grupo', 'laracl::buttons.groups.create')
 
                 @sg_search
 
+                @acl_action('groups.delete', route($route_trash), '', 'laracl::buttons.trash')
             </div>
 
         </div>

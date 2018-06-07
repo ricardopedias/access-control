@@ -3,17 +3,13 @@
 
     @slot('title') {{ $title }} @endslot
 
+    @include('laracl::breadcrumb')
+
     <hr>
 
     @acl_content('groups.read')
 
         <div class="row mb-3">
-
-            <div class="col">
-
-                @acl_action('groups.read', route($route_index), 'Lista de Grupos',  'laracl::buttons.groups.read')
-
-            </div>
 
             <div class="col text-right justify-content-end">
 

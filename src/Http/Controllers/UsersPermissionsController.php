@@ -24,6 +24,11 @@ class UsersPermissionsController extends Controller
             'route_user'   => config('laracl.routes.users.edit'),
             'route_update' => config('laracl.routes.users-permissions.update'),
             'route_groups' => config('laracl.routes.groups.index'),
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user"></i> ' . $user->name => route(config('laracl.routes.users.edit'), $user->id),
+                'Permissões'
+            ]
         ]);
     }
 

@@ -54,8 +54,12 @@ class GroupsController extends SortableGridController
             'route_edit'        => config('laracl.routes.groups.edit'),
             'route_destroy'     => config('laracl.routes.groups.destroy'),
             'route_permissions' => config('laracl.routes.groups-permissions.edit'),
-            'route_users'       => config('laracl.routes.users.index'),
-            ]);
+            'route_trash'       => config('laracl.routes.groups.trash'),
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                'Grupos'
+            ]
+        ]);
     }
 
     /**
@@ -70,10 +74,14 @@ class GroupsController extends SortableGridController
         return view($view)->with([
             'model'       => (new AclGroupsRepository)->read(),
             'title'       => 'Novo Grupo de Acesso',
-            'route_index' => config('laracl.routes.groups.index'),
             'route_store' => config('laracl.routes.groups.store'),
             'route_users' => config('laracl.routes.users.index'),
-            ]);
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
+                'Novo Grupo'
+            ]
+        ]);
     }
 
     /**
@@ -105,13 +113,17 @@ class GroupsController extends SortableGridController
         $view = config('laracl.views.groups.edit');
 
         return view($view)->with([
-            'model'             => (new AclGroupsRepository)->read($id),
+            'model'             => ($group = (new AclGroupsRepository)->read($id)),
             'title'             => 'Editar Grupo de Acesso',
-            'route_index'       => config('laracl.routes.groups.index'),
             'route_update'      => config('laracl.routes.groups.update'),
             'route_create'      => config('laracl.routes.groups.create'),
             'route_permissions' => config('laracl.routes.groups-permissions.edit'),
-            ]);
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
+                $group->name
+            ]
+        ]);
     }
 
     /**

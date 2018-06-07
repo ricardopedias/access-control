@@ -3,6 +3,8 @@
 
     @slot('title') Gerenciamento de Usuários @endslot
 
+    @include('laracl::breadcrumb')
+
     <hr>
 
     @acl_content('users.read')
