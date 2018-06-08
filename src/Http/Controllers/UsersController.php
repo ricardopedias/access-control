@@ -51,6 +51,48 @@ class UsersController extends Controller
             ]
             ]);
     }
+    /**
+     * Exibe a lista de registros na lixeira.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function trash(Request $request)
+    {
+        $this->setInitials('users.id', 'desc', 10);
+
+        $this->addGridField('ID', 'users.id');
+        $this->addGridField('Nome', 'users.name');
+        $this->addGridField('Permissões', 'acl_groups.name');
+        $this->addGridField('E-mail', 'users.email');
+        $this->addGridField('Criação', 'users.created_at');
+        $this->addGridField('Ações');
+
+        $this->addSearchField('users.id');
+        $this->addSearchField('users.name');
+        $this->addSearchField('users.email');
+
+        $this->addOrderlyField('users.id');
+        $this->addOrderlyField('users.name');
+        $this->addOrderlyField('acl_groups.name');
+        $this->addOrderlyField('users.email');
+        $this->addOrderlyField('users.created_at');
+
+        $this->setDataProvider((new AclUsersRepository)->getSearcheable());
+
+        $view = config('laracl.views.users.trash');
+        return $this->gridView($view)->with([
+            'route_create'      => config('laracl.routes.users.create'),
+            'route_edit'        => config('laracl.routes.users.edit'),
+            'route_destroy'     => config('laracl.routes.users.destroy'),
+            'route_permissions' => config('laracl.routes.users-permissions.edit'),
+            'route_groups'      => config('laracl.routes.groups.index'),
+            'route_trash'       => config('laracl.routes.users.trash'),
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                'Lixeira'
+            ]
+            ]);
+    }
 
     /**
      * Exibe o formulário para a criação de registros.

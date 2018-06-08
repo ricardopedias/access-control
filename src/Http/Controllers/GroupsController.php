@@ -47,6 +47,45 @@ class GroupsController extends Controller
     }
 
     /**
+     * Exibe a lista de registros na lixeira.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function trash(Request $request)
+    {
+        $this->setInitials('id', 'desc', 10);
+
+        $this->addGridField('ID', 'id');
+        $this->addGridField('Nome', 'name');
+        $this->addGridField('Criação', 'created_at');
+        $this->addGridField('Ações');
+
+        $this->addSearchField('id');
+        $this->addSearchField('name');
+
+        $this->addOrderlyField('id');
+        $this->addOrderlyField('name');
+        $this->addOrderlyField('created_at');
+
+        $this->setDataProvider((new AclGroupsRepository)->newQuery());
+
+        $view = config('laracl.views.groups.trash');
+        return $this->gridView($view)->with([
+            'route_create'      => config('laracl.routes.groups.create'),
+            'route_edit'        => config('laracl.routes.groups.edit'),
+            'route_destroy'     => config('laracl.routes.groups.destroy'),
+            'route_permissions' => config('laracl.routes.groups-permissions.edit'),
+            'route_trash'       => config('laracl.routes.groups.trash'),
+            'route_restore'       => config('laracl.routes.groups.restore'),
+            'breadcrumb'        => [
+                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
+                'Lixeira'
+            ]
+        ]);
+    }
+
+    /**
      * Exibe o formulário para a criação de registros.
      *
      * @return \Illuminate\Http\Response

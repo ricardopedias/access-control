@@ -79,6 +79,7 @@ return [
             'create'            => 'laracl::users.create',
             'edit'              => 'laracl::users.edit',
             'delete'            => 'laracl::users.delete',
+            'trash'             => 'laracl::users.trash',
         ],
 
         'users-permissions' => [
@@ -90,6 +91,7 @@ return [
             'create'           => 'laracl::groups.create',
             'edit'             => 'laracl::groups.edit',
             'delete'           => 'laracl::groups.delete',
+            'trash'            => 'laracl::groups.trash',
         ],
 
         'groups-permissions' => [
