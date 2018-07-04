@@ -1,12 +1,12 @@
 <?php
 namespace Laracl\Repositories;
 
-use Laracl\Models\AclGroupPermission;
+use Laracl\Models\AclUserPermission;
 use Laracl\Repositories\AclRolesRepository;
 
-class AclGroupsPermissionsRepository extends IRepository
+class AclUsersPermissionsRepository extends BaseRepository
 {
-    protected $model_class = AclGroupPermission::class;
+    protected $model_class = AclUserPermission::class;
 
     /**
      * Atualiza as permissões de um usuário existente.
@@ -23,9 +23,9 @@ class AclGroupsPermissionsRepository extends IRepository
             $role = (new AclRolesRepository)->findBySlug($slug);
 
             // Aplica as permissões para o usuário
-            $model = AclGroupPermission::firstOrNew([
-                'group_id' => $id,
-                'role_id'  => $role->id,
+            $model = AclUserPermission::firstOrNew([
+                'user_id' => $id,
+                'role_id' => $role->id,
                 ]);
 
             $model->fill([
@@ -47,33 +47,33 @@ class AclGroupsPermissionsRepository extends IRepository
      * Se $take for false então devolve todos os registros
      * Se $paginate for true retorna uma instânca do Paginator
      *
-     * @param  int  $group_id
+     * @param  int  $user_id
      * @param  bool $take
      * @param  bool $paginate
      * @return EloquentCollection|Paginator
      */
-    public function getAllByGroupID(int $group_id, $take = false, bool $paginate = false)
+    public function getAllByUserID(int $user_id, $take = false, bool $paginate = false)
     {
-        $query = $this->newQuery()->where('group_id', $group_id);
+        $query = $this->newQuery()->where('user_id', $user_id);
         return $this->doQuery($query, $take, $paginate);
     }
 
     /**
-     * Este método devolve a estrutura de permissões para
-     * a geração do formulário de edição.
-     * Se $allows_null for true e o usuário não possuir permissões,
-     * o valor null será retornado, caso contrário, uma estrutura
-     * com valores desativados será retornada.
-     *
-     * @param  int  $group_id
-     * @param  bool $allows_null
-     * @return array|null
-     */
-    public function getStructure(int $group_id, bool $allows_null = false)
+    * Este método devolve a estrutura de permissões para
+    * a geração do formulário de edição.
+    * Se $allows_null for true e o usuário não possuir permissões,
+    * o valor null será retornado, caso contrário, uma estrutura
+    * com valores desativados será retornada.
+    *
+    * @param  int  $user_id
+    * @param  bool $allows_null
+    * @return array|null
+    */
+    public function getStructure($user_id, $allows_null = false)
     {
         $permissions = [];
 
-        $collection = $this->getAllByGroupID($group_id);
+        $collection = $this->getAllByUserID($user_id);
         if ($collection->count() > 0) {
             // Apenas as habilidades do usuário
             foreach ($collection as $item) {

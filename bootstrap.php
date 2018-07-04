@@ -1,14 +1,10 @@
 <?php
 
     /*
-    |--------------------------------------------------------------------------
     | Bootstrap PhpUnit
-    |--------------------------------------------------------------------------
-    |
     | Ao executar os testes de unidade, é preciso notificar o autoloader
     | do composer sobre as classes personalizadas que possam existir
     | na implementação dos testes
-    |
     */
 
     error_reporting(E_ALL);

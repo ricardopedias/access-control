@@ -9,7 +9,7 @@ use Illuminate\Pagination\AbstractPaginator as Paginator;
 /**
  * @see https://medium.com/by-vinicius-reis/repository-pattern-n%C3%A3o-precisa-ser-chato-principalmente-com-laravel-d97235b31c7e
  */
-abstract class IRepository
+abstract class BaseRepository
 {
     /**
      * Modelo usado no repositório
@@ -63,21 +63,6 @@ abstract class IRepository
     }
 
     /**
-     * Devolve todos os registros.
-     * Se $take for false então devolve todos os registros
-     * Se $paginate for true retorna uma instânca do Paginator
-     *
-     * @param int  $take
-     * @param bool $paginate
-     *
-     * @return EloquentCollection|Paginator
-     */
-    public function getAll($take = 15, bool $paginate = true)
-    {
-        return $this->doQuery(null, $take, $paginate);
-    }
-
-    /**
     * @param string      $column
     * @param string|null $key
     *
@@ -107,22 +92,77 @@ abstract class IRepository
     }
 
     /**
-    * Devolve um registro com base em seu ID
+    * Devolve um registro com base no campo e valor especificados.
     * Se $failable for true, falhas vão disparar ModelNotFoundException.
     *
-    * @param  string  $field
+    * @param  mixed  $field
     * @param  mixed  $value
     * @param  bool $failable
     *
     * @return Model
     */
-    public function findBy(string $field, $value, bool $failable = true)
+    public function findBy($field, $value = false, bool $failable = true)
     {
-        if ($failable == true) {
-            return $this->newQuery()->where($field, $value)->firstOrFail();
+        $query = $this->newQuery();
+
+        if(is_array($field)) {
+            $failable = $value === true ? true : false;
+            foreach ($field as $k => $v) {
+                $query->where($k, $v);
+            }
+        } else {
+            $query->where($field, $value);
         }
 
-        return $this->newQuery()->where($field, $value)->first();
+        if ($failable == true) {
+            return $query->firstOrFail();
+        }
+
+        return $query->first();
+    }
+
+    /**
+     * Devolve todos os registros.
+     * Se $take for '0' então devolve todos os registros
+     * Se $paginate for true retorna uma instânca do Paginator
+     *
+     * @param int  $take
+     * @param bool $paginate
+     *
+     * @return EloquentCollection|Paginator
+     */
+    public function collectAll(int $take = 0, bool $paginate = true)
+    {
+        $take = $take > 0 ? $take : false;
+        return $this->doQuery(null, $take, $paginate);
+    }
+
+    /**
+    * Devolve uma lista de regostros com base no campo e valor especificados.
+    * Se $failable for true, falhas vão disparar ModelNotFoundException.
+    *
+    * @param  mixed  $field
+    * @param  mixed  $value
+    * @param int  $take
+    * @param bool $paginate
+    *
+    * @return EloquentCollection|Paginator
+    */
+    public function collectBy($field, $value = false, int $take = 0, bool $paginate = true)
+    {
+        $query = $this->newQuery();
+
+        if(is_array($field)) {
+            $failable = $value === true ? true : false;
+            foreach ($field as $k => $v) {
+                $query->where($k, $v);
+            }
+        } else {
+            $query->where($field, $value);
+        }
+
+        $take = $take > 0 ? $take : false;
+        return $this->doQuery($query, $take, $paginate);
     }
 
     /**

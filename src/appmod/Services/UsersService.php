@@ -1,21 +1,18 @@
 <?php
-namespace Laracl\Http\Controllers;
+namespace Laracl\Services;
 
 use Illuminate\Http\Request;
-use SortableGrid\Traits\HasSortableGrid;
 use Laracl\Repositories\AclUsersRepository;
 use Laracl\Repositories\AclGroupsRepository;
+use Laracl\Models\AclUserGroup;
+use Laracl\Models\AclUserPermission;
+use SortableGrid\Traits\HasSortableGrid;
 
-class UsersController extends Controller
+class UsersService implements CrudContract
 {
     use HasSortableGrid;
 
-    /**
-     * Exibe a lista de registros.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function gridList(Request $request, string $view)
     {
         $this->setInitials('users.id', 'desc', 10);
 
@@ -36,9 +33,9 @@ class UsersController extends Controller
         $this->addOrderlyField('users.email');
         $this->addOrderlyField('users.created_at');
 
-        $this->setDataProvider((new AclUsersRepository)->getSearcheable());
+        $provider = (new AclUsersRepository)->getSearcheable();
+        $this->setDataProvider($provider);
 
-        $view = config('laracl.views.users.index');
         return $this->gridView($view)->with([
             'route_create'      => config('laracl.routes.users.create'),
             'route_edit'        => config('laracl.routes.users.edit'),
@@ -49,14 +46,10 @@ class UsersController extends Controller
             'breadcrumb'        => [
                 '<i class="fas fa-user"></i> Usuários'
             ]
-            ]);
+        ]);
     }
-    /**
-     * Exibe a lista de registros na lixeira.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function trash(Request $request)
+
+    public function gridTrash(Request $request, string $view)
     {
         $this->setInitials('users.id', 'desc', 10);
 
@@ -77,9 +70,9 @@ class UsersController extends Controller
         $this->addOrderlyField('users.email');
         $this->addOrderlyField('users.created_at');
 
-        $this->setDataProvider((new AclUsersRepository)->getSearcheable());
+        $provider = (new AclUsersRepository)->getSearcheable()->onlyTrashed();
+        $this->setDataProvider($provider);
 
-        $view = config('laracl.views.users.trash');
         return $this->gridView($view)->with([
             'route_create'      => config('laracl.routes.users.create'),
             'route_edit'        => config('laracl.routes.users.edit'),
@@ -91,21 +84,14 @@ class UsersController extends Controller
                 '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
                 'Lixeira'
             ]
-            ]);
+        ]);
     }
 
-    /**
-     * Exibe o formulário para a criação de registros.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function formCreate(Request $request, string $view)
     {
-        $view = config('laracl.views.users.create');
-
         return view($view)->with([
             'model'           => (new AclUsersRepository)->read(),
-            'groups'          => (new AclGroupsRepository)->getAll(false),
+            'groups'          => (new AclGroupsRepository)->collectAll(),
             'title'           => 'Novo Usuário',
             'require_pass'    => 'required',
             'route_store'     => config('laracl.routes.users.store'),
@@ -116,38 +102,11 @@ class UsersController extends Controller
         ]);
     }
 
-    /**
-     * Armazena no banco de dados o novo registro criado.
-     *
-     * @param  \Illuminate\Http\Request $form
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $form)
+    public function formEdit(Request $request, string $view, $id)
     {
-        $form->validate([
-            'name'         => 'required|max:100',
-            'email'        => 'required|unique:users|max:150',
-            'password'     => 'required',
-        ]);
-
-        $model = (new AclUsersRepository)->create($form->all());
-
-        $route = config('laracl.routes.users.index');
-        return redirect()->route($route, $model);
-    }
-
-    /**
-     * Exibe o formulário para edição do registro especificado.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $view = config('laracl.views.users.edit');
         return view($view)->with([
             'model'             => ($user = (new AclUsersRepository)->read($id)),
-            'groups'            => (new AclGroupsRepository)->getAll(false),
+            'groups'            => (new AclGroupsRepository)->collectAll(),
             'require_pass'      => '',
             'title'             => 'Editar Usuário',
             'route_update'      => config('laracl.routes.users.update'),
@@ -160,40 +119,81 @@ class UsersController extends Controller
         ]);
     }
 
-    /**
-     * Atualiza os dados de um usuário existente.
-     *
-     * @param  \Illuminate\Http\Request $form
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $form, $id)
+    public function dataInsert(Request $request)
     {
-        $form->validate([
+        $request->validate([
+            'name'         => 'required|max:100',
+            'email'        => 'required|unique:users|max:150',
+            'password'     => 'required',
+        ]);
+
+        $data = $request->all();
+        $data['password'] = isset($data['password']) && !empty($data['password'])
+            ? bcrypt($data['password'])
+            : bcrypt(uniqid());
+
+        $model = (new AclUsersRepository)->create($data);
+
+        if (isset($data['acl_group_id']) && !empty($data['acl_group_id'])) {
+            // Se acl_group_id for diferente de 0 ou null
+            $relation = (new AclGroupsRepository)->create([
+                'user_id'  => $model->id,
+                'group_id' => $data['acl_group_id']
+            ]);
+        }
+
+        return $model;
+    }
+
+    public function dataUpdate(Request $request, int $id = null)
+    {
+        $request->validate([
             'name'         => 'required|max:100',
             'email'        => "required|unique:users,email,{$id}|max:150"
         ]);
 
-        $updated = (new AclUsersRepository)->update($id, $form->all());
+        $model = (new AclUsersRepository)->findByID($id);
+        $data = $request->all();
 
-        return back();
+        // Se o password for preenchido, transforma em hash
+        $data['password'] = !isset($data['password']) || empty($data['password'])
+            ? $model->password
+            : bcrypt($data['password']);
+
+        if (isset($data['acl_group_id'])) {
+
+            if (empty($data['acl_group_id'])) {
+                // Se grupo for setado como 0 ou null,
+                // remove relacionamentos existentes com grupos
+                AclUserGroup::where('user_id', $id)->delete();
+
+            } else {
+                // Se um grupo for selecionado e o usuário possuir permissões exclusivas,
+                // elas serão removidas, pois as permissões do grupo serão usadas no lugar
+                AclUserPermission::where('user_id', $id)->delete();
+
+                $group = AclUserGroup::where('user_id', $id)->first();
+                if ($group == null) {
+                    $group = new AclUserGroup;
+                    $group->user_id = $id;
+                }
+                $group->group_id = $data['acl_group_id'];
+                $group->save();
+            }
+        }
+
+        // Atualiza os dados do usuário
+        $model->fill($data);
+        return $model->save();
     }
 
-    /**
-     * Remove o registro especificado do banco de dados.
-     *
-     * @param Request $form
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $form, $id)
+    public function dataDelete(Request $request, int $id = null)
     {
-        if ($form->request->get('mode') == 'soft') {
+        if ($request->request->get('mode') == 'soft') {
             $deleted = (new AclUsersRepository)->delete($id);
         } else {
             $deleted = (new AclUsersRepository)->delete($id, true);
         }
-
-        return response()->json(['deleted' => $deleted]);
+        return $deleted;
     }
 }

@@ -3,7 +3,7 @@ namespace Laracl\Repositories;
 
 use Laracl\Models\AclGroup;
 
-class AclGroupsRepository extends IRepository
+class AclGroupsRepository extends BaseRepository
 {
     protected $model_class = AclGroup::class;
 

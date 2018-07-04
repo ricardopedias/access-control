@@ -39,7 +39,7 @@ class Core
      */
     public static function loadBladeDirectives()
     {
-        include('directives.php');
+        include(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'directives.php');
     }
 
     public static function getDebug($param = null)

@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Laracl\\": "src/"
+            "Laracl\\": "src/appmod/"
         }
     },
     "autoload-dev": {

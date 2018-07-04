@@ -3,7 +3,7 @@ namespace Laracl\Repositories;
 
 use Laracl\Models\AclRole;
 
-class AclRolesRepository extends IRepository
+class AclRolesRepository extends BaseRepository
 {
     protected $model_class = AclRole::class;
 

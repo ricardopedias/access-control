@@ -1,20 +1,18 @@
 <?php
-namespace Laracl\Http\Controllers;
+namespace Laracl\Services;
 
 use Illuminate\Http\Request;
-use SortableGrid\Traits\HasSortableGrid;
+use Laracl\Repositories\AclUsersRepository;
 use Laracl\Repositories\AclGroupsRepository;
+use Laracl\Models\AclUserGroup;
+use Laracl\Models\AclUserPermission;
+use SortableGrid\Traits\HasSortableGrid;
 
-class GroupsController extends Controller
+class GroupsService implements CrudContract
 {
     use HasSortableGrid;
 
-    /**
-     * Exibe a lista de registros.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function gridList(Request $request, string $view)
     {
         $this->setInitials('id', 'desc', 10);
 
@@ -30,9 +28,9 @@ class GroupsController extends Controller
         $this->addOrderlyField('name');
         $this->addOrderlyField('created_at');
 
-        $this->setDataProvider((new AclGroupsRepository)->newQuery());
+        $provider = (new AclGroupsRepository)->newQuery();
+        $this->setDataProvider($provider);
 
-        $view = config('laracl.views.groups.index');
         return $this->gridView($view)->with([
             'route_create'      => config('laracl.routes.groups.create'),
             'route_edit'        => config('laracl.routes.groups.edit'),
@@ -46,12 +44,7 @@ class GroupsController extends Controller
         ]);
     }
 
-    /**
-     * Exibe a lista de registros na lixeira.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function trash(Request $request)
+    public function gridTrash(Request $request, string $view)
     {
         $this->setInitials('id', 'desc', 10);
 
@@ -67,9 +60,9 @@ class GroupsController extends Controller
         $this->addOrderlyField('name');
         $this->addOrderlyField('created_at');
 
-        $this->setDataProvider((new AclGroupsRepository)->newQuery());
+        $provider = (new AclGroupsRepository)->newQuery()->onlyTrashed();
+        $this->setDataProvider($provider);
 
-        $view = config('laracl.views.groups.trash');
         return $this->gridView($view)->with([
             'route_create'      => config('laracl.routes.groups.create'),
             'route_edit'        => config('laracl.routes.groups.edit'),
@@ -85,15 +78,8 @@ class GroupsController extends Controller
         ]);
     }
 
-    /**
-     * Exibe o formulário para a criação de registros.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function formCreate(Request $request, string $view)
     {
-        $view = config('laracl.views.groups.create');
-
         return view($view)->with([
             'model'       => (new AclGroupsRepository)->read(),
             'title'       => 'Novo Grupo de Acesso',
@@ -107,34 +93,8 @@ class GroupsController extends Controller
         ]);
     }
 
-    /**
-     * Armazena no banco de dados o novo registro criado.
-     *
-     * @param  \Illuminate\Http\Request $form
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $form)
+    public function formEdit(Request $request, string $view, $id)
     {
-        $form->validate([
-            'name' => 'required|max:100|unique:acl_groups,name',
-        ]);
-
-        $model = (new AclGroupsRepository)->create($form->all());
-
-        $route = config('laracl.routes.groups.index');
-        return redirect()->route($route, $model);
-    }
-
-    /**
-     * Exibe o formulário para edição do registro especificado.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $view = config('laracl.views.groups.edit');
-
         return view($view)->with([
             'model'             => ($group = (new AclGroupsRepository)->read($id)),
             'title'             => 'Editar Grupo de Acesso',
@@ -149,39 +109,31 @@ class GroupsController extends Controller
         ]);
     }
 
-    /**
-     * Atualiza o registro especificado no banco de dados.
-     *
-     * @param  \Illuminate\Http\Request $form
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $form, $id)
+    public function dataInsert(Request $request)
     {
-        $form->validate([
+        $request->validate([
+            'name' => 'required|max:100|unique:acl_groups,name',
+        ]);
+
+        return (new AclGroupsRepository)->create($request->all());
+    }
+
+    public function dataUpdate(Request $request, int $id = null)
+    {
+        $request->validate([
             'name' => "required|max:100|unique:acl_groups,name,{$id}"
         ]);
 
-        $updated = (new AclGroupsRepository)->update($id, $form->all());
-
-        return back();
+        return (new AclGroupsRepository)->update($id, $request->all());
     }
 
-    /**
-     * Remove o registro especificado do banco de dados.
-     *
-     * @param Request $form
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $form, $id)
+    public function dataDelete(Request $request, int $id = null)
     {
-        if ($form->request->get('mode') == 'soft') {
+        if ($request->request->get('mode') == 'soft') {
             $deleted = (new AclGroupsRepository)->delete($id);
         } else {
             $deleted = (new AclGroupsRepository)->delete($id, true);
         }
-
-        return response()->json(['deleted' => $deleted]);
+        return $deleted;
     }
 }
