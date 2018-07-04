@@ -20,7 +20,7 @@ class UsersPermissionsService implements EditPermissionsContract
             'route_groups' => config('laracl.routes.groups.index'),
             'breadcrumb'   => [
                 '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                '<i class="fas fa-user"></i> ' . $user->name => route(config('laracl.routes.users.edit'), $user->id),
+                'Usuário "' . $user->name . '"' => route(config('laracl.routes.users.edit'), $user->id),
                 'Permissões'
             ]
         ]);

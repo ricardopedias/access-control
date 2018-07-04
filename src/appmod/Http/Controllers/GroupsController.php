@@ -97,4 +97,17 @@ class GroupsController extends Controller
         $deleted = (new Services\GroupsService)->dataDelete($request->all(), $id);
         return response()->json(['deleted' => $deleted]);
     }
+
+    /**
+     * Restaura o registro especificado, removendo-o da lixeira.
+     *
+     * @param Request $form
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(Request $request, $id)
+    {
+        $restored = (new Services\GroupsService)->dataRestore($request->all(), $id);
+        return response()->json(['restored' => $restored]);
+    }
 }

@@ -99,4 +99,17 @@ class UsersController extends Controller
         $deleted = (new Services\UsersService)->dataDelete($request->all(), $id);
         return response()->json(['deleted' => $deleted]);
     }
+
+    /**
+     * Restaura o registro especificado, removendo-o da lixeira.
+     *
+     * @param Request $form
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore(Request $request, $id)
+    {
+        $restored = (new Services\UsersService)->dataRestore($request->all(), $id);
+        return response()->json(['restored' => $restored]);
+    }
 }

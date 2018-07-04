@@ -137,6 +137,7 @@ class Core
      *     laracl.routes.users.update => 'users.update'
      *     laracl.routes.users.delete => 'users.delete'
      *     laracl.routes.users.destroy => 'users.destroy'
+     *     laracl.routes.users.restore => 'users.restore'
      * ]
      */
     public static function normalizeConfig()
@@ -252,5 +253,12 @@ class Core
 
         self::$registered = true;
         return true;
+    }
+
+    public static function isTrash()
+    {
+        $nodes = explode('/', request()->path());
+        $last_node = current(array_values(array_slice($nodes, -1)));
+        return ($last_node === 'trash');
     }
 }

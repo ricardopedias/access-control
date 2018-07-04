@@ -128,4 +128,10 @@ class GroupsService implements CrudContract
         }
         return $deleted;
     }
+
+    public function dataRestore(array $data, int $id = null)
+    {
+        $restored = (new AclGroupsRepository)->restore($id);
+        return $restored;
+    }
 }

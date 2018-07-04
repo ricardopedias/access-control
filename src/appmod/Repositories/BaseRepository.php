@@ -85,10 +85,10 @@ abstract class BaseRepository
     public function findByID(int $id, bool $failable = true)
     {
         if ($failable == true) {
-            return $this->newQuery()->findOrFail($id);
+            return $this->newQuery()->withTrashed()->findOrFail($id);
         }
 
-        return $this->newQuery()->find($id);
+        return $this->newQuery()->withTrashed()->find($id);
     }
 
     /**
@@ -206,7 +206,7 @@ abstract class BaseRepository
     /**
      * Remove o registro especificado do banco de dados.
      * Se $force for true, força a remoão o registro do banco
-     * Isso é putil apenas para modelos com softdelete
+     * Isso é útil apenas para modelos com softdelete
      * @see https://laravel.com/docs/5.6/eloquent#soft-deleting
      *
      * @param  int  $id
@@ -221,5 +221,17 @@ abstract class BaseRepository
         } else {
             return $register->delete();
         }
+    }
+
+    /**
+     * Restaura o registro especificado se estiver na lixeira.
+     *
+     * @param  int  $id
+     * @return bool
+     */
+    public function restore($id)
+    {
+        $register =  $this->read($id);
+        return $register->restore();
     }
 }

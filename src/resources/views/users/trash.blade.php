@@ -48,9 +48,7 @@
 
                     <td class="text-center">
 
-                        {{--
-                        @acl_action_sm('users.delete', route($route_destroy, $item->id), 'Restaurar', null, true)
-                        --}}
+                        @acl_action_sm('users.delete', route($route_restore, $item->id), 'Restaurar', 'laracl::buttons.restore', true)
 
                         @acl_action_sm('users.delete', route($route_destroy, $item->id), 'Excluir', null, true)
 

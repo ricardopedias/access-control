@@ -21,7 +21,7 @@ class GroupsPermissionsService implements EditPermissionsContract
             'breadcrumb'        => [
                 '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
                 '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
-                '<i class="fas fa-user-friends"></i> ' . $group->name => route(config('laracl.routes.groups.edit'), $group->id),
+                'Grupo "' . $group->name . '"' => route(config('laracl.routes.groups.edit'), $group->id),
                 'Permissões'
             ]
         ]);

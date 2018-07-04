@@ -114,6 +114,7 @@ class UsersService implements CrudContract
             'route_create'      => config('laracl.routes.users.create'),
             'route_edit'        => config('laracl.routes.users.edit'),
             'route_destroy'     => config('laracl.routes.users.destroy'),
+            'route_restore'     => config('laracl.routes.users.restore'),
             'route_permissions' => config('laracl.routes.users-permissions.edit'),
             'route_groups'      => config('laracl.routes.groups.index'),
             'route_trash'       => config('laracl.routes.users.trash'),
@@ -219,6 +220,12 @@ class UsersService implements CrudContract
             $deleted = (new AclUsersRepository)->delete($id, true);
         }
         return $deleted;
+    }
+
+    public function dataRestore(array $data, int $id = null)
+    {
+        $restored = (new AclUsersRepository)->restore($id);
+        return $restored;
     }
 
     /**

@@ -20,7 +20,9 @@
 
                 @sg_search
 
-                @acl_action('groups.delete', route($route_trash), '', 'laracl::buttons.trash')
+                @if(config('laracl.soft_delete') != false)
+                    @acl_action('groups.delete', route($route_trash), '', 'laracl::buttons.trash')
+                @endif
             </div>
 
         </div>

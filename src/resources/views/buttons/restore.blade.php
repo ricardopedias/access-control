@@ -1,44 +1,44 @@
 
 @if ($status==false)
 
-    <a href="{{ $url }}" class="btn btn-danger disabled {{ $size != 'none' ? "btn-{$size}" : '' }}"
+    <a href="{{ $url }}" class="btn btn-secondary disabled {{ $size != 'none' ? "btn-{$size}" : '' }}"
        title="Você não tem permissão para '{{ $label }}'">
-        <i class="{{ $icon or 'fas fa-times' }}"></i>
+        <i class="{{ $icon or 'fas fa-retweet' }}"></i>
         <span class="d-none d-lg-inline">{{ $label }}</span>
     </a>
 
 @else
 
     @php
-        $btn_id = 'btn-delete-' . md5(microtime());
+        $btn_id = 'btn-restore-' . md5(microtime());
     @endphp
 
     <a id="{{ $btn_id }}" href="javascript:void(0)"
-       class="btn btn-danger {{ $size != 'none' ? "btn-{$size}" : '' }} acl-action-delete"
+       class="btn btn-secondary {{ $size != 'none' ? "btn-{$size}" : '' }} acl-action-restore"
        data-url="{{ $url }}" title="{{ $label }}">
-        <i class="{{ $icon or 'fas fa-times' }}"></i>
+        <i class="{{ $icon or 'fas fa-retweet' }}"></i>
         <span class="d-none d-lg-inline">{{ $label }}</span>
     </a>
 
     {{--
     O Código abaixo será renderizado apenas uma vez,
-    quando o primeiro botão do tipo delete for invocado.
+    quando o primeiro botão do tipo restore for invocado.
     --}}
     @php
-        global $acl_delete_confirm_modal;
+        global $acl_restore_confirm_modal;
 
-        if(isset($acl_delete_confirm_modal)) {
-            $acl_delete_confirm_modal = false;
+        if(isset($acl_restore_confirm_modal)) {
+            $acl_restore_confirm_modal = false;
         } else {
-            $acl_delete_confirm_modal = true;
+            $acl_restore_confirm_modal = true;
         }
     @endphp
 
-    @if($acl_delete_confirm_modal == true)
+    @if($acl_restore_confirm_modal == true)
 
-        <div id="js-acl-delete-confirm-modal-logic">
+        <div id="js-acl-restore-confirm-modal-logic">
 
-            @include('laracl::modal-delete')
+            @include('laracl::modal-restore')
 
             <script>
 
@@ -50,8 +50,8 @@
                    O AclConfirmDelete é carregado em laracl/src/resources/views/modal-delete.blade.php
                 */
 
-                function acl_attach_delete_confirm(elem) {
-                    var confirm = new AclConfirmDelete();
+                function acl_attach_restore_confirm(elem) {
+                    var confirm = new AclConfirmRestore();
                     confirm.debugMode({{ var_export(env('APP_DEBUG') || env('APP_ENV') === 'local') }});
                     confirm.setToken('{{ csrf_token() }}');
                     confirm.removeGridRow({{ $delete_row }});
@@ -61,14 +61,15 @@
                 if (undefined === window.$) {
 
                     // Se jQuery ainda não estiver carregado
+
                     if(undefined === window.ready_acl_functions) {
                         window.ready_acl_functions = [];
                     }
 
                     window.ready_acl_functions.push(function(){
-                        $('#js-acl-delete-confirm-modal-logic').appendTo("body");
-                        $('.acl-action-delete').each(function(){
-                            acl_attach_delete_confirm(this);
+                        $('#js-acl-restore-confirm-modal-logic').appendTo("body");
+                        $('.acl-action-restore').each(function(){
+                            acl_attach_restore_confirm(this);
                         });
                     });
 
@@ -77,13 +78,13 @@
                             callback();
                         })
                     };
-                    
+
                 } else {
                     // se jQuery já estiver disponível
                     $(document).ready(function(){
-                        $('#js-acl-delete-confirm-modal-logic').appendTo("body");
-                        $('.acl-action-delete').each(function(){
-                            acl_attach_delete_confirm(this);
+                        $('#js-acl-restore-confirm-modal-logic').appendTo("body");
+                        $('.acl-action-restore').each(function(){
+                            acl_attach_restore_confirm(this);
                         });
                     });
                 }
