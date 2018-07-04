@@ -220,4 +220,44 @@ class UsersService implements CrudContract
         }
         return $deleted;
     }
+
+    /**
+     * Verifica se o usuário tem direito a executar a função de acesso
+     * @param  int    $user_id
+     * @param  string $role
+     * @param  string $permission
+     * @param  callable $callback
+     * @return bool
+     */
+    public function userCan(int $user_id, string $role, string $permission, $callback = null) : bool
+    {
+        // Usuário permamentemente liberado
+        $root_user = config('laracl.root_user');
+        if ($user_id == $root_user) {
+            \Laracl\Core::traceCurrentAbilityOrigin('config');
+            \Laracl\Core::traceCurrentAbility($role, $permission, true);
+            return true;
+        }
+
+        // Existem permissões setadas?
+        $user_abilities = (new UsersPermissionsService)->getPermissionsByUserID($user_id, $role);
+        if ($user_abilities === null) {
+            \Laracl\Core::traceCurrentAbility($role, $permission, false);
+            return false;
+        }
+
+        // create,read,update ou delete == yes?
+        $result = (isset($user_abilities['permissions']) && $user_abilities['permissions'][$permission] == 'yes');
+
+        // Existe uma verificação adicional
+        if ($result == true && $callback != null && is_callable($callback) && $callback() !== true) {
+            \Laracl\Core::traceCurrentAbilityOrigin('callback');
+            \Laracl\Core::traceCurrentAbility($role, $permission, false);
+            return false;
+        }
+
+        \Laracl\Core::traceCurrentAbility($role, $permission, $result);
+
+        return $result;
+    }
 }

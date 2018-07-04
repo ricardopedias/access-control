@@ -1,5 +1,4 @@
 <?php
-
 namespace Laracl\Models;
 
 use Illuminate\Database\Eloquent\Model;

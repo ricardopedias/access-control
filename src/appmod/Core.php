@@ -1,6 +1,7 @@
 <?php
 namespace Laracl;
 
+use Laracl\Services;
 use Gate;
 
 class Core
@@ -182,73 +183,12 @@ class Core
      */
     public static function getUserPermissions($user_id, string $role_slug)
     {
-        if (session('user.abilities') == null) {
-
-            // Gera um cache de permissões
-            // para evitar consultas ao banco de dados
-
-            $cache_all   = [];
-            $cache_slugs = [];
-            $roles = \Laracl\Models\AclRole::all();
-            foreach($roles as $item) {
-                $cache_all[$item->slug] = $item->toArray();
-                $cache_slugs[$item->id] = $item->slug;
-            }
-
-            // As permissões setadas para o usuário tem precedência
-            $user_permissions = \Laracl\Models\AclUserPermission::where('user_id', $user_id)->get();
-            if ($user_permissions->count() > 0) {
-                foreach($user_permissions as $item) {
-                    if (isset($cache_slugs[$item->role_id])) {
-                        $slug = $cache_slugs[$item->role_id];
-                        $cache_all[$slug]['permissions'] = $item->toArray();
-                    }
-                }
-
-                if(isset($cache_all[$role_slug]) && isset($cache_all[$role_slug]['permissions'])) {
-                    // A função de acesso foi encontrada nas permissões de usuário
-                    self::traceCurrentAbilityOrigin('user');
-                }
-            }
-            // Quando não existem permissões setadas para o usuário,
-            // as permissões do grupo são usadas no lugar
-            else {
-
-                $group_relation = \Laracl\Models\AclUser::find($user_id)->groupRelation;
-                if($group_relation != null) {
-                    $group_id = $group_relation->group_id;
-                    $group_permissions = \Laracl\Models\AclGroupPermission::where('group_id', $group_id)->get();
-                } else {
-                    $group_permissions = collect([]);
-                }
-                foreach($group_permissions as $item) {
-                    if (isset($cache_slugs[$item->role_id])) {
-                        $slug = $cache_slugs[$item->role_id];
-                        $cache_all[$slug]['permissions'] = $item->toArray();
-                    }
-                }
-
-                if(isset($cache_all[$role_slug]) && isset($cache_all[$role_slug]['permissions'])) {
-                    // A função de acesso foi encontrada nas permissões de grupo
-                    self::traceCurrentAbilityOrigin('group');
-                }
-            }
-
-            session([ 'user.abilities' => collect($cache_all) ]);
-        }
-
-        $user_abilities = session('user.abilities');
-
-        if (isset($user_abilities[$role_slug]) && isset($user_abilities[$role_slug]['permissions'])) {
-            // A função de acesso foi encontrada
-            return $user_abilities[$role_slug];
-        } else {
-            return null;
-        }
+        return (new Services\UsersPermissionsService)
+            ->getPermissionsByUserID($user_id, $role_slug);
     }
 
     /**
-     * Verifica se o usuário tem direcito a executar a função de acesso
+     * Verifica se o usuário tem direito a executar a função de acesso
      * @param  int    $user_id
      * @param  string $role
      * @param  string $permission
@@ -257,34 +197,8 @@ class Core
      */
     public static function userCan(int $user_id, string $role, string $permission, $callback = null) : bool
     {
-        // Usuário permamentemente liberado
-        $root_user = config('laracl.root_user');
-        if ($user_id == $root_user) {
-            self::traceCurrentAbilityOrigin('config');
-            self::traceCurrentAbility($role, $permission, true);
-            return true;
-        }
-
-        // Existem permissões setadas?
-        $user_abilities = self::getUserPermissions($user_id, $role);
-        if ($user_abilities === null) {
-            self::traceCurrentAbility($role, $permission, false);
-            return false;
-        }
-
-        // create,read,update ou delete == yes?
-        $result = (isset($user_abilities['permissions']) && $user_abilities['permissions'][$permission] == 'yes');
-
-        // Existe uma verificação adicional
-        if ($result == true && $callback != null && is_callable($callback) && $callback() !== true) {
-            self::traceCurrentAbilityOrigin('callback');
-            self::traceCurrentAbility($role, $permission, false);
-            return false;
-        }
-
-        self::traceCurrentAbility($role, $permission, $result);
-
-        return $result;
+        return (new Services\UsersService)
+            ->userCan($user_id, $role, $permission, $callback);
     }
 
     /**

@@ -7,23 +7,8 @@ use Laracl\Repositories\AclGroupsPermissionsRepository;
 use Laracl\Repositories\AclRolesRepository;
 use Laracl\Models\AclGroupPermission;
 
-class GroupsPermissionsService implements CrudContract
+class GroupsPermissionsService implements EditPermissionsContract
 {
-    public function gridList(string $view, Request $request = null)
-    {
-        // Nâo disponível neste contexto
-    }
-
-    public function gridTrash(string $view, Request $request = null)
-    {
-        // Nâo disponível neste contexto
-    }
-
-    public function formCreate(string $view, Request $request = null)
-    {
-        // Nâo disponível neste contexto
-    }
-
     public function formEdit(string $view, $id, Request $request = null)
     {
         return view($view)->with([
@@ -40,11 +25,6 @@ class GroupsPermissionsService implements CrudContract
                 'Permissões'
             ]
         ]);
-    }
-
-    public function dataInsert(array $data)
-    {
-        // Nâo disponível neste contexto
     }
 
     public function dataUpdate(array $data, int $id)
@@ -74,11 +54,6 @@ class GroupsPermissionsService implements CrudContract
         return count($results) == 1 && $results[0] == true;
     }
 
-    public function dataDelete(array $data, int $id = null)
-    {
-        // Nâo disponível neste contexto
-    }
-
     /**
      * Este método devolve a estrutura de permissões para
      * a geração do formulário de edição.
@@ -86,15 +61,15 @@ class GroupsPermissionsService implements CrudContract
      * o valor null será retornado, caso contrário, uma estrutura
      * com valores desativados será retornada.
      *
-     * @param  int  $group_id
+     * @param  int  $id
      * @param  bool $allows_null
      * @return array|null
      */
-    public function getStructure(int $group_id, bool $allows_null = false)
+    public function getStructure(int $id, bool $allows_null = false)
     {
         $permissions = [];
 
-        $collection = (new AclGroupsPermissionsRepository)->collectByGroupID($group_id);
+        $collection = (new AclGroupsPermissionsRepository)->collectByGroupID($id);
         if ($collection->count() > 0) {
             // Apenas as habilidades do usuário
             foreach ($collection as $item) {
