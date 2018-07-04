@@ -69,7 +69,7 @@ class GroupsService implements CrudContract
             'route_destroy'     => config('laracl.routes.groups.destroy'),
             'route_permissions' => config('laracl.routes.groups-permissions.edit'),
             'route_trash'       => config('laracl.routes.groups.trash'),
-            'route_restore'       => config('laracl.routes.groups.restore'),
+            'route_restore'     => config('laracl.routes.groups.restore'),
             'breadcrumb'        => [
                 '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
                 '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
@@ -85,7 +85,7 @@ class GroupsService implements CrudContract
             'title'       => 'Novo Grupo de Acesso',
             'route_store' => config('laracl.routes.groups.store'),
             'route_users' => config('laracl.routes.users.index'),
-            'breadcrumb'        => [
+            'breadcrumb'  => [
                 '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
                 '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
                 'Novo Grupo'

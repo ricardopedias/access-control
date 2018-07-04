@@ -2,8 +2,7 @@
 namespace Laracl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laracl\Repositories\AclGroupsRepository;
-use Laracl\Repositories\AclGroupsPermissionsRepository;
+use Laracl\Services;
 
 class GroupsPermissionsController extends Controller
 {
@@ -13,23 +12,10 @@ class GroupsPermissionsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $view = config('laracl.views.groups-permissions.edit');
-        return view($view)->with([
-            'group'        => ($group = (new AclGroupsRepository)->read($id)),
-            'structure'    => (new AclGroupsPermissionsRepository)->getStructure($group->id),
-            'route_index'  => config('laracl.routes.groups.index'),
-            'route_create' => config('laracl.routes.groups.create'),
-            'route_update' => config('laracl.routes.groups-permissions.update'),
-            'route_groups' => config('laracl.routes.groups.index'),
-            'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
-                '<i class="fas fa-user-friends"></i> ' . $group->name => route(config('laracl.routes.groups.edit'), $group->id),
-                'Permissões'
-            ]
-        ]);
+        return (new Services\GroupsPermissionsService)->formEdit($request, $view, $id);
     }
 
     /**
@@ -41,8 +27,7 @@ class GroupsPermissionsController extends Controller
      */
     public function update(Request $form, $id)
     {
-        $updated = (new AclGroupsPermissionsRepository)->update($id, $form->all());
-
+        $model = (new Services\GroupsPermissionsService)->dataUpdate($form, $id);
         $route = config('laracl.routes.groups-permissions.edit');
         return redirect()->route($route, $id);
     }

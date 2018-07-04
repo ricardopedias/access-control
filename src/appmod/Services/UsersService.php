@@ -12,6 +12,43 @@ class UsersService implements CrudContract
 {
     use HasSortableGrid;
 
+    public function getSearcheable()
+    {
+        $columns = [];
+
+        // \App\User
+        // Adiciona o prefixo 'users' nos campos do modelo
+        $fillable_user = (new AclUsersRepository)->newModel()->getFillableColumns();
+        foreach($fillable_user as $field) {
+            $columns["users.{$field}"] = "users.{$field}";
+        }
+
+        // Se os campos especiais não forem 'fillable'
+        if (!isset($columns['users.id'])) {
+            $columns[] = 'users.id';
+        }
+        if (!isset($columns['users.created_at'])) {
+            $columns[] = 'users.created_at';
+        }
+        if (!isset($columns['users.updated_at'])) {
+            $columns[] = 'users.updated_at';
+        }
+
+        // \Laracl\Models\AclUser
+        // O campo com o grupo de acesso
+        $fillable_group = (new AclGroupsRepository)->newModel()->getFillableColumns();
+        foreach($fillable_group as $field) {
+            $columns[] = "acl_groups.{$field} as group_{$field}";
+        }
+        $columns[] = "acl_groups.created_at as group_created_at";
+        $columns[] = "acl_groups.updated_at as group_updated_at";
+
+        // Faz o select devolvendo os campos de \App\User + \Laracl\Models\AclGroup
+        return (new AclUsersRepository)->newQuery()->select($columns)
+            ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
+            ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
+    }
+
     public function gridList(Request $request, string $view)
     {
         $this->setInitials('users.id', 'desc', 10);
@@ -33,7 +70,7 @@ class UsersService implements CrudContract
         $this->addOrderlyField('users.email');
         $this->addOrderlyField('users.created_at');
 
-        $provider = (new AclUsersRepository)->getSearcheable();
+        $provider = $this->getSearcheable();
         $this->setDataProvider($provider);
 
         return $this->gridView($view)->with([

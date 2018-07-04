@@ -138,22 +138,21 @@ abstract class BaseRepository
     }
 
     /**
-    * Devolve uma lista de regostros com base no campo e valor especificados.
+    * Devolve uma lista de registros com base no campo e valor especificados.
     * Se $failable for true, falhas vão disparar ModelNotFoundException.
     *
-    * @param  mixed  $field
-    * @param  mixed  $value
+    * @param  mixed  $field Nome do campo ou array com nomes e valores
+    * @param  mixed  $value Valor do campo
     * @param int  $take
     * @param bool $paginate
     *
     * @return EloquentCollection|Paginator
     */
-    public function collectBy($field, $value = false, int $take = 0, bool $paginate = true)
+    public function collectBy($field, $value = null, int $take = 0, bool $paginate = true)
     {
         $query = $this->newQuery();
 
         if(is_array($field)) {
-            $failable = $value === true ? true : false;
             foreach ($field as $k => $v) {
                 $query->where($k, $v);
             }

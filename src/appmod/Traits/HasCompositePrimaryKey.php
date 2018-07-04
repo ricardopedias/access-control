@@ -1,5 +1,4 @@
 <?php
-
 namespace Laracl\Traits;
 
 use Exception;
@@ -8,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasCompositePrimaryKey
 {
     /**
-     * Get the value indicating whether the IDs are incrementing.
+     * Valor que indica se os IDs são auto-incrementais.
      *
      * @return bool
      */
@@ -18,7 +17,7 @@ trait HasCompositePrimaryKey
     }
 
     /**
-     * Set the keys for a save update query.
+     * Seta as chaves para as consultas de atualização e gravação.
      *
      * @param  \Illuminate\Database\Eloquent\Builder $query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -38,9 +37,9 @@ trait HasCompositePrimaryKey
     }
 
     /**
-     * Execute a query for a single record by ID.
+     * Executa uma consulta para um único registro por ID.
      *
-     * @param  array  $ids Array of keys, like [column => value].
+     * @param  array  $ids Array de chaves no formato [column => value].
      * @param  array  $columns
      * @return mixed|static
      */

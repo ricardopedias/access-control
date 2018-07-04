@@ -1,10 +1,8 @@
 <?php
-
 namespace Laracl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laracl\Repositories\AclUsersRepository;
-use Laracl\Repositories\AclUsersPermissionsRepository;
+use Laracl\Services;
 
 class UsersPermissionsController extends Controller
 {
@@ -14,22 +12,10 @@ class UsersPermissionsController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $view = config('laracl.views.users-permissions.edit');
-        return view($view)->with([
-            'user'         => ($user = (new AclUsersRepository)->read($id)),
-            'structure'    => (new AclUsersPermissionsRepository)->getStructure($user->id),
-            'route_index'  => config('laracl.routes.users.index'),
-            'route_user'   => config('laracl.routes.users.edit'),
-            'route_update' => config('laracl.routes.users-permissions.update'),
-            'route_groups' => config('laracl.routes.groups.index'),
-            'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                '<i class="fas fa-user"></i> ' . $user->name => route(config('laracl.routes.users.edit'), $user->id),
-                'Permissões'
-            ]
-        ]);
+        return (new Services\UsersPermissionsService)->formEdit($request, $view, $id);
     }
 
     /**
@@ -41,8 +27,7 @@ class UsersPermissionsController extends Controller
      */
     public function update(Request $form, $id)
     {
-        $updated = (new AclUsersPermissionsRepository)->update($id, $form->all());
-
+        $model = (new Services\UsersPermissionsService)->dataUpdate($form, $id);
         $route = config('laracl.routes.users-permissions.edit');
         return redirect()->route($route, $id);
     }
