@@ -15,19 +15,19 @@ class GroupsPermissionsController extends Controller
     public function edit(Request $request, $id)
     {
         $view = config('laracl.views.groups-permissions.edit');
-        return (new Services\GroupsPermissionsService)->formEdit($request, $view, $id);
+        return (new Services\GroupsPermissionsService)->formEdit($view, $id);
     }
 
     /**
      * Atualiza as permissões no banco de dados
      *
-     * @param  \Illuminate\Http\Request $form
+     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $form, $id)
+    public function update(Request $request, $id)
     {
-        $model = (new Services\GroupsPermissionsService)->dataUpdate($form, $id);
+        $model = (new Services\GroupsPermissionsService)->dataUpdate($request->all(), $id);
         $route = config('laracl.routes.groups-permissions.edit');
         return redirect()->route($route, $id);
     }

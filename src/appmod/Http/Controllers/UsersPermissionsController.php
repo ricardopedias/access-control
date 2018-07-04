@@ -15,7 +15,7 @@ class UsersPermissionsController extends Controller
     public function edit(Request $request, $id)
     {
         $view = config('laracl.views.users-permissions.edit');
-        return (new Services\UsersPermissionsService)->formEdit($request, $view, $id);
+        return (new Services\UsersPermissionsService)->formEdit($view, $id);
     }
 
     /**
@@ -27,7 +27,7 @@ class UsersPermissionsController extends Controller
      */
     public function update(Request $form, $id)
     {
-        $model = (new Services\UsersPermissionsService)->dataUpdate($form, $id);
+        $model = (new Services\UsersPermissionsService)->dataUpdate($form->all(), $id);
         $route = config('laracl.routes.users-permissions.edit');
         return redirect()->route($route, $id);
     }

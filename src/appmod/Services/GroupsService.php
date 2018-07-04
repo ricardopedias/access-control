@@ -12,7 +12,7 @@ class GroupsService implements CrudContract
 {
     use HasSortableGrid;
 
-    public function gridList(Request $request, string $view)
+    public function gridList(string $view, Request $request = null)
     {
         $this->setInitials('id', 'desc', 10);
 
@@ -44,7 +44,7 @@ class GroupsService implements CrudContract
         ]);
     }
 
-    public function gridTrash(Request $request, string $view)
+    public function gridTrash(string $view, Request $request = null)
     {
         $this->setInitials('id', 'desc', 10);
 
@@ -78,7 +78,7 @@ class GroupsService implements CrudContract
         ]);
     }
 
-    public function formCreate(Request $request, string $view)
+    public function formCreate(string $view, Request $request = null)
     {
         return view($view)->with([
             'model'       => (new AclGroupsRepository)->read(),
@@ -93,7 +93,7 @@ class GroupsService implements CrudContract
         ]);
     }
 
-    public function formEdit(Request $request, string $view, $id)
+    public function formEdit(string $view, $id, Request $request = null)
     {
         return view($view)->with([
             'model'             => ($group = (new AclGroupsRepository)->read($id)),
@@ -109,27 +109,19 @@ class GroupsService implements CrudContract
         ]);
     }
 
-    public function dataInsert(Request $request)
+    public function dataInsert(array $data)
     {
-        $request->validate([
-            'name' => 'required|max:100|unique:acl_groups,name',
-        ]);
-
-        return (new AclGroupsRepository)->create($request->all());
+        return (new AclGroupsRepository)->create($data);
     }
 
-    public function dataUpdate(Request $request, int $id = null)
+    public function dataUpdate(array $data, int $id)
     {
-        $request->validate([
-            'name' => "required|max:100|unique:acl_groups,name,{$id}"
-        ]);
-
-        return (new AclGroupsRepository)->update($id, $request->all());
+        return (new AclGroupsRepository)->update($id, $data);
     }
 
-    public function dataDelete(Request $request, int $id = null)
+    public function dataDelete(array $data, int $id = null)
     {
-        if ($request->request->get('mode') == 'soft') {
+        if (isset($data['mode']) && $data['mode'] == 'soft') {
             $deleted = (new AclGroupsRepository)->delete($id);
         } else {
             $deleted = (new AclGroupsRepository)->delete($id, true);

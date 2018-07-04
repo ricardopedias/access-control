@@ -5,17 +5,17 @@ use \Illuminate\Http\Request;
 
 interface CrudContract
 {
-    public function gridList(Request $request, string $view);
+    public function gridList(string $view, Request $request = null);
 
-    public function gridTrash(Request $request, string $view);
+    public function gridTrash(string $view, Request $request = null);
 
-    public function formCreate(Request $request, string $view);
+    public function formCreate(string $view, Request $request = null);
 
-    public function formEdit(Request $request, string $view, $id);
+    public function formEdit(string $view, $id, Request $request = null);
 
-    public function dataInsert(Request $request);
+    public function dataInsert(array $data);
 
-    public function dataUpdate(Request $request, int $id = null);
+    public function dataUpdate(array $data, int $id);
 
-    public function dataDelete(Request $request, int $id = null);
+    public function dataDelete(array $data, int $id = null);
 }

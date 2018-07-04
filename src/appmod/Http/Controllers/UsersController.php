@@ -14,7 +14,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         $view = config('laracl.views.users.index');
-        return (new Services\UsersService)->gridList($request, $view);
+        return (new Services\UsersService)->gridList($view, $request);
     }
     /**
      * Exibe a lista de registros na lixeira.
@@ -24,7 +24,7 @@ class UsersController extends Controller
     public function trash(Request $request)
     {
         $view = config('laracl.views.users.trash');
-        return (new Services\UsersService)->gridTrash($request, $view);
+        return (new Services\UsersService)->gridTrash($view, $request);
     }
 
     /**
@@ -35,7 +35,7 @@ class UsersController extends Controller
     public function create(Request $request)
     {
         $view = config('laracl.views.users.create');
-        return (new Services\UsersService)->formCreate($request, $view);
+        return (new Services\UsersService)->formCreate($view);
     }
 
     /**
@@ -46,7 +46,13 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        $model = (new Services\UsersService)->dataInsert($request);
+        $request->validate([
+            'name'         => 'required|max:100',
+            'email'        => 'required|unique:users|max:150',
+            'password'     => 'required',
+        ]);
+
+        $model = (new Services\UsersService)->dataInsert($request->all());
         $route = config('laracl.routes.users.index');
         return redirect()->route($route, $model);
     }
@@ -60,19 +66,24 @@ class UsersController extends Controller
     public function edit(Request $request, $id)
     {
         $view = config('laracl.views.users.edit');
-        return (new Services\UsersService)->formEdit($request, $view, $id);
+        return (new Services\UsersService)->formEdit($view, $id);
     }
 
     /**
      * Atualiza os dados de um usuário existente.
      *
-     * @param  \Illuminate\Http\Request $form
+     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $form, $id)
+    public function update(Request $request, $id)
     {
-        $model = (new Services\UsersService)->dataUpdate($form, $id);
+        $request->validate([
+            'name'         => 'required|max:100',
+            'email'        => "required|unique:users,email,{$id}|max:150"
+        ]);
+
+        $model = (new Services\UsersService)->dataUpdate($request->all(), $id);
         return back();
     }
 
@@ -83,9 +94,9 @@ class UsersController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $form, $id)
+    public function destroy(Request $request, $id)
     {
-        $deleted = (new Services\UsersService)->dataDelete($form, $id);
+        $deleted = (new Services\UsersService)->dataDelete($request->all(), $id);
         return response()->json(['deleted' => $deleted]);
     }
 }

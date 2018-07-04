@@ -14,7 +14,7 @@ class GroupsController extends Controller
     public function index(Request $request)
     {
         $view = config('laracl.views.groups.index');
-        return (new Services\GroupsService)->gridList($request, $view);
+        return (new Services\GroupsService)->gridList($view);
     }
 
     /**
@@ -25,7 +25,7 @@ class GroupsController extends Controller
     public function trash(Request $request)
     {
         $view = config('laracl.views.groups.trash');
-        return (new Services\GroupsService)->gridTrash($request, $view);
+        return (new Services\GroupsService)->gridTrash($view);
     }
 
     /**
@@ -36,7 +36,7 @@ class GroupsController extends Controller
     public function create(Request $request)
     {
         $view = config('laracl.views.groups.create');
-        return (new Services\GroupsService)->formCreate($request, $view);
+        return (new Services\GroupsService)->formCreate($view);
     }
 
     /**
@@ -47,7 +47,11 @@ class GroupsController extends Controller
      */
     public function store(Request $request)
     {
-        $model = (new Services\GroupsService)->dataInsert($request);
+        $request->validate([
+            'name' => 'required|max:100|unique:acl_groups,name',
+        ]);
+
+        $model = (new Services\GroupsService)->dataInsert($request->all());
         $route = config('laracl.routes.groups.index');
         return redirect()->route($route, $model);
     }
@@ -61,32 +65,36 @@ class GroupsController extends Controller
     public function edit(Request $request, $id)
     {
         $view = config('laracl.views.groups.edit');
-        return (new Services\GroupsService)->formEdit($request, $view, $id);
+        return (new Services\GroupsService)->formEdit($view, $id);
     }
 
     /**
      * Atualiza o registro especificado no banco de dados.
      *
-     * @param  \Illuminate\Http\Request $form
+     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $form, $id)
+    public function update(Request $request, $id)
     {
-        $model = (new Services\GroupsService)->dataUpdate($form, $id);
+        $request->validate([
+            'name' => "required|max:100|unique:acl_groups,name,{$id}"
+        ]);
+
+        $model = (new Services\GroupsService)->dataUpdate($request->all(), $id);
         return back();
     }
 
     /**
      * Remove o registro especificado do banco de dados.
      *
-     * @param Request $form
+     * @param Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $form, $id)
+    public function destroy(Request $request, $id)
     {
-        $deleted = (new Services\GroupsService)->dataDelete($form, $id);
+        $deleted = (new Services\GroupsService)->dataDelete($request->all(), $id);
         return response()->json(['deleted' => $deleted]);
     }
 }

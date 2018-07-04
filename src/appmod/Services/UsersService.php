@@ -49,7 +49,7 @@ class UsersService implements CrudContract
             ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
     }
 
-    public function gridList(Request $request, string $view)
+    public function gridList(string $view, Request $request = null)
     {
         $this->setInitials('users.id', 'desc', 10);
 
@@ -86,7 +86,7 @@ class UsersService implements CrudContract
         ]);
     }
 
-    public function gridTrash(Request $request, string $view)
+    public function gridTrash(string $view, Request $request = null)
     {
         $this->setInitials('users.id', 'desc', 10);
 
@@ -124,7 +124,7 @@ class UsersService implements CrudContract
         ]);
     }
 
-    public function formCreate(Request $request, string $view)
+    public function formCreate(string $view, Request $request = null)
     {
         return view($view)->with([
             'model'           => (new AclUsersRepository)->read(),
@@ -139,7 +139,7 @@ class UsersService implements CrudContract
         ]);
     }
 
-    public function formEdit(Request $request, string $view, $id)
+    public function formEdit(string $view, $id, Request $request = null)
     {
         return view($view)->with([
             'model'             => ($user = (new AclUsersRepository)->read($id)),
@@ -156,50 +156,37 @@ class UsersService implements CrudContract
         ]);
     }
 
-    public function dataInsert(Request $request)
+    public function dataInsert(array $data)
     {
-        $request->validate([
-            'name'         => 'required|max:100',
-            'email'        => 'required|unique:users|max:150',
-            'password'     => 'required',
-        ]);
-
-        $data = $request->all();
         $data['password'] = isset($data['password']) && !empty($data['password'])
             ? bcrypt($data['password'])
             : bcrypt(uniqid());
 
         $model = (new AclUsersRepository)->create($data);
 
-        if (isset($data['acl_group_id']) && !empty($data['acl_group_id'])) {
+        if (isset($data['group_id']) && !empty($data['group_id'])) {
             // Se acl_group_id for diferente de 0 ou null
-            $relation = (new AclGroupsRepository)->create([
+            $relation = AclUserGroup::create([
                 'user_id'  => $model->id,
-                'group_id' => $data['acl_group_id']
+                'group_id' => $data['group_id']
             ]);
         }
 
         return $model;
     }
 
-    public function dataUpdate(Request $request, int $id = null)
+    public function dataUpdate(array $data, int $id)
     {
-        $request->validate([
-            'name'         => 'required|max:100',
-            'email'        => "required|unique:users,email,{$id}|max:150"
-        ]);
-
         $model = (new AclUsersRepository)->findByID($id);
-        $data = $request->all();
 
         // Se o password for preenchido, transforma em hash
         $data['password'] = !isset($data['password']) || empty($data['password'])
             ? $model->password
             : bcrypt($data['password']);
 
-        if (isset($data['acl_group_id'])) {
+        if (isset($data['group_id'])) {
 
-            if (empty($data['acl_group_id'])) {
+            if (empty($data['group_id'])) {
                 // Se grupo for setado como 0 ou null,
                 // remove relacionamentos existentes com grupos
                 AclUserGroup::where('user_id', $id)->delete();
@@ -214,7 +201,7 @@ class UsersService implements CrudContract
                     $group = new AclUserGroup;
                     $group->user_id = $id;
                 }
-                $group->group_id = $data['acl_group_id'];
+                $group->group_id = $data['group_id'];
                 $group->save();
             }
         }
@@ -224,9 +211,9 @@ class UsersService implements CrudContract
         return $model->save();
     }
 
-    public function dataDelete(Request $request, int $id = null)
+    public function dataDelete(array $data, int $id = null)
     {
-        if ($request->request->get('mode') == 'soft') {
+        if (isset($data['mode']) && $data['mode'] == 'soft') {
             $deleted = (new AclUsersRepository)->delete($id);
         } else {
             $deleted = (new AclUsersRepository)->delete($id, true);

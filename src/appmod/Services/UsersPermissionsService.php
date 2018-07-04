@@ -9,22 +9,22 @@ use Laracl\Models\AclUserPermission;
 
 class UsersPermissionsService implements CrudContract
 {
-    public function gridList(Request $request, string $view)
+    public function gridList(string $view, Request $request = null)
     {
         // Nâo disponível neste contexto
     }
 
-    public function gridTrash(Request $request, string $view)
+    public function gridTrash(string $view, Request $request = null)
     {
         // Nâo disponível neste contexto
     }
 
-    public function formCreate(Request $request, string $view)
+    public function formCreate(string $view, Request $request = null)
     {
         // Nâo disponível neste contexto
     }
 
-    public function formEdit(Request $request, string $view, $id)
+    public function formEdit(string $view, $id, Request $request = null)
     {
         return view($view)->with([
             'user'         => ($user = (new AclUsersRepository)->read($id)),
@@ -41,15 +41,13 @@ class UsersPermissionsService implements CrudContract
         ]);
     }
 
-    public function dataInsert(Request $request)
+    public function dataInsert(array $data)
     {
         // Nâo disponível neste contexto
     }
 
-    public function dataUpdate(Request $request, int $id = null)
+    public function dataUpdate(array $data, int $id)
     {
-        $data = $request->all();
-
         $results = [];
         foreach ($data['permissions'] as $slug => $perms) {
 
@@ -75,7 +73,7 @@ class UsersPermissionsService implements CrudContract
         return count($results) == 1 && $results[0] == true;
     }
 
-    public function dataDelete(Request $request, int $id = null)
+    public function dataDelete(array $data, int $id = null)
     {
         // Nâo disponível neste contexto
     }
