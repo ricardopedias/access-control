@@ -107,7 +107,7 @@ class UsersService implements CrudContract
         $this->addOrderlyField('users.email');
         $this->addOrderlyField('users.created_at');
 
-        $provider = (new AclUsersRepository)->getSearcheable()->onlyTrashed();
+        $provider = $this->getSearcheable()->onlyTrashed();
         $this->setDataProvider($provider);
 
         return $this->gridView($view)->with([
