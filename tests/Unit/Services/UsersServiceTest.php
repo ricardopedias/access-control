@@ -154,4 +154,153 @@ class UsersServiceTest extends IModelTestCase
         $this->assertEquals($group->updatet_at, $group_saved->updatet_at);
         $this->assertEquals($group->created_at, $group_saved->created_at);
     }
+
+    public function testRootUserCan()
+    {
+        $root_user = config('laracl.root_user');
+        $this->assertEquals($root_user, 1);
+
+        $role_one = self::createRole();
+        self::createUserPermissions($role_one->id, $root_user, true, true, true, true);
+
+        $role_two = self::createRole();
+        self::createUserPermissions($role_two->id, $root_user, false, false, false, false);
+
+        foreach (['create', 'read', 'update', 'delete'] as $permission) {
+
+            // Usuário root sempre tem acesso true
+
+            // Função de acesso 1
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertTrue((new UsersService)->userCan($root_user, $role_one->slug, $permission));
+            $this->assertEquals('config', \Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+                'role'       => $role_one->slug,
+                'permission' => $permission,
+                'granted'    => true,
+            ]);
+
+            // Função de acesso 2
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertTrue((new UsersService)->userCan($root_user, $role_two->slug, $permission));
+            $this->assertEquals('config', \Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+                'role'       => $role_two->slug,
+                'permission' => $permission,
+                'granted'    => true,
+            ]);
+        }
+    }
+
+    public function testUserCanWithUserPermissions()
+    {
+        $group      = self::createGroup();
+        $user       = self::createUser($group->id);
+
+        $role_one   = self::createRole();
+        self::createUserPermissions($role_one->id, $user->id, true, true, true, true);
+
+        $role_two   = self::createRole();
+        self::createUserPermissions($role_two->id, $user->id, false, false, false, false);
+
+        $role_three = self::createRole();
+        // A função de acesso 3 não possui permissões atreladas
+
+        foreach (['create', 'read', 'update', 'delete'] as $permission) {
+
+            // Função de acesso 1
+            // Todas as permissões são true
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertTrue((new UsersService)->userCan($user->id, $role_one->slug, $permission));
+            $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+                'role'       => $role_one->slug,
+                'permission' => $permission,
+                'granted'    => true,
+            ]);
+
+            // Função de acesso 2
+            // Todas as permissões são false
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertFalse((new UsersService)->userCan($user->id, $role_two->slug, $permission));
+            $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+                'role'       => $role_two->slug,
+                'permission' => $permission,
+                'granted'    => false,
+            ]);
+
+            // Função de acesso 3
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertFalse((new UsersService)->userCan($user->id, $role_three->slug, $permission));
+            $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        }
+    }
+
+    public function testUserCanWithGroupPermissions()
+    {
+        $group      = self::createGroup();
+        $user       = self::createUser($group->id);
+
+        $role_one   = self::createRole();
+        self::createGroupPermissions($role_one->id, $group->id, true, true, true, true);
+
+        $role_two   = self::createRole();
+        self::createGroupPermissions($role_two->id, $group->id, false, false, false, false);
+
+        $role_three = self::createRole();
+        // A função de acesso 3 não possui permissões atreladas
+
+        foreach (['create', 'read', 'update', 'delete'] as $permission) {
+
+            // Função de acesso 1
+            // Todas as permissões são true
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertTrue((new UsersService)->userCan($user->id, $role_one->slug, $permission));
+            $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+                'role'       => $role_one->slug,
+                'permission' => $permission,
+                'granted'    => true,
+            ]);
+
+            // Função de acesso 2
+            // Todas as permissões são false
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertFalse((new UsersService)->userCan($user->id, $role_two->slug, $permission));
+            $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+                'role'       => $role_two->slug,
+                'permission' => $permission,
+                'granted'    => false,
+            ]);
+
+            // Função de acesso 3
+            session()->forget('user.abilities'); // exclui a sessão para evitar cache
+            $this->assertFalse((new UsersService)->userCan($user->id, $role_three->slug, $permission));
+            $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        }
+    }
+
+    public function testCalbackCan()
+    {
+        $group = self::createGroup();
+        $user = self::createUser($group->id);
+        $role_one = self::createRole();
+        $role_two = self::createRole();
+
+        // As duas funções de acesso deverão retornar true
+        // para a rotina chegar até a verificação adicional via callback
+        self::createUserPermissions($role_one->id, $user->id, true, true, true, true);
+        self::createUserPermissions($role_two->id, $user->id, true, true, true, true);
+
+        foreach (['create', 'read', 'update', 'delete'] as $permission) {
+
+            $this->assertTrue((new UsersService)->userCan($user->id, $role_one->slug, $permission, function(){ return true; }));
+            $this->assertTrue((new UsersService)->userCan($user->id, $role_two->slug, $permission, function(){ return true; }));
+
+            $this->assertFalse((new UsersService)->userCan($user->id, $role_one->slug, $permission, function(){ return false; }));
+            $this->assertFalse((new UsersService)->userCan($user->id, $role_two->slug, $permission, function(){ return false; }));
+        };
+    }
 }

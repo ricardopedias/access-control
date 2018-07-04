@@ -1,5 +1,4 @@
 <?php
-
 namespace Laracl\Tests\Libs;
 
 use Tests\TestCase;
@@ -11,5 +10,5 @@ use Laracl\Tests\Libs\IModelTestCase;
 
 class IControllerTestCase extends IModelTestCase
 {
-    
+
 }

@@ -54,7 +54,7 @@ class UsersController extends Controller
 
         $model = (new Services\UsersService)->dataInsert($request->all());
         $route = config('laracl.routes.users.index');
-        return redirect()->route($route, $model);
+        return redirect()->route($route);
     }
 
     /**

@@ -1,5 +1,4 @@
 <?php
-
 namespace Laracl\Tests\Libs;
 
 use Tests\TestCase;

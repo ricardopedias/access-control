@@ -178,4 +178,79 @@ class UsersPermissionsServiceTest extends IModelTestCase
             }
         }
     }
+
+    public function testGetUserPermissionsNull()
+    {
+        $user = self::createUser();
+        $role = self::createRole();
+
+        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do usuário
+        $this->assertNull($permissions);
+        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+    }
+
+    public function testGetUserPermissionsFromUser()
+    {
+        $user = self::createUser();
+        $role = self::createRole();
+        $permissions = self::createUserPermissions($role->id, $user->id, true, false, true, true);
+
+        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do usuário
+        $this->assertNotNull($permissions);
+        $this->assertTrue(is_array($permissions));
+        $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+    }
+
+    public function testGetUserPermissionsFromGroup()
+    {
+        $group = self::createGroup();
+        $user = self::createUser($group->id);
+        $role = self::createRole();
+        $permissions = self::createGroupPermissions($role->id, $group->id, true, false, true, true);
+
+        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do grupo
+        $this->assertNotNull($permissions);
+        $this->assertTrue(is_array($permissions));
+        $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
+    }
+
+    public function testGetUserPermissionsFromUsePrecedence()
+    {
+        $group = self::createGroup();
+        $user = self::createUser($group->id);
+        $role = self::createRole();
+
+        // Existem permissãoes de grupo e de usuário para este usuário
+        self::createGroupPermissions($role->id, $group->id, true, false, true, true);
+        self::createUserPermissions($role->id, $user->id, true, false, true, true);
+
+        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+
+        $this->assertNull(session('user.abilities'));
+        $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
+        $this->assertNotNull(session('user.abilities'));
+
+        // As permissões foram adquiridas do usuário por precedência
+        $this->assertNotNull($permissions);
+        $this->assertTrue(is_array($permissions));
+        $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+    }
 }

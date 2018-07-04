@@ -1,5 +1,4 @@
 <?php
-
 namespace Laracl\Tests\Unit\Models;
 
 use Illuminate\Foundation\Application;

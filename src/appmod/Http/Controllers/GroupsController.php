@@ -53,7 +53,7 @@ class GroupsController extends Controller
 
         $model = (new Services\GroupsService)->dataInsert($request->all());
         $route = config('laracl.routes.groups.index');
-        return redirect()->route($route, $model);
+        return redirect()->route($route);
     }
 
     /**
