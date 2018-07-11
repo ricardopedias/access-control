@@ -2,19 +2,22 @@
 
 ## Configurando
 
-A primeira coisa a se fazer é efetuar a configuração básica do "Access Control". 
-Isso é realizado no arquivo de configuração que deve ser publicado através do seguinte comando:
+A primeira coisa a se fazer é efetuar a configuração básica do "Access Control" setando os parâmetros desejados no arquivo de configuração. Para ter acesso a este arquivo, é preciso publicá-lo usando o **artisan**:
 
 ```bash
 php artisan vendor:publish --tag=acl-config
 ```
 
-Após executar este comando, o arquivo de configuração poderá ser encontrado em `config/acl.php.`
+Após executar este comando, o arquivo `config/acl.php.` poderá ser encontrado no seu projeto do Laravel.
 
-## O usuário ROOT
 
-Para acessar os CRUD's, é preciso configurar as permissões dos usuários ou grupos de acesso para que estes possam acessar as páginas.
-Na instalação inicial, nenhum usuário possui permissões. Por isso, é necessário setar o ID do usuário ROOT na configuração:
+## Os CRUD's e o usuário ROOT
+
+O "Access Control" possui todas as funcionalidades necessárias para se gerenciar o que cada usuário do sistema pode ou não pode acessar. São ferramentas de verificação e também CRUD's para configurar visualmente os usuários e grupos disponíveis.
+
+Por padrão, os CRUD's podem ser acessados no URL */acl/users*, onde uma lista de usuários será exibida como ponto de partida. É possível criar e excluir usuários e grupos, bem como setar suas respectivas permissões.
+
+Inicialmente, nenhum usuário existente possuirá permissões para acessar o URL */acl/users*. Por isso, é necessário setar o ID do usuário ROOT na configuração. Este é um usuário especial que sempre terá acesso total ao sistema:
 
 ```php
 
@@ -25,23 +28,25 @@ return [
     ...
 ```
 
-O usuário ROOT possui acesso total, independente das permissões atribuídas a ele. 
-Uma vez configurado o usuário ROOT, basta setar as permissẽos adequadas aos outros usuários do sistema e, 
-se necessário, remover o ID de ROOT para o usuário voltar ao seu 'estado normal'.
+O usuário ROOT possui acesso irrestrito, independente das permissões atribuídas a ele. 
+Uma vez configurado o usuário ROOT, basta setar as permissões adequadas aos outros usuários do sistema e, 
+se necessário, remover o ID de ROOT para que o usuário em questão volte ao seu 'estado normal'.
 
 ## Usando as funções e habilidades
 
-Por padrão, existem 4 funções com suas respectivas habilidades, que podem ser usados em qualquer projeto Laravel. 
-Essas funções são gerenciáveis visualmente através dos CRUD's do Acl:
+Por padrão, existem 4 funções com suas respectivas habilidades. O nome de uma função coincide com o nome base de alguma rota disponível na seção **routes** do arquivo `config/acl.php.`.
 
-Função             | Habilidades
--------------------|-----------------------------
-users              | create, read, update, delete
-users-permissions  | create, read, update
-groups             | create, read, update, delete
-groups-permissions | create, read, update
+Funções (Rotas base) | Habilidades
+---------------------|-----------------------------
+users                | create, read, update, delete
+users-permissions    | create, read, update
+groups               | create, read, update, delete
+groups-permissions   | create, read, update
 
-Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar se o usuário atual tem ou não direito de acesso a determinada área.
+
+Cada função adicionada no arquivo `config/acl.php.` pode ser invocada nas rotinas alocadas nos controladores ou diretamente de dentro das visões do blade. 
+
+os controladores as a implementação de um projeto Laravel para verificar se o usuário atual tem ou não direito de acesso a determinada área.
 
 ## Diretivas para layout no Blade
 
