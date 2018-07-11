@@ -4,10 +4,10 @@ namespace Tests\Unit\Services;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Laracl\Tests\Libs\IModelTestCase;
-use Laracl\Repositories\AclUsersRepository;
-use Laracl\Repositories\AclGroupsRepository;
-use Laracl\Services\UsersService;
+use Acl\Tests\Libs\IModelTestCase;
+use Acl\Repositories\AclUsersRepository;
+use Acl\Repositories\AclGroupsRepository;
+use Acl\Services\UsersService;
 
 class UsersServiceTest extends IModelTestCase
 {
@@ -30,7 +30,7 @@ class UsersServiceTest extends IModelTestCase
         $this->assertCount(1 + 10, $collection);
 
         foreach ($collection as $item) {
-            $this->assertInstanceOf(\Laracl\Models\AclUser::class, $item);
+            $this->assertInstanceOf(\Acl\Models\AclUser::class, $item);
         }
     }
 
@@ -157,7 +157,7 @@ class UsersServiceTest extends IModelTestCase
 
     public function testRootUserCan()
     {
-        $root_user = config('laracl.root_user');
+        $root_user = config('acl.root_user');
         $this->assertEquals($root_user, 1);
 
         $role_one = self::createRole();
@@ -173,8 +173,8 @@ class UsersServiceTest extends IModelTestCase
             // Função de acesso 1
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertTrue((new UsersService)->userCan($root_user, $role_one->slug, $permission));
-            $this->assertEquals('config', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertEquals('config', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_one->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -183,8 +183,8 @@ class UsersServiceTest extends IModelTestCase
             // Função de acesso 2
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertTrue((new UsersService)->userCan($root_user, $role_two->slug, $permission));
-            $this->assertEquals('config', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertEquals('config', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_two->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -212,8 +212,8 @@ class UsersServiceTest extends IModelTestCase
             // Todas as permissões são true
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertTrue((new UsersService)->userCan($user->id, $role_one->slug, $permission));
-            $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_one->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -223,8 +223,8 @@ class UsersServiceTest extends IModelTestCase
             // Todas as permissões são false
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertFalse((new UsersService)->userCan($user->id, $role_two->slug, $permission));
-            $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_two->slug,
                 'permission' => $permission,
                 'granted'    => false,
@@ -233,7 +233,7 @@ class UsersServiceTest extends IModelTestCase
             // Função de acesso 3
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertFalse((new UsersService)->userCan($user->id, $role_three->slug, $permission));
-            $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
         }
     }
 
@@ -257,8 +257,8 @@ class UsersServiceTest extends IModelTestCase
             // Todas as permissões são true
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertTrue((new UsersService)->userCan($user->id, $role_one->slug, $permission));
-            $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertEquals('group', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_one->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -268,8 +268,8 @@ class UsersServiceTest extends IModelTestCase
             // Todas as permissões são false
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertFalse((new UsersService)->userCan($user->id, $role_two->slug, $permission));
-            $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertEquals('group', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_two->slug,
                 'permission' => $permission,
                 'granted'    => false,
@@ -278,7 +278,7 @@ class UsersServiceTest extends IModelTestCase
             // Função de acesso 3
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
             $this->assertFalse((new UsersService)->userCan($user->id, $role_three->slug, $permission));
-            $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
         }
     }
 

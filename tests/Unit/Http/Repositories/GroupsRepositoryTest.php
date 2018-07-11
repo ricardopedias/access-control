@@ -3,8 +3,8 @@ namespace Tests\Unit\Http\Repositories;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IModelTestCase;
-use Laracl\Repositories\AclGroupsRepository;
+use Acl\Tests\Libs\IModelTestCase;
+use Acl\Repositories\AclGroupsRepository;
 
 class GroupsRepositoryTest extends IModelTestCase
 {
@@ -19,8 +19,8 @@ class GroupsRepositoryTest extends IModelTestCase
         // Verificações
         $model = (new AclGroupsRepository)->findByUserID($user->id);
 
-        $this->assertInstanceOf(\Laracl\Models\AclGroup::class, $group);
-        $this->assertInstanceOf(\Laracl\Models\AclGroup::class, $model);
+        $this->assertInstanceOf(\Acl\Models\AclGroup::class, $group);
+        $this->assertInstanceOf(\Acl\Models\AclGroup::class, $model);
 
         $this->assertEquals($group->id, $model->id);
         $this->assertEquals($group->name, $model->name);

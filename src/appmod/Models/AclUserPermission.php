@@ -1,8 +1,8 @@
 <?php
-namespace Laracl\Models;
+namespace Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracl\Traits\HasCompositePrimaryKey;
+use Acl\Traits\HasCompositePrimaryKey;
 
 class AclUserPermission extends Model
 {
@@ -32,7 +32,7 @@ class AclUserPermission extends Model
     /**
      * Devolve o modelo com a função de acesso para estas permissões
      *
-     * @return Laracl\Models\AclRole ou null
+     * @return Acl\Models\AclRole ou null
      */
     public function role()
     {
@@ -42,11 +42,11 @@ class AclUserPermission extends Model
     /**
      * Devolve o modelo do usuário ao qual perntencem estas permissões
      *
-     * @return Laracl\Models\AclUser ou null
+     * @return Acl\Models\AclUser ou null
      */
     public function user()
     {
-        return $this->hasOne('Laracl\Models\AclUser', 'id', 'user_id');
+        return $this->hasOne('Acl\Models\AclUser', 'id', 'user_id');
     }
 
     /**

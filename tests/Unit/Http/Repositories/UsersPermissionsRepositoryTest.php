@@ -3,8 +3,8 @@ namespace Tests\Unit\Http\Repositories;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IModelTestCase;
-use Laracl\Repositories\AclUsersPermissionsRepository;
+use Acl\Tests\Libs\IModelTestCase;
+use Acl\Repositories\AclUsersPermissionsRepository;
 
 class UsersPermissionsRepositoryTest extends IModelTestCase
 {

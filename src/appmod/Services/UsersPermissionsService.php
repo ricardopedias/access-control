@@ -1,11 +1,11 @@
 <?php
-namespace Laracl\Services;
+namespace Acl\Services;
 
 use Illuminate\Http\Request;
-use Laracl\Repositories\AclUsersRepository;
-use Laracl\Repositories\AclUsersPermissionsRepository;
-use Laracl\Repositories\AclRolesRepository;
-use Laracl\Models\AclUserPermission;
+use Acl\Repositories\AclUsersRepository;
+use Acl\Repositories\AclUsersPermissionsRepository;
+use Acl\Repositories\AclRolesRepository;
+use Acl\Models\AclUserPermission;
 
 class UsersPermissionsService implements EditPermissionsContract
 {
@@ -14,13 +14,13 @@ class UsersPermissionsService implements EditPermissionsContract
         return view($view)->with([
             'user'         => ($user = (new AclUsersRepository)->read($id)),
             'structure'    => $this->getStructure($user->id),
-            'route_index'  => config('laracl.routes.users.index'),
-            'route_user'   => config('laracl.routes.users.edit'),
-            'route_update' => config('laracl.routes.users-permissions.update'),
-            'route_groups' => config('laracl.routes.groups.index'),
+            'route_index'  => config('acl.routes.users.index'),
+            'route_user'   => config('acl.routes.users.edit'),
+            'route_update' => config('acl.routes.users-permissions.update'),
+            'route_groups' => config('acl.routes.groups.index'),
             'breadcrumb'   => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                'Usuário "' . $user->name . '"' => route(config('laracl.routes.users.edit'), $user->id),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
+                'Usuário "' . $user->name . '"' => route(config('acl.routes.users.edit'), $user->id),
                 'Permissões'
             ]
         ]);
@@ -117,14 +117,14 @@ class UsersPermissionsService implements EditPermissionsContract
 
             $cache_all   = [];
             $cache_slugs = [];
-            $roles = \Laracl\Models\AclRole::all();
+            $roles = \Acl\Models\AclRole::all();
             foreach($roles as $item) {
                 $cache_all[$item->slug] = $item->toArray();
                 $cache_slugs[$item->id] = $item->slug;
             }
 
             // As permissões setadas para o usuário tem precedência
-            $user_permissions = \Laracl\Models\AclUserPermission::where('user_id', $user_id)->get();
+            $user_permissions = \Acl\Models\AclUserPermission::where('user_id', $user_id)->get();
             if ($user_permissions->count() > 0) {
                 foreach($user_permissions as $item) {
                     if (isset($cache_slugs[$item->role_id])) {
@@ -135,17 +135,17 @@ class UsersPermissionsService implements EditPermissionsContract
 
                 if(isset($cache_all[$role_slug]) && isset($cache_all[$role_slug]['permissions'])) {
                     // A função de acesso foi encontrada nas permissões de usuário
-                    \Laracl\Core::traceCurrentAbilityOrigin('user');
+                    \Acl\Core::traceCurrentAbilityOrigin('user');
                 }
             }
             // Quando não existem permissões setadas para o usuário,
             // as permissões do grupo são usadas no lugar
             else {
 
-                $group_relation = \Laracl\Models\AclUser::find($user_id)->groupRelation;
+                $group_relation = \Acl\Models\AclUser::find($user_id)->groupRelation;
                 if($group_relation != null) {
                     $group_id = $group_relation->group_id;
-                    $group_permissions = \Laracl\Models\AclGroupPermission::where('group_id', $group_id)->get();
+                    $group_permissions = \Acl\Models\AclGroupPermission::where('group_id', $group_id)->get();
                 } else {
                     $group_permissions = collect([]);
                 }
@@ -158,7 +158,7 @@ class UsersPermissionsService implements EditPermissionsContract
 
                 if(isset($cache_all[$role_slug]) && isset($cache_all[$role_slug]['permissions'])) {
                     // A função de acesso foi encontrada nas permissões de grupo
-                    \Laracl\Core::traceCurrentAbilityOrigin('group');
+                    \Acl\Core::traceCurrentAbilityOrigin('group');
                 }
             }
 

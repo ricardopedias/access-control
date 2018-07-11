@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Repositories;
+namespace Acl\Repositories;
 
 use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;

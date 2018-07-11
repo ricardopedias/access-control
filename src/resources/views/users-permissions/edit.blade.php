@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') Permissões Específicas para {{ $user->name }} @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -13,9 +13,9 @@
 
             <div class="col text-right">
 
-                @acl_action('users.update', route($route_user, $user->id), 'Editar Usuário', 'laracl::buttons.users.update')
+                @acl_action('users.update', route($route_user, $user->id), 'Editar Usuário', 'acl::buttons.users.update')
 
-                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso', 'laracl::buttons.groups.read')
+                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso', 'acl::buttons.groups.read')
 
             </div>
 

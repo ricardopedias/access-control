@@ -55,7 +55,7 @@
                     Não Excluir
                 </button>
 
-                @if(config('laracl.soft_delete') != false and \Laracl\Core::isTrash() == false)
+                @if(config('acl.soft_delete') != false and \Acl\Core::isTrash() == false)
                     <button id="acl-delete-confirm-btn-trash"
                             type="button" class="btn btn-info js-acl-delete-confirm-action"
                             data-content="Este registro será enviado para a lixeira, podendo ser recuperado depois.">

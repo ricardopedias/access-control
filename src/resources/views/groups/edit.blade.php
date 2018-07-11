@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') {{ $title }} @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -13,9 +13,9 @@
 
             <div class="col text-right justify-content-end">
 
-                @acl_action('groups.create', route($route_create), 'Novo Grupo',  'laracl::buttons.groups.create')
+                @acl_action('groups.create', route($route_create), 'Novo Grupo',  'acl::buttons.groups.create')
 
-                @acl_action('groups-permissions.update', route($route_permissions, $model->id), 'Permissões',  'laracl::buttons.groups.permissions')
+                @acl_action('groups-permissions.update', route($route_permissions, $model->id), 'Permissões',  'acl::buttons.groups.permissions')
 
             </div>
 
@@ -28,7 +28,7 @@
             {{ method_field('PUT') }}
             {{-- https://laravel.com/docs/5.5/controllers#resource-controllers --}}
 
-            @include('laracl::groups.form')
+            @include('acl::groups.form')
 
             <div class="row">
 

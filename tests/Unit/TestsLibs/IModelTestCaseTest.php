@@ -1,11 +1,11 @@
 <?php
-namespace Laracl\Tests\Unit\TestsLibs;
+namespace Acl\Tests\Unit\TestsLibs;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IModelTestCase;
-use Laracl\Models;
+use Acl\Tests\Libs\IModelTestCase;
+use Acl\Models;
 
 class IModelTestCaseTest extends IModelTestCase
 {

@@ -2,14 +2,14 @@
 
 ## Configurando
 
-A primeira coisa a se fazer é efetuar a configuração básica do Laracl. 
+A primeira coisa a se fazer é efetuar a configuração básica do Acl. 
 Isso é realizado no arquivo de configuração que deve ser publicado através do seguinte comando:
 
 ```bash
-php artisan vendor:publish --tag=laracl-config
+php artisan vendor:publish --tag=acl-config
 ```
 
-Após executar este comando, o arquivo de configuração poderá ser encontrado em config/laracl.php.
+Após executar este comando, o arquivo de configuração poderá ser encontrado em config/acl.php.
 
 ## O usuário ROOT
 
@@ -32,7 +32,7 @@ se necessário, remover o ID de ROOT para o usuário voltar ao seu 'estado norma
 ## Usando as funções e habilidades
 
 Por padrão, existem 4 funções com suas respectivas habilidades, que podem ser usados em qualquer projeto Laravel. 
-Essas funções são gerenciáveis visualmente através dos CRUD's do Laracl:
+Essas funções são gerenciáveis visualmente através dos CRUD's do Acl:
 
 Função             | Habilidades
 -------------------|-----------------------------
@@ -43,20 +43,20 @@ groups-permissions | create, edit, show
 
 Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar se o usuário atual tem ou não direito de acesso a determinada área.
 
-> ***Nota***: no Laracl, optou-se por usar o termo '*show*' ao invés de '*read*', para se adequar aos termos dos [resources](https://laravel.com/docs/5.6/controllers#resource-controllers) dos CRUD's gerados pelo Artisan.
+> ***Nota***: no Acl, optou-se por usar o termo '*show*' ao invés de '*read*', para se adequar aos termos dos [resources](https://laravel.com/docs/5.6/controllers#resource-controllers) dos CRUD's gerados pelo Artisan.
 
 ## Diretivas para layout no Blade
 
-O Laracl possui diretivas especias para controlar o acesso diretamente em templates do blade.
+O Acl possui diretivas especias para controlar o acesso diretamente em templates do blade.
 São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando o framework [Bootstrap 4](https://getbootstrap.com/).
 
 ### Personalização
 
 Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões. 
-Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/laracl/buttons':
+Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/acl/buttons':
 
 ```bash
-php artisan vendor:publish --tag=laracl-buttons
+php artisan vendor:publish --tag=acl-buttons
 ```
 
 Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
@@ -69,7 +69,7 @@ São botões simples, que contém um determinando link. Por exemplo:
 ```html
 @acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
 ```
-No exemplo acima, ***users.edit*** diz ao Laracl para verificar se a função ***users*** possui acesso à habilidade ***edit***.
+No exemplo acima, ***users.edit*** diz ao Acl para verificar se a função ***users*** possui acesso à habilidade ***edit***.
 Caso seja positivo, um botão será gerado com o texto 'Editar Usuário' e conterá o link para '/admin/users/1/edit'. 
 Caso seja negativo, um botão será gerado sem o link e com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
@@ -204,11 +204,11 @@ return [
 
 ## Personalizando os CRUDs
 
-Para adicionar flexibilidade, e possibilitar a adaptação a qualquer projeto, o Laracl permite configurar os CRUDs de configuração das permissões. Entre as personalizações, pode-se alterar as rotas, os controladores e as views usadas pelo mecanismo interno. 
+Para adicionar flexibilidade, e possibilitar a adaptação a qualquer projeto, o Acl permite configurar os CRUDs de configuração das permissões. Entre as personalizações, pode-se alterar as rotas, os controladores e as views usadas pelo mecanismo interno. 
 
 ### Rotas Personalizados
 
-As rotas padrões possuem as urls com o prefixo 'laracl' seguido da rota básica ('laracl/users' ou 'laracl/users-permissions').
+As rotas padrões possuem as urls com o prefixo 'acl' seguido da rota básica ('acl/users' ou 'acl/users-permissions').
 Isso pode ser facilmente mudado, setando urls personalizadas na seção 'routes' do arquivo de configuração:
 
 ```php
@@ -218,9 +218,9 @@ return [
 
     'routes'     => [
         'users'              => 'meu-painel/usuarios', // <-- rota personalizada
-        'users-permissions'  => 'laracl/users-permissions',
-        'groups'             => 'laracl/groups',
-        'groups-permissions' => 'laracl/groups-permissions', 
+        'users-permissions'  => 'acl/users-permissions',
+        'groups'             => 'acl/groups',
+        'groups-permissions' => 'acl/groups-permissions', 
     ],
 
     ...
@@ -230,14 +230,14 @@ return [
 ### Visões Personalizadas
 
 Para personalizar a aparência dos CRUD's, basta publicar uma cópia dos templates padrões. 
-Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/laracl/cruds':
+Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/acl/cruds':
 
 ```bash
-php artisan vendor:publish --tag=laracl-cruds
+php artisan vendor:publish --tag=acl-cruds
 ```
 
 > **Nota**:
-> As views publicadas, por se tratarem de cópias das views internas do Laracl, possuem chamadas para o pacote 'laracl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'laracl::' para 'laracl.cruds.'.
+> As views publicadas, por se tratarem de cópias das views internas do Acl, possuem chamadas para o pacote 'acl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'acl::' para 'acl.cruds.'.
 
 Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
 são configuradas manualmente na seção ***views*** do arquivo de configuração:
@@ -250,9 +250,9 @@ return [
     'views' => [
 
         'users' => [
-            'index'  => 'laracl.cruds.index',   // <-- view personalizada
-            'create' => 'laracl::users.create', // <-- view do pacote laracl (::)
-            'edit'   => 'laracl::users.edit',   // <-- view do pacote laracl (::)
+            'index'  => 'acl.cruds.index',   // <-- view personalizada
+            'create' => 'acl::users.create', // <-- view do pacote acl (::)
+            'edit'   => 'acl::users.edit',   // <-- view do pacote acl (::)
         ],
 
         ...
@@ -274,19 +274,19 @@ return [
 
     'controllers'     => [
         'users'              => 'App\Http\Controllers\MeuUsersController', // <-- controlador personalizado
-        'users-permissions'  => 'Laracl\Http\Controllers\UsersPermissionsController',
-        'groups'             => 'Laracl\Http\Controllers\GroupsController',
-        'groups-permissions' => 'Laracl\Http\Controllers\GroupsPermissionsController',
+        'users-permissions'  => 'Acl\Http\Controllers\UsersPermissionsController',
+        'groups'             => 'Acl\Http\Controllers\GroupsController',
+        'groups-permissions' => 'Acl\Http\Controllers\GroupsPermissionsController',
     ],
 
     ...
 
 ```
 
-O aproveitamento das funcionalidades padrões é feita facilmente, extendendo o controlador original do Laracl:
+O aproveitamento das funcionalidades padrões é feita facilmente, extendendo o controlador original do Acl:
 
 ```php
-class MeuUsersController extends \Laracl\Http\Controllers\UsersController
+class MeuUsersController extends \Acl\Http\Controllers\UsersController
 {
     public function store(Request $form)
     {
@@ -296,7 +296,7 @@ class MeuUsersController extends \Laracl\Http\Controllers\UsersController
             'blog_id' => 'required|int',
         ]);
 
-        // Invoca o método store padrão do Laracl
+        // Invoca o método store padrão do Acl
         return parent::store($form);
     }
 }

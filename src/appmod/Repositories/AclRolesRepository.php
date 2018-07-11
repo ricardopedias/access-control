@@ -1,7 +1,7 @@
 <?php
-namespace Laracl\Repositories;
+namespace Acl\Repositories;
 
-use Laracl\Models\AclRole;
+use Acl\Models\AclRole;
 
 class AclRolesRepository extends BaseRepository
 {
@@ -9,7 +9,7 @@ class AclRolesRepository extends BaseRepository
 
     public function findBySlug($slug, bool $failable = false)
     {
-        $info = config("laracl.roles.{$slug}");
+        $info = config("acl.roles.{$slug}");
 
         if (!isset($info) || !isset($info['label'])) {
             if($failable == true) {

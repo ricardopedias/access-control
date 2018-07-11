@@ -1,6 +1,6 @@
 <?php
 
-namespace Laracl;
+namespace Acl;
 
 use Gate;
 

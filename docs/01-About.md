@@ -1,6 +1,6 @@
-# Laracl
+# Acl
 
-O Laracl foi desenvolvido para disponibilizar facilmente um gerenciador de [ACL](https://pt.wikipedia.org/wiki/Lista_de_controle_de_acesso) (Lista de Controle de Acesso) para um projeto Laravel. 
+O Acl foi desenvolvido para disponibilizar facilmente um gerenciador de [ACL](https://pt.wikipedia.org/wiki/Lista_de_controle_de_acesso) (Lista de Controle de Acesso) para um projeto Laravel. 
 
 Com CRUD's funcionais e personalizáveis, é simples configurar permissões baseadas em Grupos de Acesso ou exclusivamente para determinados usuários.
 

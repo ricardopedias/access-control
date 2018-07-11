@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') Permissões para "{{ $group->name }}" @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -13,7 +13,7 @@
 
             <div class="col text-right">
 
-                @acl_action('groups.create', route($route_create), 'Novo Grupo',  'laracl::buttons.groups.create')
+                @acl_action('groups.create', route($route_create), 'Novo Grupo',  'acl::buttons.groups.create')
 
             </div>
 

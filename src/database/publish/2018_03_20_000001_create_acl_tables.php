@@ -13,7 +13,7 @@ class createAclTables extends Migration
      */
     public function up()
     {
-        \Artisan::call('migrate', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
+        \Artisan::call('migrate', ['--path' => 'vendor/plexi/access-control/src/database/migrations']);
     }
 
     /**
@@ -23,6 +23,6 @@ class createAclTables extends Migration
      */
     public function down()
     {
-        \Artisan::call('migrate:reset', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
+        \Artisan::call('migrate:reset', ['--path' => 'vendor/plexi/access-control/src/database/migrations']);
     }
 }

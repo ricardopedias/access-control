@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Traits;
+namespace Acl\Traits;
 
 use Exception;
 use Illuminate\Database\Eloquent\Builder;

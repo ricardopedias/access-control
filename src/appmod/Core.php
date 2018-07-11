@@ -1,7 +1,7 @@
 <?php
-namespace Laracl;
+namespace Acl;
 
-use Laracl\Services;
+use Acl\Services;
 use Gate;
 
 class Core
@@ -129,20 +129,20 @@ class Core
      * No item ['users' => 'painel/users'], serão extraidos
      * os indices e os nomes para as rotas dos CRUDs, ficando assim:
      * [
-     *     laracl.routes.users.base   =>  'painel/users'
-     *     laracl.routes.users.index  => 'users.index'
-     *     laracl.routes.users.create => 'users.create'
-     *     laracl.routes.users.store  => 'users.store'
-     *     laracl.routes.users.edit   => 'users.edit'
-     *     laracl.routes.users.update => 'users.update'
-     *     laracl.routes.users.delete => 'users.delete'
-     *     laracl.routes.users.destroy => 'users.destroy'
-     *     laracl.routes.users.restore => 'users.restore'
+     *     acl.routes.users.base   =>  'painel/users'
+     *     acl.routes.users.index  => 'users.index'
+     *     acl.routes.users.create => 'users.create'
+     *     acl.routes.users.store  => 'users.store'
+     *     acl.routes.users.edit   => 'users.edit'
+     *     acl.routes.users.update => 'users.update'
+     *     acl.routes.users.delete => 'users.delete'
+     *     acl.routes.users.destroy => 'users.destroy'
+     *     acl.routes.users.restore => 'users.restore'
      * ]
      */
     public static function normalizeConfig()
     {
-        $config = config('laracl');
+        $config = config('acl');
 
         // A configuração só pode ser normalizada uma vez
         // se a primeira rota já for um array, encerra a operação
@@ -157,16 +157,16 @@ class Core
             $route_base = preg_replace('#.*/#', '', $config['routes'][$slug]);
 
             $route_params = [
-                "laracl.routes.{$slug}.base"    => $config['routes'][$slug],
-                "laracl.routes.{$slug}.index"   => $route_base . ".index",
-                "laracl.routes.{$slug}.create"  => $route_base . ".create",
-                "laracl.routes.{$slug}.store"   => $route_base . ".store",
-                "laracl.routes.{$slug}.edit"    => $route_base . ".edit",
-                "laracl.routes.{$slug}.update"  => $route_base . ".update",
-                "laracl.routes.{$slug}.delete"  => $route_base . ".delete",
-                "laracl.routes.{$slug}.destroy" => $route_base . ".destroy",
-                "laracl.routes.{$slug}.trash"   => $route_base . ".trash",
-                "laracl.routes.{$slug}.restore" => $route_base . ".restore",
+                "acl.routes.{$slug}.base"    => $config['routes'][$slug],
+                "acl.routes.{$slug}.index"   => $route_base . ".index",
+                "acl.routes.{$slug}.create"  => $route_base . ".create",
+                "acl.routes.{$slug}.store"   => $route_base . ".store",
+                "acl.routes.{$slug}.edit"    => $route_base . ".edit",
+                "acl.routes.{$slug}.update"  => $route_base . ".update",
+                "acl.routes.{$slug}.delete"  => $route_base . ".delete",
+                "acl.routes.{$slug}.destroy" => $route_base . ".destroy",
+                "acl.routes.{$slug}.trash"   => $route_base . ".trash",
+                "acl.routes.{$slug}.restore" => $route_base . ".restore",
             ];
             config($route_params);
         }
@@ -214,10 +214,10 @@ class Core
             return false;
         }
 
-        $roles_list = config('laracl.roles');
+        $roles_list = config('acl.roles');
 
         if (is_array($roles_list) == false || count($roles_list) == 0) {
-            throw new \OutOfRangeException("You need to add the 'roles' in the Laracl configuration");
+            throw new \OutOfRangeException("You need to add the 'roles' in the Acl configuration");
         }
 
         foreach ($roles_list as $role => $info) {
@@ -226,7 +226,7 @@ class Core
 
             if (isset($info['permissions']) == false || is_string($info['permissions']) == false) {
                 throw new \InvalidArgumentException(
-                    "You need to add comma separated 'permissions' in the Laracl '{$role}' configuration");
+                    "You need to add comma separated 'permissions' in the Acl '{$role}' configuration");
             }
 
             $allowed_permissions = explode(',', trim($info['permissions'], ',') );
@@ -246,7 +246,7 @@ class Core
                     function ($user, $callback = null)
                     use ($role, $permission)
                 {
-                    return \Laracl\Core::userCan($user->id, $role, $permission, $callback);
+                    return \Acl\Core::userCan($user->id, $role, $permission, $callback);
                 });
             }
         }

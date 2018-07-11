@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') {{ $title }} @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -13,7 +13,7 @@
 
             {{ csrf_field() }}
 
-            @include('laracl::groups.form')
+            @include('acl::groups.form')
 
             <div class="row">
 

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Laracl\Models\AclGroup;
+use Acl\Models\AclGroup;
 
 class CreateAclGroupsTable extends Migration
 {

@@ -1,11 +1,11 @@
 <?php
-namespace Laracl\Tests\Feature;
+namespace Acl\Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Console\Kernel;
-use Laracl\Tests\Libs\IModelTestCase;
+use Acl\Tests\Libs\IModelTestCase;
 use Illuminate\Database\Eloquent\Collection;
 
 class CoreTest extends IModelTestCase
@@ -14,27 +14,27 @@ class CoreTest extends IModelTestCase
 
     public function testeDebug()
     {
-        \Laracl\Core::setDebug('test_param', 'test_value');
+        \Acl\Core::setDebug('test_param', 'test_value');
 
         // Primeira chamada devolve e exclui
-        $debug = \Laracl\Core::getDebug('test_param');
+        $debug = \Acl\Core::getDebug('test_param');
         $this->assertEquals($debug, 'test_value');
         // Debug excluído
-        $this->assertNull(\Laracl\Core::getDebug('test_param'));
+        $this->assertNull(\Acl\Core::getDebug('test_param'));
     }
 
     public function testeNormalizeConfig()
     {
         // Sobrescreve a configuração para ela voltar ao normal
-        // pois \Laracl\Core::normalizeConfig() foi chamado no ServiceProvider
+        // pois \Acl\Core::normalizeConfig() foi chamado no ServiceProvider
         config([
-            'laracl.routes.users'              => 'laracl/users',
-            'laracl.routes.users-permissions'  => 'laracl/users-permissions',
-            'laracl.routes.groups'             => 'painel/groups', // rota personalizada
-            'laracl.routes.groups-permissions' => 'laracl/groups-permissions',
+            'acl.routes.users'              => 'acl/users',
+            'acl.routes.users-permissions'  => 'acl/users-permissions',
+            'acl.routes.groups'             => 'painel/groups', // rota personalizada
+            'acl.routes.groups-permissions' => 'acl/groups-permissions',
         ]);
 
-        $config = config('laracl');
+        $config = config('acl');
         $this->assertArrayHasKey('users', $config['routes']);
         $this->assertArrayHasKey('users-permissions', $config['routes']);
         $this->assertArrayHasKey('groups', $config['routes']);
@@ -45,9 +45,9 @@ class CoreTest extends IModelTestCase
         $this->assertTrue(is_string($config['routes']['groups-permissions']));
 
         // Realiza o processo de normalização
-        $this->assertTrue(\Laracl\Core::normalizeConfig());
+        $this->assertTrue(\Acl\Core::normalizeConfig());
 
-        $config = config('laracl');
+        $config = config('acl');
         $this->assertArrayHasKey('users', $config['routes']);
         $this->assertArrayHasKey('users-permissions', $config['routes']);
         $this->assertArrayHasKey('groups', $config['routes']);
@@ -62,7 +62,7 @@ class CoreTest extends IModelTestCase
         foreach ($route_params as $param) {
             $this->assertArrayHasKey($param, $config['routes']['users']);
             if ($param == 'base') {
-                $this->assertEquals("laracl/users", $config['routes']['users']['base']);
+                $this->assertEquals("acl/users", $config['routes']['users']['base']);
             } else {
                 $this->assertEquals("users.$param", $config['routes']['users'][$param]);
             }
@@ -80,7 +80,7 @@ class CoreTest extends IModelTestCase
         }
 
         // A configuração não é normalizada se já estiver ok
-        $this->assertFalse(\Laracl\Core::normalizeConfig());
+        $this->assertFalse(\Acl\Core::normalizeConfig());
 
     }
 
@@ -89,15 +89,15 @@ class CoreTest extends IModelTestCase
         $user = self::createUser();
         $role = self::createRole();
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
-        $permissions = \Laracl\Core::getUserPermissions($user->id, $role->slug);
+        $permissions = \Acl\Core::getUserPermissions($user->id, $role->slug);
         $this->assertNotNull(session('user.abilities'));
 
         // As permissões foram adquiridas do usuário
         $this->assertNull($permissions);
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
     }
 
     public function testGetUserPermissionsFromUser()
@@ -106,16 +106,16 @@ class CoreTest extends IModelTestCase
         $role = self::createRole();
         $permissions = self::createUserPermissions($role->id, $user->id, true, false, true, true);
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
-        $permissions = \Laracl\Core::getUserPermissions($user->id, $role->slug);
+        $permissions = \Acl\Core::getUserPermissions($user->id, $role->slug);
         $this->assertNotNull(session('user.abilities'));
 
         // As permissões foram adquiridas do usuário
         $this->assertNotNull($permissions);
         $this->assertTrue(is_array($permissions));
-        $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
     }
 
     public function testGetUserPermissionsFromGroup()
@@ -125,16 +125,16 @@ class CoreTest extends IModelTestCase
         $role = self::createRole();
         $permissions = self::createGroupPermissions($role->id, $group->id, true, false, true, true);
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
-        $permissions = \Laracl\Core::getUserPermissions($user->id, $role->slug);
+        $permissions = \Acl\Core::getUserPermissions($user->id, $role->slug);
         $this->assertNotNull(session('user.abilities'));
 
         // As permissões foram adquiridas do grupo
         $this->assertNotNull($permissions);
         $this->assertTrue(is_array($permissions));
-        $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertEquals('group', \Acl\Core::getDebug('current_ability_origin'));
     }
 
     public function testGetUserPermissionsFromUsePrecedence()
@@ -147,21 +147,21 @@ class CoreTest extends IModelTestCase
         self::createGroupPermissions($role->id, $group->id, true, false, true, true);
         self::createUserPermissions($role->id, $user->id, true, false, true, true);
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
-        $permissions = \Laracl\Core::getUserPermissions($user->id, $role->slug);
+        $permissions = \Acl\Core::getUserPermissions($user->id, $role->slug);
         $this->assertNotNull(session('user.abilities'));
 
         // As permissões foram adquiridas do usuário por precedência
         $this->assertNotNull($permissions);
         $this->assertTrue(is_array($permissions));
-        $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
     }
 
     public function testRootUserCan()
     {
-        $root_user = config('laracl.root_user');
+        $root_user = config('acl.root_user');
         $this->assertEquals($root_user, 1);
 
         $role_one = self::createRole();
@@ -176,9 +176,9 @@ class CoreTest extends IModelTestCase
 
             // Função de acesso 1
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertTrue(\Laracl\Core::userCan($root_user, $role_one->slug, $permission));
-            $this->assertEquals('config', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertTrue(\Acl\Core::userCan($root_user, $role_one->slug, $permission));
+            $this->assertEquals('config', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_one->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -186,9 +186,9 @@ class CoreTest extends IModelTestCase
 
             // Função de acesso 2
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertTrue(\Laracl\Core::userCan($root_user, $role_two->slug, $permission));
-            $this->assertEquals('config', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertTrue(\Acl\Core::userCan($root_user, $role_two->slug, $permission));
+            $this->assertEquals('config', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_two->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -215,9 +215,9 @@ class CoreTest extends IModelTestCase
             // Função de acesso 1
             // Todas as permissões são true
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertTrue(\Laracl\Core::userCan($user->id, $role_one->slug, $permission));
-            $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertTrue(\Acl\Core::userCan($user->id, $role_one->slug, $permission));
+            $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_one->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -226,9 +226,9 @@ class CoreTest extends IModelTestCase
             // Função de acesso 2
             // Todas as permissões são false
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertFalse(\Laracl\Core::userCan($user->id, $role_two->slug, $permission));
-            $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertFalse(\Acl\Core::userCan($user->id, $role_two->slug, $permission));
+            $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_two->slug,
                 'permission' => $permission,
                 'granted'    => false,
@@ -236,8 +236,8 @@ class CoreTest extends IModelTestCase
 
             // Função de acesso 3
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertFalse(\Laracl\Core::userCan($user->id, $role_three->slug, $permission));
-            $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertFalse(\Acl\Core::userCan($user->id, $role_three->slug, $permission));
+            $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
         }
     }
 
@@ -260,9 +260,9 @@ class CoreTest extends IModelTestCase
             // Função de acesso 1
             // Todas as permissões são true
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertTrue(\Laracl\Core::userCan($user->id, $role_one->slug, $permission));
-            $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertTrue(\Acl\Core::userCan($user->id, $role_one->slug, $permission));
+            $this->assertEquals('group', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_one->slug,
                 'permission' => $permission,
                 'granted'    => true,
@@ -271,9 +271,9 @@ class CoreTest extends IModelTestCase
             // Função de acesso 2
             // Todas as permissões são false
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertFalse(\Laracl\Core::userCan($user->id, $role_two->slug, $permission));
-            $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
-            $this->assertEquals(\Laracl\Core::getDebug('current_ability'), [
+            $this->assertFalse(\Acl\Core::userCan($user->id, $role_two->slug, $permission));
+            $this->assertEquals('group', \Acl\Core::getDebug('current_ability_origin'));
+            $this->assertEquals(\Acl\Core::getDebug('current_ability'), [
                 'role'       => $role_two->slug,
                 'permission' => $permission,
                 'granted'    => false,
@@ -281,8 +281,8 @@ class CoreTest extends IModelTestCase
 
             // Função de acesso 3
             session()->forget('user.abilities'); // exclui a sessão para evitar cache
-            $this->assertFalse(\Laracl\Core::userCan($user->id, $role_three->slug, $permission));
-            $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+            $this->assertFalse(\Acl\Core::userCan($user->id, $role_three->slug, $permission));
+            $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
         }
     }
 
@@ -300,85 +300,85 @@ class CoreTest extends IModelTestCase
 
         foreach (['create', 'read', 'update', 'delete'] as $permission) {
 
-            $this->assertTrue(\Laracl\Core::userCan($user->id, $role_one->slug, $permission, function(){ return true; }));
-            $this->assertTrue(\Laracl\Core::userCan($user->id, $role_two->slug, $permission, function(){ return true; }));
+            $this->assertTrue(\Acl\Core::userCan($user->id, $role_one->slug, $permission, function(){ return true; }));
+            $this->assertTrue(\Acl\Core::userCan($user->id, $role_two->slug, $permission, function(){ return true; }));
 
-            $this->assertFalse(\Laracl\Core::userCan($user->id, $role_one->slug, $permission, function(){ return false; }));
-            $this->assertFalse(\Laracl\Core::userCan($user->id, $role_two->slug, $permission, function(){ return false; }));
+            $this->assertFalse(\Acl\Core::userCan($user->id, $role_one->slug, $permission, function(){ return false; }));
+            $this->assertFalse(\Acl\Core::userCan($user->id, $role_two->slug, $permission, function(){ return false; }));
         };
     }
 
     public function testRegisterPoliciesRolesException()
     {
-        \Laracl\Core::resetCore(); // limpa todos os lazy loads
+        \Acl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\OutOfRangeException::class);
 
         // é obrigatória a existencia de Roles na configuração
-        config(['laracl.roles' => null ]);
-        \Laracl\Core::registerPolicies();
+        config(['acl.roles' => null ]);
+        \Acl\Core::registerPolicies();
     }
 
     public function testRegisterPoliciesNoPermissionsException()
     {
-        \Laracl\Core::resetCore(); // limpa todos os lazy loads
+        \Acl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\InvalidArgumentException::class);
 
         // É obrigatória a existencia do indice 'permissions' na configuração de Roles
-        config(['laracl.roles.users' => null ]);
-        config(['laracl.roles.users.label' => 'Usuários' ]);
-        \Laracl\Core::registerPolicies();
+        config(['acl.roles.users' => null ]);
+        config(['acl.roles.users.label' => 'Usuários' ]);
+        \Acl\Core::registerPolicies();
     }
 
     public function testRegisterPoliciesInvalidPermissionsParamExceptionOne()
     {
-        \Laracl\Core::resetCore(); // limpa todos os lazy loads
+        \Acl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\InvalidArgumentException::class);
 
         // O indice 'permissions' na configuração de Roles deve ser uma string
-        config(['laracl.roles.users' => null ]);
+        config(['acl.roles.users' => null ]);
         config([
-            'laracl.roles.users.label' => 'Usuários',
-            'laracl.roles.users.permissions' => null
+            'acl.roles.users.label' => 'Usuários',
+            'acl.roles.users.permissions' => null
         ]);
-        \Laracl\Core::registerPolicies();
+        \Acl\Core::registerPolicies();
     }
 
     public function testRegisterPoliciesInvalidPermissionsParamExceptionTwo()
     {
-        \Laracl\Core::resetCore(); // limpa todos os lazy loads
+        \Acl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\InvalidArgumentException::class);
 
         // O indice 'permissions' na configuração de Roles deve ser uma string
-        config(['laracl.roles.users' => null ]);
+        config(['acl.roles.users' => null ]);
         config([
-            'laracl.roles.users.label' => 'Usuários',
-            'laracl.roles.users.permissions' => 456
+            'acl.roles.users.label' => 'Usuários',
+            'acl.roles.users.permissions' => 456
         ]);
-        \Laracl\Core::registerPolicies();
+        \Acl\Core::registerPolicies();
     }
 
     public function testRegisterPoliciesInvalidPermissionsValueExceptionTwo()
     {
-        \Laracl\Core::resetCore(); // limpa todos os lazy loads
+        \Acl\Core::resetCore(); // limpa todos os lazy loads
         $this->expectException(\UnexpectedValueException::class);
 
         // Apenas create,read,update e delete são permissões válidas
-        config(['laracl.roles.users' => null ]);
+        config(['acl.roles.users' => null ]);
         config([
-            'laracl.roles.users.label'       => 'Usuários',
-            'laracl.roles.users.permissions' => 'create,invalid,update,delete'
+            'acl.roles.users.label'       => 'Usuários',
+            'acl.roles.users.permissions' => 'create,invalid,update,delete'
         ]);
-        \Laracl\Core::registerPolicies();
+        \Acl\Core::registerPolicies();
     }
 
     public function testRegisterPolicies()
     {
-        \Laracl\Core::resetCore(); // limpa todos os lazy loads
-        $system_roles = config('laracl.roles');
+        \Acl\Core::resetCore(); // limpa todos os lazy loads
+        $system_roles = config('acl.roles');
 
-        \Laracl\Core::registerPolicies();
+        \Acl\Core::registerPolicies();
 
-        $registered = \Laracl\Core::getDebug('registered_polices');
+        $registered = \Acl\Core::getDebug('registered_polices');
 
         $compared = [];
         foreach ($system_roles as $role => $item) {

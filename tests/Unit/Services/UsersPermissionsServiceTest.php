@@ -3,8 +3,8 @@ namespace Tests\Unit\Repositories;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IModelTestCase;
-use Laracl\Services\UsersPermissionsService;
+use Acl\Tests\Libs\IModelTestCase;
+use Acl\Services\UsersPermissionsService;
 
 class UsersPermissionsServiceTest extends IModelTestCase
 {
@@ -31,8 +31,8 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $this->assertTrue($updated);
 
         // users
-        $role_users = \Laracl\Models\AclRole::where('slug', 'users')->first();
-        $permissions_users = \Laracl\Models\AclUserPermission::where('role_id', $role_users->id)
+        $role_users = \Acl\Models\AclRole::where('slug', 'users')->first();
+        $permissions_users = \Acl\Models\AclUserPermission::where('role_id', $role_users->id)
             ->where('user_id', $user->id)->first();
         $this->assertEquals('yes', $permissions_users->create);
         $this->assertEquals('no', $permissions_users->read);
@@ -40,8 +40,8 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $this->assertEquals('no', $permissions_users->delete);
 
         // groups
-        $role_groups = \Laracl\Models\AclRole::where('slug', 'groups')->first();
-        $permissions_groups = \Laracl\Models\AclUserPermission::where('role_id', $role_groups->id)
+        $role_groups = \Acl\Models\AclRole::where('slug', 'groups')->first();
+        $permissions_groups = \Acl\Models\AclUserPermission::where('role_id', $role_groups->id)
             ->where('user_id', $user->id)->first();
         $this->assertEquals('yes', $permissions_groups->create);
         $this->assertEquals('yes', $permissions_groups->read);
@@ -49,8 +49,8 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $this->assertEquals('yes', $permissions_groups->delete);
 
         // groups-permissions
-        $role_groups_permissions = \Laracl\Models\AclRole::where('slug', 'groups-permissions')->first();
-        $permissions_groups_perms = \Laracl\Models\AclUserPermission::where('role_id', $role_groups_permissions->id)
+        $role_groups_permissions = \Acl\Models\AclRole::where('slug', 'groups-permissions')->first();
+        $permissions_groups_perms = \Acl\Models\AclUserPermission::where('role_id', $role_groups_permissions->id)
             ->where('user_id', $user->id)->first();
         $this->assertEquals('no', $permissions_groups_perms->create);
         $this->assertEquals('no', $permissions_groups_perms->read);
@@ -74,8 +74,8 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $this->assertTrue($updated);
 
         // users
-        $role_users = \Laracl\Models\AclRole::where('slug', 'users')->first();
-        $permissions_users = \Laracl\Models\AclUserPermission::where('role_id', $role_users->id)
+        $role_users = \Acl\Models\AclRole::where('slug', 'users')->first();
+        $permissions_users = \Acl\Models\AclUserPermission::where('role_id', $role_users->id)
             ->where('user_id', $user->id)->first();
         $this->assertEquals('no', $permissions_users->create);
         $this->assertEquals('no', $permissions_users->read);
@@ -83,8 +83,8 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $this->assertEquals('no', $permissions_users->delete);
 
         // groups
-        $role_groups = \Laracl\Models\AclRole::where('slug', 'groups')->first();
-        $permissions_groups = \Laracl\Models\AclUserPermission::where('role_id', $role_groups->id)
+        $role_groups = \Acl\Models\AclRole::where('slug', 'groups')->first();
+        $permissions_groups = \Acl\Models\AclUserPermission::where('role_id', $role_groups->id)
             ->where('user_id', $user->id)->first();
         $this->assertEquals('no', $permissions_groups->create);
         $this->assertEquals('yes', $permissions_groups->read);
@@ -96,7 +96,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
     {
         $user = self::createUser();
 
-        $abilities = config('laracl.roles');
+        $abilities = config('acl.roles');
 
         $structure = (new UsersPermissionsService)->getStructure($user->id);
 
@@ -134,11 +134,11 @@ class UsersPermissionsServiceTest extends IModelTestCase
 
     public function testGetStructure_UserPermissions()
     {
-        $role = \Laracl\Models\AclRole::where('slug', 'users')->first();
+        $role = \Acl\Models\AclRole::where('slug', 'users')->first();
         $user = self::createUser();
         self::createUserPermissions($role->id, $user->id, true, true, true, true);
 
-        $abilities = config('laracl.roles');
+        $abilities = config('acl.roles');
 
         $structure = (new UsersPermissionsService)->getStructure($user->id);
 
@@ -184,7 +184,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $user = self::createUser();
         $role = self::createRole();
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
         $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
@@ -192,7 +192,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
 
         // As permissões foram adquiridas do usuário
         $this->assertNull($permissions);
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
     }
 
     public function testGetUserPermissionsFromUser()
@@ -201,7 +201,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $role = self::createRole();
         $permissions = self::createUserPermissions($role->id, $user->id, true, false, true, true);
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
         $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
@@ -210,7 +210,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
         // As permissões foram adquiridas do usuário
         $this->assertNotNull($permissions);
         $this->assertTrue(is_array($permissions));
-        $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
     }
 
     public function testGetUserPermissionsFromGroup()
@@ -220,7 +220,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $role = self::createRole();
         $permissions = self::createGroupPermissions($role->id, $group->id, true, false, true, true);
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
         $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
@@ -229,7 +229,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
         // As permissões foram adquiridas do grupo
         $this->assertNotNull($permissions);
         $this->assertTrue(is_array($permissions));
-        $this->assertEquals('group', \Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertEquals('group', \Acl\Core::getDebug('current_ability_origin'));
     }
 
     public function testGetUserPermissionsFromUsePrecedence()
@@ -242,7 +242,7 @@ class UsersPermissionsServiceTest extends IModelTestCase
         self::createGroupPermissions($role->id, $group->id, true, false, true, true);
         self::createUserPermissions($role->id, $user->id, true, false, true, true);
 
-        $this->assertNull(\Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertNull(\Acl\Core::getDebug('current_ability_origin'));
 
         $this->assertNull(session('user.abilities'));
         $permissions = (new UsersPermissionsService)->getPermissionsByUserID($user->id, $role->slug);
@@ -251,6 +251,6 @@ class UsersPermissionsServiceTest extends IModelTestCase
         // As permissões foram adquiridas do usuário por precedência
         $this->assertNotNull($permissions);
         $this->assertTrue(is_array($permissions));
-        $this->assertEquals('user', \Laracl\Core::getDebug('current_ability_origin'));
+        $this->assertEquals('user', \Acl\Core::getDebug('current_ability_origin'));
     }
 }

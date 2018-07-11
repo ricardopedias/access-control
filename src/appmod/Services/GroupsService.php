@@ -1,11 +1,11 @@
 <?php
-namespace Laracl\Services;
+namespace Acl\Services;
 
 use Illuminate\Http\Request;
-use Laracl\Repositories\AclUsersRepository;
-use Laracl\Repositories\AclGroupsRepository;
-use Laracl\Models\AclUserGroup;
-use Laracl\Models\AclUserPermission;
+use Acl\Repositories\AclUsersRepository;
+use Acl\Repositories\AclGroupsRepository;
+use Acl\Models\AclUserGroup;
+use Acl\Models\AclUserPermission;
 use SortableGrid\Traits\HasSortableGrid;
 
 class GroupsService implements CrudContract
@@ -32,13 +32,13 @@ class GroupsService implements CrudContract
         $this->setDataProvider($provider);
 
         return $this->gridView($view)->with([
-            'route_create'      => config('laracl.routes.groups.create'),
-            'route_edit'        => config('laracl.routes.groups.edit'),
-            'route_destroy'     => config('laracl.routes.groups.destroy'),
-            'route_permissions' => config('laracl.routes.groups-permissions.edit'),
-            'route_trash'       => config('laracl.routes.groups.trash'),
+            'route_create'      => config('acl.routes.groups.create'),
+            'route_edit'        => config('acl.routes.groups.edit'),
+            'route_destroy'     => config('acl.routes.groups.destroy'),
+            'route_permissions' => config('acl.routes.groups-permissions.edit'),
+            'route_trash'       => config('acl.routes.groups.trash'),
             'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
                 'Grupos'
             ]
         ]);
@@ -64,15 +64,15 @@ class GroupsService implements CrudContract
         $this->setDataProvider($provider);
 
         return $this->gridView($view)->with([
-            'route_create'      => config('laracl.routes.groups.create'),
-            'route_edit'        => config('laracl.routes.groups.edit'),
-            'route_destroy'     => config('laracl.routes.groups.destroy'),
-            'route_permissions' => config('laracl.routes.groups-permissions.edit'),
-            'route_trash'       => config('laracl.routes.groups.trash'),
-            'route_restore'     => config('laracl.routes.groups.restore'),
+            'route_create'      => config('acl.routes.groups.create'),
+            'route_edit'        => config('acl.routes.groups.edit'),
+            'route_destroy'     => config('acl.routes.groups.destroy'),
+            'route_permissions' => config('acl.routes.groups-permissions.edit'),
+            'route_trash'       => config('acl.routes.groups.trash'),
+            'route_restore'     => config('acl.routes.groups.restore'),
             'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
+                '<i class="fas fa-user-friends"></i> Grupos' => route(config('acl.routes.groups.index')),
                 'Lixeira'
             ]
         ]);
@@ -83,11 +83,11 @@ class GroupsService implements CrudContract
         return view($view)->with([
             'model'       => (new AclGroupsRepository)->read(),
             'title'       => 'Novo Grupo de Acesso',
-            'route_store' => config('laracl.routes.groups.store'),
-            'route_users' => config('laracl.routes.users.index'),
+            'route_store' => config('acl.routes.groups.store'),
+            'route_users' => config('acl.routes.users.index'),
             'breadcrumb'  => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
+                '<i class="fas fa-user-friends"></i> Grupos' => route(config('acl.routes.groups.index')),
                 'Novo Grupo'
             ]
         ]);
@@ -98,12 +98,12 @@ class GroupsService implements CrudContract
         return view($view)->with([
             'model'             => ($group = (new AclGroupsRepository)->read($id)),
             'title'             => 'Editar Grupo de Acesso',
-            'route_update'      => config('laracl.routes.groups.update'),
-            'route_create'      => config('laracl.routes.groups.create'),
-            'route_permissions' => config('laracl.routes.groups-permissions.edit'),
+            'route_update'      => config('acl.routes.groups.update'),
+            'route_create'      => config('acl.routes.groups.create'),
+            'route_permissions' => config('acl.routes.groups-permissions.edit'),
             'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
+                '<i class="fas fa-user-friends"></i> Grupos' => route(config('acl.routes.groups.index')),
                 $group->name
             ]
         ]);

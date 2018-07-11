@@ -3,8 +3,8 @@ namespace Tests\Unit\Repositories;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IModelTestCase;
-use Laracl\Services\RolesService;
+use Acl\Tests\Libs\IModelTestCase;
+use Acl\Services\RolesService;
 
 class RolesServiceTest extends IModelTestCase
 {
@@ -12,7 +12,7 @@ class RolesServiceTest extends IModelTestCase
 
     public function testGetStructure()
     {
-        $abilities = config('laracl.roles');
+        $abilities = config('acl.roles');
 
         $structure = (new RolesService)->getStructure();
 

@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') {{ $title }} @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -13,9 +13,9 @@
 
             <div class="col text-right justify-content-end">
 
-                @acl_action('users.create', route($route_create), 'Novo Usuário', 'laracl::buttons.users.create')
+                @acl_action('users.create', route($route_create), 'Novo Usuário', 'acl::buttons.users.create')
 
-                @acl_action('users-permissions.update', route($route_permissions, $model->id), 'Permissões', 'laracl::buttons.users.permissions')
+                @acl_action('users-permissions.update', route($route_permissions, $model->id), 'Permissões', 'acl::buttons.users.permissions')
 
             </div>
 
@@ -28,7 +28,7 @@
             {{ method_field('PUT') }}
             {{-- https://laravel.com/docs/5.5/controllers#resource-controllers --}}
 
-            @include('laracl::users.form')
+            @include('acl::users.form')
 
             <div class="row">
 

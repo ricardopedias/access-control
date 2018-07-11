@@ -3,7 +3,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IControllerTestCase;
+use Acl\Tests\Libs\IControllerTestCase;
 
 class UsersPermissionsControllerTest extends IControllerTestCase
 {
@@ -19,7 +19,7 @@ class UsersPermissionsControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        $response = $this->get('/laracl/users-permissions/' . $user->id . '/edit');
+        $response = $this->get('/acl/users-permissions/' . $user->id . '/edit');
         $response->assertStatus(200);
     }
 
@@ -39,12 +39,12 @@ class UsersPermissionsControllerTest extends IControllerTestCase
 
         // Requisição PUT
         $original_user = self::createUser();
-        $response = $this->put("/laracl/users/" . $original_user->id, $put, [
-            'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
+        $response = $this->put("/acl/users/" . $original_user->id, $put, [
+            'HTTP_REFERER' => "/acl/users/" . $original_user->id . "/edit"
         ]);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users/" . $original_user->id . "/edit");
+        $response->assertRedirect("/acl/users/" . $original_user->id . "/edit");
 
         // Usuário atualizado
         $edited_user = \App\User::find($original_user->id);

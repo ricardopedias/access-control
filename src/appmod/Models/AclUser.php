@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Models;
+namespace Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,7 +35,7 @@ class AclUser extends \App\User
 
     /**
      * Devolve os dados de status deste usuário.
-     * @return Laracl\Models\AclUserStatus ou null
+     * @return Acl\Models\AclUserStatus ou null
      */
     public function status()
     {
@@ -44,7 +44,7 @@ class AclUser extends \App\User
 
     /**
      * Devolve o modelo de relacionamento entre o usuário e o grupo
-     * @return Laracl\Models\AclUserGroup ou null
+     * @return Acl\Models\AclUserGroup ou null
      */
     public function groupRelation()
     {

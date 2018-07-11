@@ -3,8 +3,8 @@ namespace Tests\Feature\Http\Controllers;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IControllerTestCase;
-use Laracl\Models;
+use Acl\Tests\Libs\IControllerTestCase;
+use Acl\Models;
 
 class GroupsControllerTest extends IControllerTestCase
 {
@@ -18,7 +18,7 @@ class GroupsControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        $response = $this->get('/laracl/groups');
+        $response = $this->get('/acl/groups');
         $response->assertStatus(200);
     }
 
@@ -28,7 +28,7 @@ class GroupsControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        $response = $this->get('/laracl/groups/create');
+        $response = $this->get('/acl/groups/create');
         $response->assertStatus(200);
     }
 
@@ -45,12 +45,12 @@ class GroupsControllerTest extends IControllerTestCase
         ];
 
         // Requisição POST
-        $response = $this->post('/laracl/groups', $post);
+        $response = $this->post('/acl/groups', $post);
 
         // Usuário criado
         $group = Models\AclGroup::where('name', $name)->first();
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/groups");
+        $response->assertRedirect("/acl/groups");
     }
 
     public function testEdit()
@@ -60,7 +60,7 @@ class GroupsControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        $response = $this->get('/laracl/groups/' . $group->id . '/edit');
+        $response = $this->get('/acl/groups/' . $group->id . '/edit');
         $response->assertStatus(200);
     }
 
@@ -78,12 +78,12 @@ class GroupsControllerTest extends IControllerTestCase
 
         // Requisição PUT
         $original_group = self::createGroup();
-        $response = $this->put("/laracl/groups/" . $original_group->id, $put, [
-            'HTTP_REFERER' => "/laracl/groups/" . $original_group->id . "/edit"
+        $response = $this->put("/acl/groups/" . $original_group->id, $put, [
+            'HTTP_REFERER' => "/acl/groups/" . $original_group->id . "/edit"
         ]);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/groups/" . $original_group->id . "/edit");
+        $response->assertRedirect("/acl/groups/" . $original_group->id . "/edit");
 
         // Grupo atualizado
         $edited_group = Models\AclGroup::find($original_group->id);

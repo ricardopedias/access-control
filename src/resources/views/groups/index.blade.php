@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') Grupos de Acesso @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -16,12 +16,12 @@
             </div>
 
             <div>
-                @acl_action('groups.create', route($route_create), 'Novo Grupo', 'laracl::buttons.groups.create')
+                @acl_action('groups.create', route($route_create), 'Novo Grupo', 'acl::buttons.groups.create')
 
                 @sg_search
 
-                @if(config('laracl.soft_delete') != false)
-                    @acl_action('groups.delete', route($route_trash), '', 'laracl::buttons.trash')
+                @if(config('acl.soft_delete') != false)
+                    @acl_action('groups.delete', route($route_trash), '', 'acl::buttons.trash')
                 @endif
             </div>
 
@@ -47,7 +47,7 @@
 
                         @acl_action_sm('groups.update', route($route_edit, $item->id ), 'Editar')
 
-                        @acl_action_sm('groups-permissions.update', route($route_permissions, $item->id ), 'Permissões', 'laracl::buttons.permissions')
+                        @acl_action_sm('groups-permissions.update', route($route_permissions, $item->id ), 'Permissões', 'acl::buttons.permissions')
 
                         @acl_action_sm('groups.delete', route($route_destroy, $item->id), 'Excluir', null, true)
 

@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') Lixeira de Grupos de Acesso @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -39,7 +39,7 @@
 
                     <td class="text-center">
 
-                        @acl_action_sm('groups.delete', route($route_restore, $item->id), 'Restaurar', 'laracl::buttons.restore', true)
+                        @acl_action_sm('groups.delete', route($route_restore, $item->id), 'Restaurar', 'acl::buttons.restore', true)
 
                         @acl_action_sm('groups.delete', route($route_destroy, $item->id), 'Excluir', null, true)
 

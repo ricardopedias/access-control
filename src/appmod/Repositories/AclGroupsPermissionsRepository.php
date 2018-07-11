@@ -1,8 +1,8 @@
 <?php
-namespace Laracl\Repositories;
+namespace Acl\Repositories;
 
-use Laracl\Models\AclGroupPermission;
-use Laracl\Repositories\AclRolesRepository;
+use Acl\Models\AclGroupPermission;
+use Acl\Repositories\AclRolesRepository;
 
 class AclGroupsPermissionsRepository extends BaseRepository
 {

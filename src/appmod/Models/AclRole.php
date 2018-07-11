@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Models;
+namespace Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -47,7 +47,7 @@ class AclRole extends Model
 
     /**
      * Devolve o modelo com as permissões de usuário para esta função de acesso
-     * @return Laracl\Models\AclUserPermission ou null
+     * @return Acl\Models\AclUserPermission ou null
      */
     public function usersPermissions()
     {
@@ -56,7 +56,7 @@ class AclRole extends Model
 
     /**
      * Devolve o modelo com as permissões de grupo para esta função de acesso
-     * @return Laracl\Models\AclGroupPermission ou null
+     * @return Acl\Models\AclGroupPermission ou null
      */
     public function groupsPermissions()
     {

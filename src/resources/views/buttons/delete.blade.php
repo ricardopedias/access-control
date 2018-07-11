@@ -38,7 +38,7 @@
 
         <div id="js-acl-delete-confirm-modal-logic">
 
-            @include('laracl::modal-delete')
+            @include('acl::modal-delete')
 
             <script>
 
@@ -47,7 +47,7 @@
                 1. Move a logica do modal de confirmação para o final do documento
                 2. Gera uma instancia do objeto AclConfirmDelete e aplica o evento
                    de clique em todos os botões 'delete'.
-                   O AclConfirmDelete é carregado em laracl/src/resources/views/modal-delete.blade.php
+                   O AclConfirmDelete é carregado em acl/src/resources/views/modal-delete.blade.php
                 */
 
                 function acl_attach_delete_confirm(elem) {

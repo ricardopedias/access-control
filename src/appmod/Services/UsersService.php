@@ -1,13 +1,13 @@
 <?php
-namespace Laracl\Services;
+namespace Acl\Services;
 
 use Illuminate\Http\Request;
-use Laracl\Repositories\AclUsersRepository;
-use Laracl\Repositories\AclGroupsRepository;
-use Laracl\Repositories\AclUsersStatusRepository;
-use Laracl\Models\AclUserGroup;
-use Laracl\Models\AclUserPermission;
-use Laracl\Models\AclUserStatus;
+use Acl\Repositories\AclUsersRepository;
+use Acl\Repositories\AclGroupsRepository;
+use Acl\Repositories\AclUsersStatusRepository;
+use Acl\Models\AclUserGroup;
+use Acl\Models\AclUserPermission;
+use Acl\Models\AclUserStatus;
 use SortableGrid\Traits\HasSortableGrid;
 
 class UsersService implements CrudContract
@@ -36,7 +36,7 @@ class UsersService implements CrudContract
             $columns[] = 'users.updated_at';
         }
 
-        // \Laracl\Models\AclUser
+        // \Acl\Models\AclUser
         // O campo com o grupo de acesso
         $fillable_group = (new AclGroupsRepository)->newModel()->getFillableColumns();
         foreach($fillable_group as $field) {
@@ -45,7 +45,7 @@ class UsersService implements CrudContract
         $columns[] = "acl_groups.created_at as group_created_at";
         $columns[] = "acl_groups.updated_at as group_updated_at";
 
-        // Faz o select devolvendo os campos de \App\User + \Laracl\Models\AclGroup
+        // Faz o select devolvendo os campos de \App\User + \Acl\Models\AclGroup
         return (new AclUsersRepository)->newQuery()->select($columns)
             ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
             ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
@@ -76,12 +76,12 @@ class UsersService implements CrudContract
         $this->setDataProvider($provider);
 
         return $this->gridView($view)->with([
-            'route_create'      => config('laracl.routes.users.create'),
-            'route_edit'        => config('laracl.routes.users.edit'),
-            'route_destroy'     => config('laracl.routes.users.destroy'),
-            'route_permissions' => config('laracl.routes.users-permissions.edit'),
-            'route_groups'      => config('laracl.routes.groups.index'),
-            'route_trash'       => config('laracl.routes.users.trash'),
+            'route_create'      => config('acl.routes.users.create'),
+            'route_edit'        => config('acl.routes.users.edit'),
+            'route_destroy'     => config('acl.routes.users.destroy'),
+            'route_permissions' => config('acl.routes.users-permissions.edit'),
+            'route_groups'      => config('acl.routes.groups.index'),
+            'route_trash'       => config('acl.routes.users.trash'),
             'breadcrumb'        => [
                 '<i class="fas fa-user"></i> Usuários'
             ]
@@ -113,15 +113,15 @@ class UsersService implements CrudContract
         $this->setDataProvider($provider);
 
         return $this->gridView($view)->with([
-            'route_create'      => config('laracl.routes.users.create'),
-            'route_edit'        => config('laracl.routes.users.edit'),
-            'route_destroy'     => config('laracl.routes.users.destroy'),
-            'route_restore'     => config('laracl.routes.users.restore'),
-            'route_permissions' => config('laracl.routes.users-permissions.edit'),
-            'route_groups'      => config('laracl.routes.groups.index'),
-            'route_trash'       => config('laracl.routes.users.trash'),
+            'route_create'      => config('acl.routes.users.create'),
+            'route_edit'        => config('acl.routes.users.edit'),
+            'route_destroy'     => config('acl.routes.users.destroy'),
+            'route_restore'     => config('acl.routes.users.restore'),
+            'route_permissions' => config('acl.routes.users-permissions.edit'),
+            'route_groups'      => config('acl.routes.groups.index'),
+            'route_trash'       => config('acl.routes.users.trash'),
             'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
                 'Lixeira'
             ]
         ]);
@@ -135,9 +135,9 @@ class UsersService implements CrudContract
             'groups'          => (new AclGroupsRepository)->collectAll(),
             'title'           => 'Novo Usuário',
             'require_pass'    => 'required',
-            'route_store'     => config('laracl.routes.users.store'),
+            'route_store'     => config('acl.routes.users.store'),
             'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
                 'Novo Usuário'
             ]
         ]);
@@ -151,11 +151,11 @@ class UsersService implements CrudContract
             'groups'            => (new AclGroupsRepository)->collectAll(),
             'require_pass'      => '',
             'title'             => 'Editar Usuário',
-            'route_update'      => config('laracl.routes.users.update'),
-            'route_create'      => config('laracl.routes.users.create'),
-            'route_permissions' => config('laracl.routes.users-permissions.edit'),
+            'route_update'      => config('acl.routes.users.update'),
+            'route_create'      => config('acl.routes.users.create'),
+            'route_permissions' => config('acl.routes.users-permissions.edit'),
             'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
                 $user->name
             ]
         ]);
@@ -256,17 +256,17 @@ class UsersService implements CrudContract
     public function userCan(int $user_id, string $role, string $permission, $callback = null) : bool
     {
         // Usuário permamentemente liberado
-        $root_user = config('laracl.root_user');
+        $root_user = config('acl.root_user');
         if ($user_id == $root_user) {
-            \Laracl\Core::traceCurrentAbilityOrigin('config');
-            \Laracl\Core::traceCurrentAbility($role, $permission, true);
+            \Acl\Core::traceCurrentAbilityOrigin('config');
+            \Acl\Core::traceCurrentAbility($role, $permission, true);
             return true;
         }
 
         // Existem permissões setadas?
         $user_abilities = (new UsersPermissionsService)->getPermissionsByUserID($user_id, $role);
         if ($user_abilities === null) {
-            \Laracl\Core::traceCurrentAbility($role, $permission, false);
+            \Acl\Core::traceCurrentAbility($role, $permission, false);
             return false;
         }
 
@@ -275,12 +275,12 @@ class UsersService implements CrudContract
 
         // Existe uma verificação adicional
         if ($result == true && $callback != null && is_callable($callback) && $callback() !== true) {
-            \Laracl\Core::traceCurrentAbilityOrigin('callback');
-            \Laracl\Core::traceCurrentAbility($role, $permission, false);
+            \Acl\Core::traceCurrentAbilityOrigin('callback');
+            \Acl\Core::traceCurrentAbility($role, $permission, false);
             return false;
         }
 
-        \Laracl\Core::traceCurrentAbility($role, $permission, $result);
+        \Acl\Core::traceCurrentAbility($role, $permission, $result);
 
         return $result;
     }

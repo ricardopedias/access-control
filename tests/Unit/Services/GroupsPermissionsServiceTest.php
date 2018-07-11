@@ -3,8 +3,8 @@ namespace Tests\Unit\Repositories;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IModelTestCase;
-use Laracl\Services\GroupsPermissionsService;
+use Acl\Tests\Libs\IModelTestCase;
+use Acl\Services\GroupsPermissionsService;
 
 class GroupsPermissionsServiceTest extends IModelTestCase
 {
@@ -31,8 +31,8 @@ class GroupsPermissionsServiceTest extends IModelTestCase
         $this->assertTrue($updated);
 
         // users
-        $role_users = \Laracl\Models\AclRole::where('slug', 'users')->first();
-        $permissions_users = \Laracl\Models\AclGroupPermission::where('role_id', $role_users->id)
+        $role_users = \Acl\Models\AclRole::where('slug', 'users')->first();
+        $permissions_users = \Acl\Models\AclGroupPermission::where('role_id', $role_users->id)
             ->where('group_id', $group->id)->first();
         $this->assertEquals('yes', $permissions_users->create);
         $this->assertEquals('no', $permissions_users->read);
@@ -40,8 +40,8 @@ class GroupsPermissionsServiceTest extends IModelTestCase
         $this->assertEquals('no', $permissions_users->delete);
 
         // groups
-        $role_groups = \Laracl\Models\AclRole::where('slug', 'groups')->first();
-        $permissions_groups = \Laracl\Models\AclGroupPermission::where('role_id', $role_groups->id)
+        $role_groups = \Acl\Models\AclRole::where('slug', 'groups')->first();
+        $permissions_groups = \Acl\Models\AclGroupPermission::where('role_id', $role_groups->id)
             ->where('group_id', $group->id)->first();
         $this->assertEquals('yes', $permissions_groups->create);
         $this->assertEquals('yes', $permissions_groups->read);
@@ -49,8 +49,8 @@ class GroupsPermissionsServiceTest extends IModelTestCase
         $this->assertEquals('yes', $permissions_groups->delete);
 
         // groups-permissions
-        $role_groups_permissions = \Laracl\Models\AclRole::where('slug', 'groups-permissions')->first();
-        $permissions_groups_perms = \Laracl\Models\AclGroupPermission::where('role_id', $role_groups_permissions->id)
+        $role_groups_permissions = \Acl\Models\AclRole::where('slug', 'groups-permissions')->first();
+        $permissions_groups_perms = \Acl\Models\AclGroupPermission::where('role_id', $role_groups_permissions->id)
             ->where('group_id', $group->id)->first();
         $this->assertEquals('no', $permissions_groups_perms->create);
         $this->assertEquals('no', $permissions_groups_perms->read);
@@ -74,8 +74,8 @@ class GroupsPermissionsServiceTest extends IModelTestCase
         $this->assertTrue($updated);
 
         // users
-        $role_users = \Laracl\Models\AclRole::where('slug', 'users')->first();
-        $permissions_users = \Laracl\Models\AclGroupPermission::where('role_id', $role_users->id)
+        $role_users = \Acl\Models\AclRole::where('slug', 'users')->first();
+        $permissions_users = \Acl\Models\AclGroupPermission::where('role_id', $role_users->id)
             ->where('group_id', $group->id)->first();
         $this->assertEquals('no', $permissions_users->create);
         $this->assertEquals('no', $permissions_users->read);
@@ -83,8 +83,8 @@ class GroupsPermissionsServiceTest extends IModelTestCase
         $this->assertEquals('no', $permissions_users->delete);
 
         // groups
-        $role_groups = \Laracl\Models\AclRole::where('slug', 'groups')->first();
-        $permissions_groups = \Laracl\Models\AclGroupPermission::where('role_id', $role_groups->id)
+        $role_groups = \Acl\Models\AclRole::where('slug', 'groups')->first();
+        $permissions_groups = \Acl\Models\AclGroupPermission::where('role_id', $role_groups->id)
             ->where('group_id', $group->id)->first();
         $this->assertEquals('no', $permissions_groups->create);
         $this->assertEquals('yes', $permissions_groups->read);
@@ -96,7 +96,7 @@ class GroupsPermissionsServiceTest extends IModelTestCase
     {
         $group = self::createGroup();
 
-        $abilities = config('laracl.roles');
+        $abilities = config('acl.roles');
 
         $structure = (new GroupsPermissionsService)->getStructure($group->id);
 
@@ -134,11 +134,11 @@ class GroupsPermissionsServiceTest extends IModelTestCase
 
     public function testGetStructure_UserPermissions()
     {
-        $role = \Laracl\Models\AclRole::where('slug', 'users')->first();
+        $role = \Acl\Models\AclRole::where('slug', 'users')->first();
         $group = self::createGroup();
         self::createGroupPermissions($role->id, $group->id, true, true, true, true);
 
-        $abilities = config('laracl.roles');
+        $abilities = config('acl.roles');
 
         $structure = (new GroupsPermissionsService)->getStructure($group->id);
 

@@ -15,6 +15,6 @@
         extract($data);
     @endphp --}}
 
-    @include('laracl::permissions.form')
+    @include('acl::permissions.form')
 
 @endcomponent

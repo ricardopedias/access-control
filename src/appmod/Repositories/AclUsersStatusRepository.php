@@ -1,7 +1,7 @@
 <?php
-namespace Laracl\Repositories;
+namespace Acl\Repositories;
 
-use Laracl\Models\AclUserStatus;
+use Acl\Models\AclUserStatus;
 
 class AclUsersStatusRepository extends BaseRepository
 {

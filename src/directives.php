@@ -111,7 +111,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
 
             $perm = preg_replace('#.*\.#', '', $ability);
             if (empty($view)) {
-                $view = "laracl::buttons.{$perm}";
+                $view = "acl::buttons.{$perm}";
             }
 
             $status  = var_export(\Auth::user()->can($ability), true);
@@ -180,7 +180,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
 
             $perm = preg_replace('#.*\.#', '', $ability);
             if (empty($view)) {
-                $view = "laracl::buttons.submit";
+                $view = "acl::buttons.submit";
             }
 
             $status  = var_export(\Auth::user()->can($ability), true);
@@ -243,7 +243,7 @@ if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
         $close = "?";
 
         $expression = trim($expression);
-        $view = !empty($expression) ? $expression : 'laracl::messages.forbidden';
+        $view = !empty($expression) ? $expression : 'acl::messages.forbidden';
 
         $code = "<{$open} else: {$close}>";
         $code.= "<{$open} echo view('$view')->with(['user' => \Auth::user()])->render(); {$close}>";

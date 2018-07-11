@@ -1,7 +1,7 @@
 <?php
-namespace Laracl\Repositories;
+namespace Acl\Repositories;
 
-use Laracl\Models\AclGroup;
+use Acl\Models\AclGroup;
 
 class AclGroupsRepository extends BaseRepository
 {

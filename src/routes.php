@@ -11,9 +11,9 @@ if(env('APP_ENV') !== 'testing') {
     if (\Schema::hasTable('users') == false || \App\User::find(1) == null) {
 
         \Artisan::call('migrate');
-        \Artisan::call('migrate', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
+        \Artisan::call('migrate', ['--path' => 'vendor/plexi/access-control/src/database/migrations']);
 
-        $u = (new \Laracl\Services\UsersService)->dataInsert([
+        $u = (new \Acl\Services\UsersService)->dataInsert([
             'name'     => 'Ricardo',
             'email'    => 'ricardo@bnw.com.br',
             'password' => bcrypt('secret')
@@ -25,7 +25,7 @@ if(env('APP_ENV') !== 'testing') {
 
 Route::middleware(['web', 'auth'])->group(function () {
 
-    $config = config('laracl');
+    $config = config('acl');
 
     // Usuários, Grupos e Permissões
     foreach ($config['routes'] as $slug => $url) {

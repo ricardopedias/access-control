@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Models;
+namespace Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

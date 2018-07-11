@@ -1,6 +1,6 @@
 <?php
 
-namespace Laracl;
+namespace Acl;
 
 class Facade extends \Illuminate\Support\Facades\Facade
 {

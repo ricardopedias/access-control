@@ -3,7 +3,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IControllerTestCase;
+use Acl\Tests\Libs\IControllerTestCase;
 
 class GroupsPermissionsControllerTest extends IControllerTestCase
 {
@@ -19,7 +19,7 @@ class GroupsPermissionsControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        $response = $this->get('/laracl/groups-permissions/' . $group->id . '/edit');
+        $response = $this->get('/acl/groups-permissions/' . $group->id . '/edit');
         $response->assertStatus(200);
     }
 }

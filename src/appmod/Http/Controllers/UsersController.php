@@ -1,8 +1,8 @@
 <?php
-namespace Laracl\Http\Controllers;
+namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laracl\Services;
+use Acl\Services;
 
 class UsersController extends Controller
 {
@@ -13,7 +13,7 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
-        $view = config('laracl.views.users.index');
+        $view = config('acl.views.users.index');
         return (new Services\UsersService)->gridList($view, $request);
     }
     /**
@@ -23,7 +23,7 @@ class UsersController extends Controller
      */
     public function trash(Request $request)
     {
-        $view = config('laracl.views.users.trash');
+        $view = config('acl.views.users.trash');
         return (new Services\UsersService)->gridTrash($view, $request);
     }
 
@@ -34,7 +34,7 @@ class UsersController extends Controller
      */
     public function create(Request $request)
     {
-        $view = config('laracl.views.users.create');
+        $view = config('acl.views.users.create');
         return (new Services\UsersService)->formCreate($view);
     }
 
@@ -53,7 +53,7 @@ class UsersController extends Controller
         ]);
 
         $model = (new Services\UsersService)->dataInsert($request->all());
-        $route = config('laracl.routes.users.index');
+        $route = config('acl.routes.users.index');
         return redirect()->route($route);
     }
 
@@ -65,7 +65,7 @@ class UsersController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('laracl.views.users.edit');
+        $view = config('acl.views.users.edit');
         return (new Services\UsersService)->formEdit($view, $id);
     }
 

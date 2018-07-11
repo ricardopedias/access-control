@@ -3,7 +3,7 @@ namespace Tests\Feature\Http\Controllers;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laracl\Tests\Libs\IControllerTestCase;
+use Acl\Tests\Libs\IControllerTestCase;
 
 class UsersControllerTest extends IControllerTestCase
 {
@@ -17,7 +17,7 @@ class UsersControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        $response = $this->get('/laracl/users');
+        $response = $this->get('/acl/users');
         $response->assertStatus(200);
     }
 
@@ -29,7 +29,7 @@ class UsersControllerTest extends IControllerTestCase
         $user = \App\User::find(1);
         $this->actingAs($user);
 
-        $response = $this->get('/laracl/users/create');
+        $response = $this->get('/acl/users/create');
         $response->assertStatus(200);
     }
 
@@ -48,7 +48,7 @@ class UsersControllerTest extends IControllerTestCase
         ];
 
         // Requisição POST
-        $response = $this->post('/laracl/users', $post);
+        $response = $this->post('/acl/users', $post);
         $response->assertSessionHasErrors(['password']);
 
         $errors = session('errors');
@@ -73,7 +73,7 @@ class UsersControllerTest extends IControllerTestCase
         ];
 
         // Requisição POST
-        $response = $this->post('/laracl/users', $post);
+        $response = $this->post('/acl/users', $post);
 
         // Usuário criado
         $user = \App\User::where('email', $user_email)->first();
@@ -81,7 +81,7 @@ class UsersControllerTest extends IControllerTestCase
         $this->assertInstanceOf('\App\User', $user);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users");
+        $response->assertRedirect("/acl/users");
 
         // Grupo Relacionado
         $this->assertDatabaseMissing('acl_users_groups', ['user_id' => $user->id, 'group_id' => $group_id]);
@@ -107,7 +107,7 @@ class UsersControllerTest extends IControllerTestCase
         ];
 
         // Requisição POST
-        $response = $this->post('/laracl/users', $post);
+        $response = $this->post('/acl/users', $post);
 
         // Usuário criado
         $user = \App\User::where('email', $user_email)->first();
@@ -115,7 +115,7 @@ class UsersControllerTest extends IControllerTestCase
         $this->assertInstanceOf('\App\User', $user);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users");
+        $response->assertRedirect("/acl/users");
 
         // Grupo Relacionado
         $this->assertDatabaseHas('acl_users_groups', ['user_id' => $user->id, 'group_id' => $group->id]);
@@ -128,7 +128,7 @@ class UsersControllerTest extends IControllerTestCase
 
         $edit_user = self::createUser();
 
-        $response = $this->get("/laracl/users/" . $edit_user->id . "/edit");
+        $response = $this->get("/acl/users/" . $edit_user->id . "/edit");
         $response->assertStatus(200);
     }
 
@@ -148,12 +148,12 @@ class UsersControllerTest extends IControllerTestCase
 
         // Requisição PUT
         $original_user = self::createUser();
-        $response = $this->put("/laracl/users/" . $original_user->id, $put, [
-            'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
+        $response = $this->put("/acl/users/" . $original_user->id, $put, [
+            'HTTP_REFERER' => "/acl/users/" . $original_user->id . "/edit"
         ]);
 
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users/" . $original_user->id . "/edit");
+        $response->assertRedirect("/acl/users/" . $original_user->id . "/edit");
 
         // Usuário atualizado
         $edited_user = \App\User::find($original_user->id);
@@ -181,11 +181,11 @@ class UsersControllerTest extends IControllerTestCase
             'password'     => bcrypt('secret'), // Ausência de campo obrigatório
         ];
         $original_user = self::createUser();
-        $response = $this->put("/laracl/users/" . $original_user->id, $put, [
-            'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
+        $response = $this->put("/acl/users/" . $original_user->id, $put, [
+            'HTTP_REFERER' => "/acl/users/" . $original_user->id . "/edit"
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users/" . $original_user->id . "/edit");
+        $response->assertRedirect("/acl/users/" . $original_user->id . "/edit");
 
         // Usuário atualizado
         $edited_user = \App\User::find($original_user->id);
@@ -222,11 +222,11 @@ class UsersControllerTest extends IControllerTestCase
             'password'     => bcrypt('secret'),
             'group_id' => $group->id // Criação de um grupo
         ];
-        $response = $this->put("/laracl/users/" . $original_user->id, $put, [
-            'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
+        $response = $this->put("/acl/users/" . $original_user->id, $put, [
+            'HTTP_REFERER' => "/acl/users/" . $original_user->id . "/edit"
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users/" . $original_user->id . "/edit");
+        $response->assertRedirect("/acl/users/" . $original_user->id . "/edit");
 
         // Usuário atualizado
         $edited_user = \App\User::find($original_user->id);
@@ -237,7 +237,7 @@ class UsersControllerTest extends IControllerTestCase
         $this->assertDatabaseHas('acl_users_groups', ['user_id' => $edited_user->id, 'group_id' => $group->id]);
 
         // Apenas um grupo por usuário é permitido
-        $this->assertEquals(1, \Laracl\Models\AclUserGroup::where('user_id', $edited_user->id)->count());
+        $this->assertEquals(1, \Acl\Models\AclUserGroup::where('user_id', $edited_user->id)->count());
 
         // Não há permissões de usuário
         $this->assertDatabaseMissing('acl_users_permissions', ['user_id' => $original_user->id]);
@@ -266,11 +266,11 @@ class UsersControllerTest extends IControllerTestCase
             'password'     => bcrypt('secret'),
             'group_id' => $group_two->id
         ];
-        $response = $this->put("/laracl/users/" . $original_user->id, $put, [
-            'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
+        $response = $this->put("/acl/users/" . $original_user->id, $put, [
+            'HTTP_REFERER' => "/acl/users/" . $original_user->id . "/edit"
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users/" . $original_user->id . "/edit");
+        $response->assertRedirect("/acl/users/" . $original_user->id . "/edit");
 
         // Usuário atualizado
         $edited_user = \App\User::find($original_user->id);
@@ -282,7 +282,7 @@ class UsersControllerTest extends IControllerTestCase
         $this->assertDatabaseMissing('acl_users_groups', ['user_id' => $edited_user->id, 'group_id' => $group_one->id]);
 
         // Apenas um grupo por usuário é permitido
-        $this->assertEquals(1, \Laracl\Models\AclUserGroup::where('user_id', $edited_user->id)->count());
+        $this->assertEquals(1, \Acl\Models\AclUserGroup::where('user_id', $edited_user->id)->count());
 
         // Não há permissões de usuário
         $this->assertDatabaseMissing('acl_users_permissions', ['user_id' => $original_user->id]);
@@ -312,11 +312,11 @@ class UsersControllerTest extends IControllerTestCase
             'password'     => bcrypt('secret'),
             'group_id' => 0 // Grupo ausente
         ];
-        $response = $this->put("/laracl/users/" . $original_user->id, $put, [
-            'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
+        $response = $this->put("/acl/users/" . $original_user->id, $put, [
+            'HTTP_REFERER' => "/acl/users/" . $original_user->id . "/edit"
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users/" . $original_user->id . "/edit");
+        $response->assertRedirect("/acl/users/" . $original_user->id . "/edit");
 
         // Usuário atualizado
         $edited_user = \App\User::find($original_user->id);
@@ -362,11 +362,11 @@ class UsersControllerTest extends IControllerTestCase
             'password'     => bcrypt('secret'),
             'group_id' => $group->id // Criação de um grupo
         ];
-        $response = $this->put("/laracl/users/" . $original_user->id, $put, [
-            'HTTP_REFERER' => "/laracl/users/" . $original_user->id . "/edit"
+        $response = $this->put("/acl/users/" . $original_user->id, $put, [
+            'HTTP_REFERER' => "/acl/users/" . $original_user->id . "/edit"
         ]);
         $response->assertStatus(302);
-        $response->assertRedirect("/laracl/users/" . $original_user->id . "/edit");
+        $response->assertRedirect("/acl/users/" . $original_user->id . "/edit");
 
         // Usuário atualizado
         $edited_user = \App\User::find($original_user->id);
@@ -377,7 +377,7 @@ class UsersControllerTest extends IControllerTestCase
         $this->assertDatabaseHas('acl_users_groups', ['user_id' => $edited_user->id, 'group_id' => $group->id]);
 
         // Apenas um grupo por usuário é permitido
-        $this->assertEquals(1, \Laracl\Models\AclUserGroup::where('user_id', $edited_user->id)->count());
+        $this->assertEquals(1, \Acl\Models\AclUserGroup::where('user_id', $edited_user->id)->count());
 
         // As permissões de usuário foram excluídas
         $this->assertDatabaseMissing('acl_users_permissions', ['user_id' => $original_user->id]);

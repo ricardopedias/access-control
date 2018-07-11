@@ -1,7 +1,7 @@
 <?php
-namespace Laracl\Services;
+namespace Acl\Services;
 
-use Laracl\Core;
+use Acl\Core;
 
 class RolesService
 {
@@ -15,7 +15,7 @@ class RolesService
     {
         $structure = [];
 
-        $abilities = config('laracl.roles');
+        $abilities = config('acl.roles');
 
         // Habilidades resistradas
         foreach (Core::getPolicies() as $item) {

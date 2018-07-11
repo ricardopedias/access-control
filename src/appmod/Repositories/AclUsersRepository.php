@@ -1,9 +1,9 @@
 <?php
-namespace Laracl\Repositories;
+namespace Acl\Repositories;
 
-use Laracl\Models\AclUser;
-use Laracl\Models\AclUserGroup;
-use Laracl\Models\AclUserPermission;
+use Acl\Models\AclUser;
+use Acl\Models\AclUserGroup;
+use Acl\Models\AclUserPermission;
 
 class AclUsersRepository extends BaseRepository
 {

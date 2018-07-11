@@ -1,8 +1,8 @@
 <?php
-namespace Laracl\Http\Controllers;
+namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laracl\Services;
+use Acl\Services;
 
 class GroupsPermissionsController extends Controller
 {
@@ -14,7 +14,7 @@ class GroupsPermissionsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('laracl.views.groups-permissions.edit');
+        $view = config('acl.views.groups-permissions.edit');
         return (new Services\GroupsPermissionsService)->formEdit($view, $id);
     }
 
@@ -28,7 +28,7 @@ class GroupsPermissionsController extends Controller
     public function update(Request $request, $id)
     {
         $model = (new Services\GroupsPermissionsService)->dataUpdate($request->all(), $id);
-        $route = config('laracl.routes.groups-permissions.edit');
+        $route = config('acl.routes.groups-permissions.edit');
         return redirect()->route($route, $id);
     }
 }

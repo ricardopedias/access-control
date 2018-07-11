@@ -1,9 +1,9 @@
 
-@component('laracl::document')
+@component('acl::document')
 
     @slot('title') Gerenciamento de Usuários @endslot
 
-    @include('laracl::breadcrumb')
+    @include('acl::breadcrumb')
 
     <hr>
 
@@ -19,14 +19,14 @@
 
             <div class="col-10 text-right justify-content-end">
 
-                @acl_action('users.create', route($route_create), '', 'laracl::buttons.users.create')
+                @acl_action('users.create', route($route_create), '', 'acl::buttons.users.create')
 
-                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso', 'laracl::buttons.groups.read')
+                @acl_action('groups.read', route($route_groups), 'Grupos de Acesso', 'acl::buttons.groups.read')
 
                 @sg_search
 
-                @if(config('laracl.soft_delete') != false)
-                    @acl_action('users.delete', route($route_trash), '', 'laracl::buttons.trash')
+                @if(config('acl.soft_delete') != false)
+                    @acl_action('users.delete', route($route_trash), '', 'acl::buttons.trash')
                 @endif
             </div>
 
@@ -57,7 +57,7 @@
 
                         @acl_action_sm('users.update', route($route_edit, $item->id ), 'Editar')
 
-                        @acl_action_sm('users-permissions.update', route($route_permissions, $item->id), 'Permissões', 'laracl::buttons.permissions')
+                        @acl_action_sm('users-permissions.update', route($route_permissions, $item->id), 'Permissões', 'acl::buttons.permissions')
 
                         @acl_action_sm('users.delete', route($route_destroy, $item->id), 'Excluir', null, true)
 

@@ -1,8 +1,8 @@
 <?php
-namespace Laracl\Models;
+namespace Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracl\Traits\HasCompositePrimaryKey;
+use Acl\Traits\HasCompositePrimaryKey;
 
 class AclGroupPermission extends Model
 {
@@ -31,7 +31,7 @@ class AclGroupPermission extends Model
 
     /**
      * Devolve o modelo com a função de acesso para estas permissões
-     * @return Laracl\Models\AclRole ou null
+     * @return Acl\Models\AclRole ou null
      */
     public function role()
     {
@@ -40,11 +40,11 @@ class AclGroupPermission extends Model
 
     /**
      * Devolve o modelo do grupo ao qual perntencem estas permissões
-     * @return Laracl\Models\AclGroup ou null
+     * @return Acl\Models\AclGroup ou null
      */
     public function group()
     {
-        return $this->hasOne('Laracl\Models\AclGroup', 'id', 'group_id');
+        return $this->hasOne('Acl\Models\AclGroup', 'id', 'group_id');
     }
 
 

@@ -1,11 +1,11 @@
 <?php
-namespace Laracl\Services;
+namespace Acl\Services;
 
 use Illuminate\Http\Request;
-use Laracl\Repositories\AclGroupsRepository;
-use Laracl\Repositories\AclGroupsPermissionsRepository;
-use Laracl\Repositories\AclRolesRepository;
-use Laracl\Models\AclGroupPermission;
+use Acl\Repositories\AclGroupsRepository;
+use Acl\Repositories\AclGroupsPermissionsRepository;
+use Acl\Repositories\AclRolesRepository;
+use Acl\Models\AclGroupPermission;
 
 class GroupsPermissionsService implements EditPermissionsContract
 {
@@ -14,14 +14,14 @@ class GroupsPermissionsService implements EditPermissionsContract
         return view($view)->with([
             'group'        => ($group = (new AclGroupsRepository)->read($id)),
             'structure'    => $this->getStructure($group->id),
-            'route_index'  => config('laracl.routes.groups.index'),
-            'route_create' => config('laracl.routes.groups.create'),
-            'route_update' => config('laracl.routes.groups-permissions.update'),
-            'route_groups' => config('laracl.routes.groups.index'),
+            'route_index'  => config('acl.routes.groups.index'),
+            'route_create' => config('acl.routes.groups.create'),
+            'route_update' => config('acl.routes.groups-permissions.update'),
+            'route_groups' => config('acl.routes.groups.index'),
             'breadcrumb'        => [
-                '<i class="fas fa-user"></i> Usuários' => route(config('laracl.routes.users.index')),
-                '<i class="fas fa-user-friends"></i> Grupos' => route(config('laracl.routes.groups.index')),
-                'Grupo "' . $group->name . '"' => route(config('laracl.routes.groups.edit'), $group->id),
+                '<i class="fas fa-user"></i> Usuários' => route(config('acl.routes.users.index')),
+                '<i class="fas fa-user-friends"></i> Grupos' => route(config('acl.routes.groups.index')),
+                'Grupo "' . $group->name . '"' => route(config('acl.routes.groups.edit'), $group->id),
                 'Permissões'
             ]
         ]);

@@ -1,8 +1,8 @@
 <?php
-namespace Laracl\Http\Controllers;
+namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laracl\Services;
+use Acl\Services;
 
 class GroupsController extends Controller
 {
@@ -13,7 +13,7 @@ class GroupsController extends Controller
      */
     public function index(Request $request)
     {
-        $view = config('laracl.views.groups.index');
+        $view = config('acl.views.groups.index');
         return (new Services\GroupsService)->gridList($view);
     }
 
@@ -24,7 +24,7 @@ class GroupsController extends Controller
      */
     public function trash(Request $request)
     {
-        $view = config('laracl.views.groups.trash');
+        $view = config('acl.views.groups.trash');
         return (new Services\GroupsService)->gridTrash($view);
     }
 
@@ -35,7 +35,7 @@ class GroupsController extends Controller
      */
     public function create(Request $request)
     {
-        $view = config('laracl.views.groups.create');
+        $view = config('acl.views.groups.create');
         return (new Services\GroupsService)->formCreate($view);
     }
 
@@ -52,7 +52,7 @@ class GroupsController extends Controller
         ]);
 
         $model = (new Services\GroupsService)->dataInsert($request->all());
-        $route = config('laracl.routes.groups.index');
+        $route = config('acl.routes.groups.index');
         return redirect()->route($route);
     }
 
@@ -64,7 +64,7 @@ class GroupsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('laracl.views.groups.edit');
+        $view = config('acl.views.groups.edit');
         return (new Services\GroupsService)->formEdit($view, $id);
     }
 

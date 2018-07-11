@@ -1,12 +1,12 @@
 <?php
-namespace Laracl\Tests\Libs;
+namespace Acl\Tests\Libs;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Console\Kernel;
-use Laracl\Models;
+use Acl\Models;
 use Illuminate\Support\Str;
-use Laracl\Tests\Libs\IModelTestCase;
+use Acl\Tests\Libs\IModelTestCase;
 
 class IControllerTestCase extends IModelTestCase
 {

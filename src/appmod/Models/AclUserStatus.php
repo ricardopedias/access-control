@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Models;
+namespace Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,7 +31,7 @@ class AclUserStatus extends Model
 
     /**
      * Devolve o modelo do usuário ao qual este relacionamento pertence.
-     * @return Laracl\Models\AclUser ou null
+     * @return Acl\Models\AclUser ou null
      */
     public function user()
     {

@@ -25,23 +25,23 @@ $ mkdir /caminho/do/projeto/packages
 
 ### 3. Obtendo o pacote para desenvolvimento
 
-No novo diretório de pacotes, é preciso criar a estrutura do pacote 'laracl'. O formato deve ser '[vendor]/[pacote]', ou seja, a estrutura do pacote ficará assim '/plexi/laracl':
+No novo diretório de pacotes, é preciso criar a estrutura do pacote 'acl'. O formato deve ser '[vendor]/[pacote]', ou seja, a estrutura do pacote ficará assim '/plexi/access-control':
 
 ```bash
 $ cd /caminho/do/projeto/packages
-$mkdir -p plexi/laracl
+$mkdir -p plexi/access-control
 ```
 
-No diretório 'laracl', faça um clone do repositório:
+No diretório 'acl', faça um clone do repositório:
 
 ```bash
-$ cd /caminho/do/projeto/packages/plexi/laracl
-$ git clone https://github.com/rpdesignerfly/laracl.git .
+$ cd /caminho/do/projeto/packages/plexi/access-control
+$ git clone https://github.com/rpdesignerfly/acl.git .
 ```
 
 ### 4. Configurando o Laravel para usar o pacote
 
-No arquivo "composer.json", abaixo da seção 'config', adicione 'minimum-stability' como 'dev' e o repositório apontando para o diretório './packages/plexi/laracl/'. 
+No arquivo "composer.json", abaixo da seção 'config', adicione 'minimum-stability' como 'dev' e o repositório apontando para o diretório './packages/plexi/access-control/'. 
 
 > **Atenção:** 
 > Não esqueça da barra (/) no final:
@@ -60,7 +60,7 @@ No arquivo "composer.json", abaixo da seção 'config', adicione 'minimum-stabil
 
     "minimum-stability" : "dev",
     "repositories": [
-        {"type": "path", "url": "./packages/plexi/laracl/"}
+        {"type": "path", "url": "./packages/plexi/access-control/"}
     ]
 
 }
@@ -70,7 +70,7 @@ Com o repositório configurado, use normalmente o comando para instalação:
 
 ```bash
 $ cd /caminho/do/projeto
-$ composer require plexi/laracl
+$ composer require plexi/access-control
 ```
 
 

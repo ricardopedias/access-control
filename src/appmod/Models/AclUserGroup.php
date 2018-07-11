@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Models;
+namespace Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,7 +29,7 @@ class AclUserGroup extends Model
 
     /**
      * Devolve o modelo do usuário ao qual este relacionamento pertence.
-     * @return Laracl\Models\AclUser ou null
+     * @return Acl\Models\AclUser ou null
      */
     public function user()
     {
@@ -38,7 +38,7 @@ class AclUserGroup extends Model
 
     /**
      * Devolve o modelo do grupo ao qual este relacionamento pertence.
-     * @return Laracl\Models\AclGroup ou null
+     * @return Acl\Models\AclGroup ou null
      */
     public function group()
     {

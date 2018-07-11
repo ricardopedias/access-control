@@ -1,5 +1,5 @@
 <?php
-namespace Laracl\Services;
+namespace Acl\Services;
 
 use \Illuminate\Http\Request;
 

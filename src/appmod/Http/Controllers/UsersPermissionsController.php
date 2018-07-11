@@ -1,8 +1,8 @@
 <?php
-namespace Laracl\Http\Controllers;
+namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Laracl\Services;
+use Acl\Services;
 
 class UsersPermissionsController extends Controller
 {
@@ -14,7 +14,7 @@ class UsersPermissionsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('laracl.views.users-permissions.edit');
+        $view = config('acl.views.users-permissions.edit');
         return (new Services\UsersPermissionsService)->formEdit($view, $id);
     }
 
@@ -28,7 +28,7 @@ class UsersPermissionsController extends Controller
     public function update(Request $form, $id)
     {
         $model = (new Services\UsersPermissionsService)->dataUpdate($form->all(), $id);
-        $route = config('laracl.routes.users-permissions.edit');
+        $route = config('acl.routes.users-permissions.edit');
         return redirect()->route($route, $id);
     }
 }

@@ -35,10 +35,10 @@ return [
     */
 
     'routes'     => [
-        'users'              => 'laracl/users',
-        'users-permissions'  => 'laracl/users-permissions',
-        'groups'             => 'laracl/groups',
-        'groups-permissions' => 'laracl/groups-permissions',
+        'users'              => 'acl/users',
+        'users-permissions'  => 'acl/users-permissions',
+        'groups'             => 'acl/groups',
+        'groups-permissions' => 'acl/groups-permissions',
     ],
 
     /*
@@ -51,17 +51,17 @@ return [
     | suas funcionalidades originas e mudando apenas o necessário:
     |
     | Por exemplo:
-    | class PersonalController extends Laracl\Http\Controllers\UsersController {
+    | class PersonalController extends Acl\Http\Controllers\UsersController {
     |    ...
     | }
     */
 
     'controllers'     => [
-        'users'              => 'Laracl\Http\Controllers\UsersController',
-        'users-permissions'  => 'Laracl\Http\Controllers\UsersPermissionsController',
+        'users'              => 'Acl\Http\Controllers\UsersController',
+        'users-permissions'  => 'Acl\Http\Controllers\UsersPermissionsController',
 
-        'groups'             => 'Laracl\Http\Controllers\GroupsController',
-        'groups-permissions' => 'Laracl\Http\Controllers\GroupsPermissionsController',
+        'groups'             => 'Acl\Http\Controllers\GroupsController',
+        'groups-permissions' => 'Acl\Http\Controllers\GroupsPermissionsController',
     ],
 
     /*
@@ -75,27 +75,27 @@ return [
     'views' => [
 
         'users' => [
-            'index'             => 'laracl::users.index',
-            'create'            => 'laracl::users.create',
-            'edit'              => 'laracl::users.edit',
-            'delete'            => 'laracl::users.delete',
-            'trash'             => 'laracl::users.trash',
+            'index'             => 'acl::users.index',
+            'create'            => 'acl::users.create',
+            'edit'              => 'acl::users.edit',
+            'delete'            => 'acl::users.delete',
+            'trash'             => 'acl::users.trash',
         ],
 
         'users-permissions' => [
-            'edit' => 'laracl::users-permissions.edit',
+            'edit' => 'acl::users-permissions.edit',
         ],
 
         'groups' => [
-            'index'            => 'laracl::groups.index',
-            'create'           => 'laracl::groups.create',
-            'edit'             => 'laracl::groups.edit',
-            'delete'           => 'laracl::groups.delete',
-            'trash'            => 'laracl::groups.trash',
+            'index'            => 'acl::groups.index',
+            'create'           => 'acl::groups.create',
+            'edit'             => 'acl::groups.edit',
+            'delete'           => 'acl::groups.delete',
+            'trash'            => 'acl::groups.trash',
         ],
 
         'groups-permissions' => [
-            'edit' => 'laracl::groups-permissions.edit',
+            'edit' => 'acl::groups-permissions.edit',
         ]
     ],
 

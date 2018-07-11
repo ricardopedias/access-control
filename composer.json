@@ -1,5 +1,5 @@
 {
-    "name": "plexi/laracl",
+    "name": "plexi/access-control",
     "description": "Gerenciador de listas de acesso (Access Control List) com CRUD's de configuração para usuários e grupos",
     "keywords": ["laravel","cruds","auth","acl","security","blade","helpers"],
     "license": "MIT",
@@ -12,8 +12,8 @@
     "require": {
         "php": ">=7.0.0",
         "laravel/framework": "~5.6",
-        "plexi/old-extended": ">=1.1.0",
-        "plexi/sortable-grid": ">=1.1.6",
+        "plexi/old-extended": ">=1.1.5",
+        "plexi/sortable-grid": ">=2.0.0",
         "doctrine/dbal": "^2.7"
     },
     "require-dev": {
@@ -22,26 +22,26 @@
     },
     "autoload": {
         "psr-4": {
-            "Laracl\\": "src/appmod/"
+            "Acl\\": "src/appmod/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Laracl\\Tests\\": "tests/"
+            "Acl\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "2.0.x-dev"
         },
         "laravel": {
             "providers": [
-                "Laracl\\ServiceProvider"
+                "Acl\\ServiceProvider"
             ],
             "aliases": {
-                "Laracl": "Laracl\\Facade"
+                "Acl": "Acl\\Facade"
             }
         }
     }
