@@ -16,7 +16,10 @@ class CreateAclGroupsPermissionsTable extends Migration
         Schema::create('acl_groups_permissions', function (Blueprint $table) {
 
             $table->unsignedInteger('role_id')->index();
+            $table->foreign('role_id')->references('id')->on('acl_roles')->onDelete('cascade');
+
             $table->unsignedInteger('group_id')->index();
+            $table->foreign('group_id')->references('id')->on('acl_groups')->onDelete('cascade');
 
             $table->enum('create', ['yes', 'no']);
             $table->enum('read', ['yes', 'no']);
@@ -24,9 +27,6 @@ class CreateAclGroupsPermissionsTable extends Migration
             $table->enum('delete', ['yes', 'no']);
 
             $table->primary(['role_id', 'group_id']);
-
-            $table->foreign('role_id')->references('id')->on('acl_roles')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('acl_groups')->onDelete('cascade');
         });
     }
 

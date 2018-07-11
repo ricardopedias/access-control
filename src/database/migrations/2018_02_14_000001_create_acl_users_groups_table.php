@@ -17,12 +17,13 @@ class CreateAclUsersGroupsTable extends Migration
         Schema::create('acl_users_groups', function (Blueprint $table) {
 
             $table->unsignedInteger('user_id')->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->unsignedInteger('group_id')->index();
+            $table->foreign('group_id')->references('id')->on('acl_groups')->onDelete('cascade');
 
             $table->primary('user_id');
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('acl_groups')->onDelete('cascade');
+            
         });
     }
 
