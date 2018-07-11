@@ -13,11 +13,11 @@ if(env('APP_ENV') !== 'testing') {
         \Artisan::call('migrate');
         \Artisan::call('migrate', ['--path' => 'vendor/plexi/laracl/src/database/migrations']);
 
-        $u = new App\User;
-        $u->name="Ricardo";
-        $u->email="ricardo@bnw.com.br";
-        $u->password = bcrypt('secret');
-        $u->save();
+        $u = (new \Laracl\Services\UsersService)->dataInsert([
+            'name'     => 'Ricardo',
+            'email'    => 'ricardo@bnw.com.br',
+            'password' => bcrypt('secret')
+        ]);
     }
 
     Auth::loginUsingId(1);

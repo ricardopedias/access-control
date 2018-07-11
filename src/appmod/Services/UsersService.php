@@ -4,8 +4,10 @@ namespace Laracl\Services;
 use Illuminate\Http\Request;
 use Laracl\Repositories\AclUsersRepository;
 use Laracl\Repositories\AclGroupsRepository;
+use Laracl\Repositories\AclUsersStatusRepository;
 use Laracl\Models\AclUserGroup;
 use Laracl\Models\AclUserPermission;
+use Laracl\Models\AclUserStatus;
 use SortableGrid\Traits\HasSortableGrid;
 
 class UsersService implements CrudContract
@@ -129,6 +131,7 @@ class UsersService implements CrudContract
     {
         return view($view)->with([
             'model'           => (new AclUsersRepository)->read(),
+            'model_status'    => (new AclUsersStatusRepository)->read(),
             'groups'          => (new AclGroupsRepository)->collectAll(),
             'title'           => 'Novo Usuário',
             'require_pass'    => 'required',
@@ -144,6 +147,7 @@ class UsersService implements CrudContract
     {
         return view($view)->with([
             'model'             => ($user = (new AclUsersRepository)->read($id)),
+            'model_status'      => (new AclUsersStatusRepository)->read($user->id),
             'groups'            => (new AclGroupsRepository)->collectAll(),
             'require_pass'      => '',
             'title'             => 'Editar Usuário',
@@ -172,6 +176,12 @@ class UsersService implements CrudContract
                 'group_id' => $data['group_id']
             ]);
         }
+
+        AclUserStatus::create([
+            'user_id'      => $model->id,
+            'access_panel' => ($data['access_panel'] ?? 'no'),
+            'status'       => ($data['status'] ?? 'inactive')
+        ]);
 
         return $model;
     }
@@ -206,6 +216,13 @@ class UsersService implements CrudContract
                 $group->save();
             }
         }
+
+        $model_status = (new AclUsersStatusRepository)->findByID($model->id);
+        $model_status->fill([
+            'access_panel' => ($data['access_panel'] ?? 'no'),
+            'status'       => ($data['status'] ?? 'inactive')
+        ]);
+        $model_status->save();
 
         // Atualiza os dados do usuário
         $model->fill($data);

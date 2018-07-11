@@ -34,6 +34,15 @@ class AclUser extends \App\User
     }
 
     /**
+     * Devolve os dados de status deste usuário.
+     * @return Laracl\Models\AclUserStatus ou null
+     */
+    public function status()
+    {
+        return $this->hasOne(AclUserStatus::class, 'user_id', 'id');
+    }
+
+    /**
      * Devolve o modelo de relacionamento entre o usuário e o grupo
      * @return Laracl\Models\AclUserGroup ou null
      */

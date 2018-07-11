@@ -54,3 +54,23 @@
         </div>
 
     </div>
+
+    <div class="row">
+
+        <div class="col form-group">
+            <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input"
+                       id="status" name="status"
+                       value="active" {{ old_check('status', 'active', $model_status->status) }}>
+                <label class="custom-control-label" for="status">Ativar usuário</label>
+            </div>
+
+            <div class="custom-control custom-checkbox custom-control-inline">
+                <input type="checkbox" class="custom-control-input"
+                       id="access_panel" name="access_panel"
+                       value="yes" {{ old_check('access_panel', 'yes', $model_status->access_panel) }}>
+                <label class="custom-control-label" for="access_panel">Liberar acesso ao painel</label>
+            </div>
+        </div>
+
+    </div>
