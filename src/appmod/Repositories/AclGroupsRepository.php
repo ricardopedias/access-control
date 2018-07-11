@@ -7,6 +7,8 @@ class AclGroupsRepository extends BaseRepository
 {
     protected $model_class = AclGroup::class;
 
+    protected $soft_deletes = true;
+
     /**
      * Devolve um registro com base no seu relacionamento com o usuário
      * Se $failable for true, falhas vão disparar ModelNotFoundException.

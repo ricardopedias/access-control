@@ -8,4 +8,6 @@ use Laracl\Models\AclUserPermission;
 class AclUsersRepository extends BaseRepository
 {
     protected $model_class = AclUser::class;
+
+    protected $soft_deletes = true;
 }

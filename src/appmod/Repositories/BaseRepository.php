@@ -19,6 +19,13 @@ abstract class BaseRepository
     protected $model_class;
 
     /**
+     * O repositório maniula soft deletes?
+     *
+     * @var bool
+     */
+    protected $soft_deletes = false;
+
+    /**
      * Devolve uma instância do QueryBuilder
      *
      * @return EloquentQueryBuilder|QueryBuilder
@@ -45,7 +52,7 @@ abstract class BaseRepository
      *
      * @return EloquentCollection|Paginator
      */
-    protected function doQuery($query = null, $take = 15, bool $paginate = true)
+    protected function doQuery($query = null, $take = 1000, bool $paginate = true)
     {
         if (is_null($query)) {
             $query = $this->newQuery();
@@ -82,13 +89,15 @@ abstract class BaseRepository
     *
     * @return Model
     */
-    public function findByID(int $id, bool $failable = true)
+    public function findByID(int $id, bool $failable = false)
     {
-        if ($failable == true) {
-            return $this->newQuery()->withTrashed()->findOrFail($id);
+        $query = $this->newQuery();
+        if($this->soft_deletes == true) {
+            $query->withTrashed();
         }
 
-        return $this->newQuery()->withTrashed()->find($id);
+        return ($failable == true)
+            ? $query->findOrFail($id) : $query->find($id);
     }
 
     /**
