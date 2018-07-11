@@ -26,7 +26,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$this->modPath('resources/views/buttons') => resource_path('views/acl/buttons')], 'acl-buttons');
 
         // php artisan vendor:publish --tag=acl-migrations
-        $this->publishes([$this->modPath('database/migrations') => database_path('migrations')], 'acl-migrations');
+        $this->publishes([$this->modPath('database/publish') => database_path('migrations')], 'acl-migrations');
 
         // php artisan vendor:publish --tag=acl-cruds
         $this->publishes([$this->modPath('resources/views/users') => resource_path('views/acl/cruds/users')], 'acl-cruds');
