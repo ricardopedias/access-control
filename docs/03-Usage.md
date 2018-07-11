@@ -2,14 +2,14 @@
 
 ## Configurando
 
-A primeira coisa a se fazer é efetuar a configuração básica do Acl. 
+A primeira coisa a se fazer é efetuar a configuração básica do "Access Control". 
 Isso é realizado no arquivo de configuração que deve ser publicado através do seguinte comando:
 
 ```bash
 php artisan vendor:publish --tag=acl-config
 ```
 
-Após executar este comando, o arquivo de configuração poderá ser encontrado em config/acl.php.
+Após executar este comando, o arquivo de configuração poderá ser encontrado em `config/acl.php.`
 
 ## O usuário ROOT
 
@@ -20,13 +20,13 @@ Na instalação inicial, nenhum usuário possui permissões. Por isso, é necess
 
 return [
 
-    'root_user' => 1, // <--- Usuário 1 será o ROOT
+    'root_user' => 1, // <--- Usuário com id "1" será o ROOT
 
     ...
 ```
 
 O usuário ROOT possui acesso total, independente das permissões atribuídas a ele. 
-Uma vez configurado o usuário ROOT, basta setar as permissẽos adequadas aos usuários e, 
+Uma vez configurado o usuário ROOT, basta setar as permissẽos adequadas aos outros usuários do sistema e, 
 se necessário, remover o ID de ROOT para o usuário voltar ao seu 'estado normal'.
 
 ## Usando as funções e habilidades
@@ -36,18 +36,16 @@ Essas funções são gerenciáveis visualmente através dos CRUD's do Acl:
 
 Função             | Habilidades
 -------------------|-----------------------------
-users              | create, edit, show, delete
-users-permissions  | create, edit, show
-groups             | create, edit ,show, delete
-groups-permissions | create, edit, show
+users              | create, read, update, delete
+users-permissions  | create, read, update
+groups             | create, read, update, delete
+groups-permissions | create, read, update
 
 Cada função pode ser chamada dentro da implementação de um projeto Laravel para verificar se o usuário atual tem ou não direito de acesso a determinada área.
 
-> ***Nota***: no Acl, optou-se por usar o termo '*show*' ao invés de '*read*', para se adequar aos termos dos [resources](https://laravel.com/docs/5.6/controllers#resource-controllers) dos CRUD's gerados pelo Artisan.
-
 ## Diretivas para layout no Blade
 
-O Acl possui diretivas especias para controlar o acesso diretamente em templates do blade.
+O "Access Control" possui diretivas especias para controlar o acesso diretamente em templates do blade.
 São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando o framework [Bootstrap 4](https://getbootstrap.com/).
 
 ### Personalização
@@ -128,7 +126,7 @@ Também é possível restringir uma parte especifica de um layout, usando o inv�
 ```html
 <div>
 
-    @acl_content('users.show')
+    @acl_content('users.read')
 
         <p>
         Conteudo html restrito!
@@ -143,7 +141,7 @@ Também é possível restringir uma parte especifica de um layout, usando o inv�
 </div>
 ```
 
-No exemplo acima, ***users.show*** verifica se a função ***users*** possui acesso à habilidade ***show***.
+No exemplo acima, ***users.read*** verifica se a função ***users*** possui acesso à habilidade ***show***.
 Caso seja positivo, o conteúdo será renderizado normalmente no template. 
 Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
 
@@ -173,7 +171,7 @@ A diretiva '@can' pode ser usada para efetuar verificações de acesso, bastando
 Dentro das rotina de programação também é possível verificar as permissões de acesso, usando o médodo 'can' do facade 'Auth' do Laravel: 
 
 ```php
-if ( \Auth::user()->can('users.edit') == true) {
+if ( \Auth::user()->can('users.update') == true) {
     echo 'Parabéns, você pode editar!!';
 }
 else {
@@ -195,7 +193,7 @@ return [
 
         'users' => [                                    // <-- A slug da função
             'label'       => 'Usuários',                // <-- O nome para exibição
-            'permissions' => 'create,edit,show,delete', // <-- As habilidades configuráveis
+            'permissions' => 'create,read,update,delete', // <-- As habilidades configuráveis
         ],
 
     ...

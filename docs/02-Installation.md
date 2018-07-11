@@ -2,37 +2,36 @@
 
 ## Requisitos do servidor
 
-O pacote Acl possui os seguintes requisitos básicos:
+O pacote Access Control possui os seguintes requisitos básicos:
 
 * PHP >= 7.0.0
-* Laravel >= 5.5
+* Laravel >= 5.6
 * Banco de Dados MySQL
 * Extensão PDO do PHP
 
 ## Baixando o pacote e as dependências
 
 Para baixar o pacote, será necessário usar o [Composer](http://getcomposer.org/).
-Com o composer devidamente instalado no sistema operacional, execute o seguinte comando: 
+Com o composer devidamente instalado no sistema operacional, execute o seguinte comando para isntalar a última versão do Access Control: 
 
 ```bash
 $ cd /diretorio/meu/projeto/laravel/
 $ composer require plexi/access-control
 ```
 
-O comando acima vai adicionar automaticamente a chamada para a última versão do Acl no 
-arquivo composer.json do Laravel e em seguia efetuar o processo de instalação.
-
 Para instalar uma versão específica, basta substituir pelo comando:
 
 ```bash
-$ composer require plexi/access-control:1.1.5
+$ composer require plexi/access-control:2.0.0
 ```
+
+Os comandos acima vão adicionar automaticamente a chamada para o pacote no arquivo composer.json do Laravel e em seguida efetuar o processo de instalação.
+
 
 ## Atualizando o banco de dados 
 
-O Acl precisa de algumas tabelas adicionais no banco de dados para o gerenciamento das permissões.
-Para adicioná-las ao seu banco de dados será necessário executar as [Migrações](https://laravel.com/docs/5.6/migrations) 
-contidas no pacote plexi/access-control.
+O Access Control precisa de algumas tabelas adicionais no banco de dados para o gerenciamento das permissões.
+Para adicioná-las ao seu banco de dados será necessário executar as [Migrações](https://laravel.com/docs/5.6/migrations) contidas no pacote plexi/access-control.
 
 Existem duas maneiras de fazer isso, publicando as migrações ou rodando-as diretamente do pacote:
 
@@ -43,14 +42,10 @@ Para publicar as migrações, basta usar o comando abaixo:
 ```bash
 $ php artisan vendor:publish --tag=acl-migrations
 ```
-As seguintes migrações serão adicionadas ao diretório `database/migrations`:
+O seguinte arquivo de migração será adicionado ao diretório `database/migrations`:
 
 ```bash
-2018_02_14_000000_create_acl_groups_table.php
-2018_02_14_000001_update_users_acl_group_field.php
-2018_02_14_000002_create_acl_roles_table.php
-2018_02_14_000003_create_acl_users_permissions_table.php
-2018_02_14_000004_create_acl_groups_permissions_table.php
+2018_03_20_000001_create_acl_tables.php
 ```
 
 Em seguida, basta rodar as migrações normalmente para gerar as tabelas:
@@ -70,13 +65,14 @@ Esta operação criará quatro tabelas:
 * acl_groups
 * acl_groups_permissions
 * acl_roles
+* acl_users_groups
 * acl_users_permissions
+* acl_users_status
 
-A operação também atualizará a tabela users, nativa do Laravel, adicionando a coluna:
+O "Access Control" possui suporte a soft deletes, por isso, precisa que o campo "deleted_at" exista 
+na tabela "users" (nativa do Laravel). A operação de migração também atualizará a tabela users, 
+adicionando a coluna "deleted_at" se ela não existir:
 
-* acl_group_id
-
-Esta coluna servirá para especificar a identificação do grupo de acesso ao qual o usuário pertencerá.
 
 ## Testando a instalação
 
@@ -91,7 +87,15 @@ Nota: troque o domínio do exemplo ('meuprojeto.com.br') para o domínio onde o 
 
 ## Revertendo/Limpando o banco de dados
 
-Para remover as alterações efetuadas no bancod e dados:
+Para remover as alterações efetuadas no banco de dados basta:
+
+Se você publicou o arquivo "2018_03_20_000001_create_acl_tables.php":
+
+```bash
+$ php artisan migrate:reset
+```
+
+Se você não publicou:
 
 ```bash
 $ php artisan migrate:reset --path=vendor/plexi/access-control/src/database/migrations
