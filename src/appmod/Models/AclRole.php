@@ -17,7 +17,6 @@ class AclRole extends Model
         'name',
         'slug',
         'description',
-        'system',
     ];
 
     /**
