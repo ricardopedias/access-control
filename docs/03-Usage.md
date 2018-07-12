@@ -34,7 +34,7 @@ se necessário, remover o ID de ROOT para que o usuário em questão volte ao se
 
 ## 3. Os CRUD's, as funções e as habilidades
 
-Por padrão, existem 4 funções com suas respectivas habilidades. O nome de uma função é declarado nas chaves alocadas an seção **roles** do arquivo `config/acl.php`.
+Por padrão, existem 4 funções com suas respectivas habilidades. O nome de uma função é declarado nas chaves alocadas na seção **roles** do arquivo `config/acl.php`.
 
 Funções (Roles)      | Habilidades
 ---------------------|-----------------------------
@@ -75,7 +75,7 @@ Nos CRUD's de permissões elas são desenhadas assim:
 
 ![CRUD com as funções](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles.png?raw=true)
 
-Usando como exemplo a 'user-permissions', pode-se constatar que:
+Usando como exemplo a função 'user-permissions', pode-se constatar que:
 
 ```php
 'users-permissions' => [
@@ -87,21 +87,21 @@ Usando como exemplo a 'user-permissions', pode-se constatar que:
 * O parâmetro "label" define o nome a ser exibido na coluna "Área de Acesso";
 * O parâmetro "permissions" define quais habilidades estarão disponíveis para a configuração desta função.
 
-Note que a função "users" possui as quatro habilidades, mas a função "users-permissions" somente três selecionar.
+Note que a função "users" possui as quatro habilidades, mas a função "users-permissions" somente três para selecionar.
 
 ![CRUD com as habilidades](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles-abilities.png?raw=true)
 
 
 ## 4. Usando as funções e habilidades
 
-Cada função adicionada no arquivo `config/acl.php` é usada para verificação através de helpers que podem ser invocados em rotinas PHP ou em arquivos de template, diretamente nas visões do blade. 
+Cada função adicionada na seção **roles** do arquivo `config/acl.php` é usada para verificar as permissões de acesso de um usuário. Esta verificação é feita através de helpers que podem ser invocados em rotinas PHP ou em arquivos de template, diretamente nas visões do blade. 
 
 ![CRUD com as funções e habilidades](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles-functions-abilities.png?raw=true)
 
 
 ### No ambiente do PHP
 
-Dentro de rotinas PHP é possível verificar as permissões de acesso, usando o médodo 'can' do facade 'Auth' do Laravel: 
+Dentro de rotinas PHP é possível verificar as permissões de acesso, usando o médodo ***can*** do facade ***Auth*** do Laravel: 
 
 ```php
 if (\Auth::user()->can('users.update') == true) {
@@ -114,7 +114,7 @@ else {
 
 ### Nos templates do Blade
 
-De forma semelhante, as verificações condicionais podem ser efetuadas pela diretiva @can, presente nos templates do Blade:
+De forma semelhante, as verificações condicionais podem ser efetuadas pela diretiva ***@can***, presente nos templates do Blade:
 
 
 ```html
