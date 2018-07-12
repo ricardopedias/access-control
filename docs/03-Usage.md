@@ -140,18 +140,20 @@ São botões de acesso e delimitadores para restrição de conteúdo. Tudo é im
 São botões simples, que contém um determinando link. Por exemplo:
 
 ```html
-@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
+@acl_action('users.update', '/admin/users/1/edit', 'Editar Usuário')
 ```
-No exemplo acima, ***users.edit*** diz ao Acl para verificar se a função ***users*** possui acesso à habilidade ***edit***.
+No exemplo acima, ***users.update*** diz ao Acl para verificar se a função ***users*** possui acesso à habilidade ***update***.
 Caso seja positivo, um botão será gerado com o texto 'Editar Usuário' e conterá o link para '/admin/users/1/edit'. 
 Caso seja negativo, um botão será gerado sem o link e com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
-Existem variantes deste botão, para tamanhos diferentes, onde o sufixo ***_sm*** signifca um botão pequeno e o sufixo ***_lg***, um botão grande:
+Existem variantes deste botão, para tamanhos diferentes, onde o sufixo ***_sm*** signifca um botão pequeno e o sufixo ***_lg***, um botão grande.
+
+![Botões de ação](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/action-buttons.png?raw=true)
 
 ```html
-@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário')
-@acl_action_sm('users.edit', '/admin/users/1/edit', 'Editar Usuário')
-@acl_action_lg('users.edit', '/admin/users/1/edit', 'Editar Usuário')
+@acl_action('users.update', '/admin/users/1/edit', 'Editar Usuário')
+@acl_action_sm('users.update', '/admin/users/1/edit', 'Editar Usuário')
+@acl_action_lg('users.update', '/admin/users/1/edit', 'Editar Usuário')
 ```
 
 Os botões usam um template padrão, baseado no [Bootstrap 4](https://getbootstrap.com/). 
@@ -173,7 +175,9 @@ No exemplo acima, ***users.create*** verifica se a função ***users*** possui a
 Caso seja positivo, o formulário será liberado para submissão e um botão será gerado com o texto 'Gravar Novo Usuário'. 
 Caso seja negativo, o formulário será bloqueado para submissão e um botão será gerado com aparência esmaecida, indicando que o usuário não tem direito de acesso.
 
-Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo ***_sm*** significa um botão pequeno e o sufixo ***_lg***, um botão grande:
+Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo ***_sm*** significa um botão pequeno e o sufixo ***_lg***, um botão grande.
+
+![Botões de submissão](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/submit-buttons.png?raw=true)
 
 ```html
 @acl_submit('users.create', 'Gravar Novo Usuário') 
@@ -206,6 +210,8 @@ Também é possível restringir uma parte especifica de um layout, usando o inv�
 No exemplo acima, ***users.read*** verifica se a função ***users*** possui acesso à habilidade ***read***.
 Caso seja positivo, o conteúdo será renderizado normalmente no template. 
 Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
+
+![Restrição de conteúdo](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/content-access.png?raw=true)
 
 
 ## 6. Personalizando Templates
