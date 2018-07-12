@@ -1,6 +1,6 @@
 # 3. Como Usar
 
-## Configurando
+## 1. Ativando as configurações
 
 A primeira coisa a se fazer é efetuar a configuração básica do "Access Control" setando os parâmetros desejados no arquivo de configuração. Para ter acesso a este arquivo, é preciso publicá-lo usando o **artisan**:
 
@@ -8,10 +8,10 @@ A primeira coisa a se fazer é efetuar a configuração básica do "Access Contr
 php artisan vendor:publish --tag=acl-config
 ```
 
-Após executar este comando, o arquivo `config/acl.php.` poderá ser encontrado no seu projeto do Laravel.
+Após executar este comando, o arquivo `config/acl.php` poderá ser encontrado no seu projeto do Laravel.
 
 
-## Os CRUD's e o usuário ROOT
+## 2. Os CRUD's e o usuário ROOT
 
 O "Access Control" possui todas as funcionalidades necessárias para se gerenciar o que cada usuário do sistema pode ou não pode acessar. São ferramentas de verificação e também CRUD's para configurar visualmente os usuários e grupos disponíveis.
 
@@ -32,40 +32,110 @@ O usuário ROOT possui acesso irrestrito, independente das permissões atribuíd
 Uma vez configurado o usuário ROOT, basta setar as permissões adequadas aos outros usuários do sistema e, 
 se necessário, remover o ID de ROOT para que o usuário em questão volte ao seu 'estado normal'.
 
-## Usando as funções e habilidades
+## 3. Os CRUD's, as funções e as habilidades
 
-Por padrão, existem 4 funções com suas respectivas habilidades. O nome de uma função coincide com o nome base de alguma rota disponível na seção **routes** do arquivo `config/acl.php.`.
+Por padrão, existem 4 funções com suas respectivas habilidades. O nome de uma função é declarado nas chaves alocadas an seção **roles** do arquivo `config/acl.php`.
 
-Funções (Rotas base) | Habilidades
+Funções (Roles)      | Habilidades
 ---------------------|-----------------------------
 users                | create, read, update, delete
 users-permissions    | create, read, update
 groups               | create, read, update, delete
 groups-permissions   | create, read, update
 
+No arquivo `config/acl.php` elas estão declaradas assim:
 
-Cada função adicionada no arquivo `config/acl.php.` pode ser invocada nas rotinas alocadas nos controladores ou diretamente de dentro das visões do blade. 
+```php
 
-os controladores as a implementação de um projeto Laravel para verificar se o usuário atual tem ou não direito de acesso a determinada área.
+'roles' => [
 
-## Diretivas para layout no Blade
+        'users' => [
+            'label' => 'Usuários',
+            'permissions' => 'create,read,update,delete',
+            ],
 
-O "Access Control" possui diretivas especias para controlar o acesso diretamente em templates do blade.
-São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando o framework [Bootstrap 4](https://getbootstrap.com/).
+        'users-permissions' => [
+            'label' => 'Permissões de Usuários',
+            'permissions' => 'create,read,update',
+            ],
 
-### Personalização
+        'groups' => [
+            'label' => 'Grupos de Acesso',
+            'permissions' => 'create,read,update,delete',
+            ],
 
-Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões. 
-Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/acl/buttons':
-
-```bash
-php artisan vendor:publish --tag=acl-buttons
+        'groups-permissions' => [
+            'label' => 'Permissões de Grupos',
+            'permissions' => 'create,read,update',
+            ],
+    ]
 ```
 
-Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
-são setadas no momento da exibição do botão e podem possuir qualquer caminho de localização.
+Nos CRUD's de permissões elas são desenhadas assim:
 
-### Botões de Ação
+![CRUD com as funções](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles.png?raw=true)
+
+Usando como exemplo a 'user-permissions', pode-se constatar que:
+
+```php
+'users-permissions' => [
+    'label' => 'Permissões de Usuários',
+    'permissions' => 'create,read,update',
+ ],
+```
+
+* O parâmetro "label" define o nome a ser exibido na coluna "Área de Acesso";
+* O parâmetro "permissions" define quais habilidades estarão disponíveis para a configuração desta função.
+
+Note que a função "users" possui as quatro habilidades, mas a função "users-permissions" somente três selecionar.
+
+![CRUD com as habilidades](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles-abilities.png?raw=true)
+
+
+## 4. Usando as funções e habilidades
+
+Cada função adicionada no arquivo `config/acl.php` é usada para verificação através de helpers que podem ser invocados em rotinas PHP ou em arquivos de template, diretamente nas visões do blade. 
+
+![CRUD com as funções e habilidades](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles-functions-abilities.png?raw=true)
+
+
+### No ambiente do PHP
+
+Dentro de rotinas PHP é possível verificar as permissões de acesso, usando o médodo 'can' do facade 'Auth' do Laravel: 
+
+```php
+if (\Auth::user()->can('users.update') == true) {
+    echo 'Parabéns, você pode editar!!';
+}
+else {
+    echo 'Desculpe, você não pode editar!!';
+}
+```
+
+### Nos templates do Blade
+
+De forma semelhante, as verificações condicionais podem ser efetuadas pela diretiva @can, presente nos templates do Blade:
+
+
+```html
+@can('users.update')
+
+    <h1>Parabéns, você pode editar!!</h1>
+
+@else
+
+    <h1>Desculpe, você não pode editar!!</h1>
+
+@endif
+```
+
+## 5. Diretivas especiais
+
+Além da diretiva @can, o "Access Control" possui diretivas especias para controlar o acesso de várias maneiras dentro de templates Blade.
+
+São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando o framework [Bootstrap 4](https://getbootstrap.com/).
+
+### 5.1. Botões de Ação
 
 São botões simples, que contém um determinando link. Por exemplo:
 
@@ -92,7 +162,7 @@ botão será renderizado com ela.
 @acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário', 'meus-botoes.botao-de-edicao')
 ```
 
-### Botões de Submissão de Formulário
+### 5.2. Botões de Submissão de Formulário
 
 São botões especiais, que só funcionam dentro de formulários. Por exemplo:
 
@@ -124,7 +194,7 @@ botão será renderizado com ela.
 @acl_submit('users.create', 'Gravar Novo Usuário', 'meus-botoes.botao-de-criacao') 
 ```
 
-### Restrição de conteúdo
+### 5.3. Restrição de conteúdo
 
 Também é possível restringir uma parte especifica de um layout, usando o invólucro de conteúdo, como no exemplo abaixo:
 
@@ -146,43 +216,23 @@ Também é possível restringir uma parte especifica de um layout, usando o inv�
 </div>
 ```
 
-No exemplo acima, ***users.read*** verifica se a função ***users*** possui acesso à habilidade ***show***.
+No exemplo acima, ***users.read*** verifica se a função ***users*** possui acesso à habilidade ***read***.
 Caso seja positivo, o conteúdo será renderizado normalmente no template. 
 Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
 
-## Restrições condicionais
 
-As verificações condicionais são efetuadas através do método 'can', presente no objeto de autenticação padrão do Laravel.
-O método está disponível tanto no Blade como no ambiente PHP:
+## 6. Personalizando o Access Control
 
-### No blade
+Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões. 
+Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/acl/buttons':
 
-A diretiva '@can' pode ser usada para efetuar verificações de acesso, bastando passar a função e a habilidade desejada como parâmetro:
-
-```html
-@can('users.edit')
-
-    <h1>Parabéns, você pode editar!!</h1>
-
-@else
-
-    <h1>Desculpe, você não pode editar!!</h1>
-
-@endif
+```bash
+php artisan vendor:publish --tag=acl-buttons
 ```
 
-### No PHP
+Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
+são setadas no momento da exibição do botão e podem possuir qualquer caminho de localização.
 
-Dentro das rotina de programação também é possível verificar as permissões de acesso, usando o médodo 'can' do facade 'Auth' do Laravel: 
-
-```php
-if ( \Auth::user()->can('users.update') == true) {
-    echo 'Parabéns, você pode editar!!';
-}
-else {
-    echo 'Desculpe, você não pode editar!!';
-}
-```
 
 ## Adicionando funções e habilidades
 
