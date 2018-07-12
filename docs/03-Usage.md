@@ -155,12 +155,6 @@ Existem variantes deste botão, para tamanhos diferentes, onde o sufixo ***_sm**
 ```
 
 Os botões usam um template padrão, baseado no [Bootstrap 4](https://getbootstrap.com/). 
-Para especificar um template personalizado, basta fornecer um quarto parâmetro com a view desejada e o 
-botão será renderizado com ela.
-
-```html
-@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário', 'meus-botoes.botao-de-edicao')
-```
 
 ### 5.2. Botões de Submissão de Formulário
 
@@ -185,13 +179,6 @@ Da mesma forma que os botões de ação, existem variantes para tamanhos diferen
 @acl_submit('users.create', 'Gravar Novo Usuário') 
 @acl_submit_sm('users.create', 'Gravar Novo Usuário') 
 @acl_submit_lg('users.create', 'Gravar Novo Usuário') 
-```
-
-Para especificar um template personalizado, basta fornecer um terceiro parâmetro com a view desejada e o 
-botão será renderizado com ela.
-
-```html
-@acl_submit('users.create', 'Gravar Novo Usuário', 'meus-botoes.botao-de-criacao') 
 ```
 
 ### 5.3. Restrição de conteúdo
@@ -221,79 +208,45 @@ Caso seja positivo, o conteúdo será renderizado normalmente no template.
 Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
 
 
-## 6. Personalizando o Access Control
+## 6. Personalizando Templates
 
-Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões. 
-Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/acl/buttons':
+No Access Control, praticamente tudo pode ser personalizado. Deste controladores até os layouts e templates do Blade podem ser facilmente manipulados, permitindo flexibilidade e liberdade na utilização das funcionalidades em qualquer projeto feito com Laravel.
+
+## 6.1. Personalizando Botões
+
+Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo. As visões personalizáveis serão geradas no diretório 'resources/views/acl/buttons':
 
 ```bash
 php artisan vendor:publish --tag=acl-buttons
 ```
 
-Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
-são setadas no momento da exibição do botão e podem possuir qualquer caminho de localização.
+Não é necessário que as visões estejam nesta estrutura específica de diretórios (*resources/views/acl/buttons*). Pode-se mudar a localização para se adequar ao projeto.
 
+Para renderizar um **botão de ação** com uma visão personalizada, basta especificar a localização dela como quarto parâmetro da diretiva **@acl_action**:
 
-## Adicionando funções e habilidades
-
-Novas funções e habilidades devem ser adicionadas na seção ***roles*** do arquivo de configuração.
-Cada habilidade deve possuir a sua slug, seguida de dois parâmetros, sendo:
-
-```php
-return [
-
-    ...
-
-    'roles' => [
-
-        'users' => [                                    // <-- A slug da função
-            'label'       => 'Usuários',                // <-- O nome para exibição
-            'permissions' => 'create,read,update,delete', // <-- As habilidades configuráveis
-        ],
-
-    ...
-
+```html
+@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário', 'acl.buttons.botao-de-edicao')
 ```
 
-## Personalizando os CRUDs
+Para renderizar um **botão de submissão de formulário** com uma visão personalizada, basta especificar a localização dela no terceiro parâmetro da diretiva **@acl_submit**:
 
-Para adicionar flexibilidade, e possibilitar a adaptação a qualquer projeto, o Acl permite configurar os CRUDs de configuração das permissões. Entre as personalizações, pode-se alterar as rotas, os controladores e as views usadas pelo mecanismo interno. 
-
-### Rotas Personalizados
-
-As rotas padrões possuem as urls com o prefixo 'acl' seguido da rota básica ('acl/users' ou 'acl/users-permissions').
-Isso pode ser facilmente mudado, setando urls personalizadas na seção 'routes' do arquivo de configuração:
-
-```php
-return [
-
-    ...
-
-    'routes'     => [
-        'users'              => 'meu-painel/usuarios', // <-- rota personalizada
-        'users-permissions'  => 'acl/users-permissions',
-        'groups'             => 'acl/groups',
-        'groups-permissions' => 'acl/groups-permissions', 
-    ],
-
-    ...
-
+```html
+@acl_submit('users.create', 'Gravar Novo Usuário', 'acl.buttons.botao-de-criacao') 
 ```
 
-### Visões Personalizadas
+### 6.2. Personalizando Formulários e Grids
 
-Para personalizar a aparência dos CRUD's, basta publicar uma cópia dos templates padrões. 
-Usando o comando abaixo, as views personalizáveis serão geradas no diretório 'resources/views/acl/cruds':
+Para personalizar a aparência dos CRUD's de gerenciamento de usuários, grupos e permissões, e poder adequá-los ao seu projeto, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo. As visões personalizáveis serão geradas no diretório 'resources/views/acl/cruds':
 
 ```bash
 php artisan vendor:publish --tag=acl-cruds
 ```
 
 > **Nota**:
-> As views publicadas, por se tratarem de cópias das views internas do Acl, possuem chamadas para o pacote 'acl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'acl::' para 'acl.cruds.'.
+> As views publicadas, por se tratarem de cópias das views internas do Acl, possuem chamadas para o pacote 'acl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'acl::' para 'acl.cruds', ou para outra localização de sua preferência.
 
-Não é necessário que as views estejam nesta estrutura de diretórios, pois as views personalizadas 
-são configuradas manualmente na seção ***views*** do arquivo de configuração:
+Assim como os botões, não é necessário que as visões estejam nesta estrutura específica de diretórios (*resources/views/acl/cruds*). Pode-se mudar a localização para se adequar ao projeto. Isso é feito na seção **views** no arquivo `config/acl.php`.
+
 
 ```php
 return [
@@ -316,9 +269,54 @@ return [
 
 ```
 
-### Controlladores Personalizados
+## 7. Personalizando rotinas
 
-Os controladores também podem ser personalizados, setando-os na seção 'controllers':
+
+## 7.1. Personalizando funções e habilidades
+
+Novas funções e habilidades podem ser adicionadas na seção **roles** do arquivo `config/acl.php`. Cada função deve possuir a sua chave em ***slug case*** (ex: minha-funcao). Como valores desta chave, devem existir dois parâmetros (label e permissions):
+
+```php
+return [
+
+    ...
+
+    'roles' => [
+
+        'articles' => [                                   // <-- A slug da função
+            'label'       => 'Artigos',                   // <-- O nome para exibição
+            'permissions' => 'create,read,update,delete', // <-- As habilidades configuráveis
+        ],
+
+    ...
+
+```
+
+### 7.2. Personalizando rotas
+
+As rotas padrões possuem as urls com o prefixo 'acl' seguido da rota básica (*acl/users* ou *acl/users-permissions*). Isso pode ser facilmente mudado, setando urls personalizadas na seção **routes** do arquivo `config/acl.php`:
+
+```php
+return [
+
+    ...
+
+    'routes'     => [
+        'users'              => 'meu-painel/usuarios', // <-- rota personalizada
+        'users-permissions'  => 'acl/users-permissions',
+        'groups'             => 'acl/groups',
+        'groups-permissions' => 'acl/groups-permissions', 
+    ],
+
+    ...
+
+```
+
+
+### 7.3. Personalizando controladores
+
+Os controladores também podem ser personalizados, setando-os adequadamente na seção **controllers** do arquivo `config/acl.php`:
+
 
 ```php
 return [
@@ -336,7 +334,7 @@ return [
 
 ```
 
-O aproveitamento das funcionalidades padrões é feita facilmente, extendendo o controlador original do Acl:
+Isso permite mudar ou expandir as funcionalidades de um determinado controlador, possibilitando a sobrecarga ou abstação do controlador original do Acl:
 
 ```php
 class MeuUsersController extends \Acl\Http\Controllers\UsersController
@@ -354,6 +352,7 @@ class MeuUsersController extends \Acl\Http\Controllers\UsersController
     }
 }
 ```
+
 
 ## Sumário
 
