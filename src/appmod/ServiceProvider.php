@@ -42,6 +42,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 \Acl\Console\Commands\UserOn::class,
                 \Acl\Console\Commands\UserOff::class,
                 \Acl\Console\Commands\UserPassword::class,
+                \Acl\Console\Commands\UserPanelOn::class,
+                \Acl\Console\Commands\UserPanelOff::class,
             ]);
         }
 
