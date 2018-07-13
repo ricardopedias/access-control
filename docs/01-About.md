@@ -1,16 +1,20 @@
-# Acl
+# Access Control
 
-O Acl foi desenvolvido para disponibilizar facilmente um gerenciador de [ACL](https://pt.wikipedia.org/wiki/Lista_de_controle_de_acesso) (Lista de Controle de Acesso) para um projeto Laravel. 
+O Access Control foi criado para disponibilizar facilmente um gerenciador de [ACL](https://pt.wikipedia.org/wiki/Lista_de_controle_de_acesso) (Lista de Controle de Acesso) para projetos desenvolvidos com Laravel. 
 
-Com CRUD's funcionais e personalizáveis, é simples configurar permissões baseadas em Grupos de Acesso ou exclusivamente para determinados usuários.
+![Lista de Usuários](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-users.png?raw=true)
 
-O sistema é construído sob a implementação de [Gates](https://laravel.com/docs/5.6/authorization#writing-gates) do Laravel, que monitoram o conteúdo com base na configuração.
+Com **CRUD's funcionais e personalizáveis**, é simples configurar permissões baseadas em **Grupos de Acesso** ou exclusivamente para determinados usuários.
 
-Genericamente, o método ***can***, invocado através do facade ***Auth*** realiza as verificações sobre a função e a habilidade do usuário logado:
+![Permissões de acesso](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-permissions.png?raw=true)
+
+O sistema é construído sob a implementação de [Gates](https://laravel.com/docs/5.6/authorization#writing-gates) do Laravel. Genericamente, o método ***can***, invocado através do facade ***Auth*** realiza as verificações sobre as funções e a habilidade do usuário logado:
 
 ```php
 \Auth::user()->can('users.create')
 ```
+
+A invocação acima verifica se o usuário logado possui a habilidade ***create*** na função ***users***, retornando um valor booleano.
 
 ## Sumário
 

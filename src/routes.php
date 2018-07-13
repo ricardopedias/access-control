@@ -5,24 +5,6 @@
  * and open the template in the editor.
  */
 
-// Modo paleativo para testes
-if(env('APP_ENV') !== 'testing') {
-
-    if (\Schema::hasTable('users') == false || \App\User::find(1) == null) {
-
-        \Artisan::call('migrate');
-        \Artisan::call('migrate', ['--path' => 'vendor/plexi/access-control/src/database/migrations']);
-
-        $u = (new \Acl\Services\UsersService)->dataInsert([
-            'name'     => 'Ricardo',
-            'email'    => 'ricardo@bnw.com.br',
-            'password' => bcrypt('secret')
-        ]);
-    }
-
-    Auth::loginUsingId(1);
-}
-
 Route::middleware(['web', 'auth'])->group(function () {
 
     $config = config('acl');
