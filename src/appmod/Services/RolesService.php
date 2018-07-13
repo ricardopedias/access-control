@@ -17,7 +17,7 @@ class RolesService
 
         $abilities = config('acl.roles');
 
-        // Habilidades resistradas
+        // Habilidades registradas
         foreach (Core::getPolicies() as $item) {
 
             $role       = $item->role;

@@ -24,29 +24,6 @@ class CreateAclRolesTable extends Migration
             $table->timestamps();
         });
 
-        AclRole::create([
-            'name' => 'Users',
-            'slug' => 'users',
-            'description' => 'Gerenciamento de usuários',
-            ]);
-
-        AclRole::create([
-            'name' => 'Users Permissions',
-            'slug' => 'users-permissions',
-            'description' => 'Permissões de Usuários',
-            ]);
-
-        AclRole::create([
-            'name' => 'Groups',
-            'slug' => 'groups',
-            'description' => 'Grupos de Acesso',
-            ]);
-
-        AclRole::create([
-            'name' => 'Groups Permissions',
-            'slug' => 'groups-permissions',
-            'description' => 'Permissões de Grupos',
-            ]);
     }
 
     /**

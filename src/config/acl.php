@@ -119,21 +119,25 @@ return [
         'users' => [
             'label' => 'Usuários',
             'permissions' => 'create,read,update,delete',
+            'description' => 'Gerenciamento de usuários'
             ],
 
         'users-permissions' => [
             'label' => 'Permissões de Usuários',
             'permissions' => 'create,read,update',
+            'description' => 'Permissões de Usuários'
             ],
 
         'groups' => [
             'label' => 'Grupos de Acesso',
             'permissions' => 'create,read,update,delete',
+            'description' => 'Grupos de Acesso'
             ],
 
         'groups-permissions' => [
             'label' => 'Permissões de Grupos',
             'permissions' => 'create,read,update',
+            'description' => 'Permissões de Grupos'
             ],
     ]
 ];
