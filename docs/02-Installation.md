@@ -60,7 +60,7 @@ $ php artisan migrate
 $ php artisan migrate --path=vendor/plexi/access-control/src/database/migrations
 ```
 
-Esta operação criará quatro tabelas:
+Esta operação criará seis tabelas:
 
 * acl_groups
 * acl_groups_permissions
@@ -69,9 +69,8 @@ Esta operação criará quatro tabelas:
 * acl_users_permissions
 * acl_users_status
 
-O "Access Control" possui suporte a soft deletes, por isso, precisa que o campo "deleted_at" exista 
-na tabela "users" (nativa do Laravel). A operação de migração também atualizará a tabela users, 
-adicionando a coluna "deleted_at" se ela não existir:
+O *Access Control* possui suporte a [Soft Deletes](https://laravel.com/docs/5.6/eloquent#soft-deleting), por isso, precisa que o campo ***deleted_at*** exista 
+na tabela ***users*** (nativa do Laravel). Por isso, a operação de migração atualizará a tabela *users*, adicionando a coluna *deleted_at* se ela não existir.
 
 
 ## Testando a instalação
