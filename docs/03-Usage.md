@@ -180,9 +180,9 @@ Da mesma forma que os botões de ação, existem variantes para tamanhos diferen
 ![Botões de submissão](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/submit-buttons.png?raw=true)
 
 ```html
-@acl_submit('users.create', 'Gravar Novo Usuário') 
-@acl_submit_sm('users.create', 'Gravar Novo Usuário') 
-@acl_submit_lg('users.create', 'Gravar Novo Usuário') 
+@acl_submit('users.create', 'Gravar Dados') 
+@acl_submit_sm('users.create', 'Gravar Dados') 
+@acl_submit_lg('users.create', 'Gravar Dados') 
 ```
 
 ### 5.3. Restrição de conteúdo
@@ -208,8 +208,9 @@ Também é possível restringir uma parte especifica de um layout, usando o inv�
 ```
 
 No exemplo acima, ***users.read*** verifica se a função ***users*** possui acesso à habilidade ***read***.
-Caso seja positivo, o conteúdo será renderizado normalmente no template. 
-Caso seja negativo, uma mensagem de 'Acesso Negado' será exibida para o usuário.
+
+* Caso seja positivo, o conteúdo será renderizado normalmente no template. 
+* Caso seja negativo, uma mensagem de **Acesso Negado** será exibida para o usuário.
 
 ![Restrição de conteúdo](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/content-access.png?raw=true)
 
@@ -231,7 +232,7 @@ Não é necessário que as visões estejam nesta estrutura específica de diret�
 Para renderizar um **botão de ação** com uma visão personalizada, basta especificar a localização dela como quarto parâmetro da diretiva **@acl_action**:
 
 ```html
-@acl_action('users.edit', '/admin/users/1/edit', 'Editar Usuário', 'acl.buttons.botao-de-edicao')
+@acl_action('users.update', '/admin/users/1/edit', 'Editar Usuário', 'acl.buttons.botao-de-edicao')
 ```
 
 Para renderizar um **botão de submissão de formulário** com uma visão personalizada, basta especificar a localização dela no terceiro parâmetro da diretiva **@acl_submit**:
