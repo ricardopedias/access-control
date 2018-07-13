@@ -36,6 +36,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishes([$this->modPath('resources/views/messages') => resource_path('views/acl/cruds/messages')], 'acl-cruds');
         $this->publishes([$this->modPath('resources/views/document.blade.php') => resource_path('views/acl/cruds/document.blade.php')], 'acl-cruds');
 
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Acl\Console\Commands\UserCreate::class,
+                \Acl\Console\Commands\UserOn::class,
+                \Acl\Console\Commands\UserOff::class,
+                \Acl\Console\Commands\UserPassword::class,
+            ]);
+        }
+
         \Acl\Core::registerPolicies();
 
         \Acl\Core::loadBladeDirectives();

@@ -255,6 +255,11 @@ class Core
         return true;
     }
 
+    /**
+     * Verfica se o endereço atual (URL) correponde a uma lixeira.
+     *
+     * @return boolean
+     */
     public static function isTrash()
     {
         $nodes = explode('/', request()->path());
