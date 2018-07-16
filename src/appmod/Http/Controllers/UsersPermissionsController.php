@@ -29,6 +29,6 @@ class UsersPermissionsController extends Controller
     {
         $model = (new Services\UsersPermissionsService)->dataUpdate($form->all(), $id);
         $route = config('acl.routes.users-permissions.edit');
-        return redirect()->route($route, $id);
+        return redirect()->route($route, $id)->with('success', 'Permissões atualizadas com sucesso');
     }
 }

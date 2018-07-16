@@ -226,7 +226,9 @@ class UsersService implements CrudContract
 
         // Atualiza os dados do usuário
         $model->fill($data);
-        return $model->save();
+        $model->save();
+
+        return $model;
     }
 
     public function dataDelete(array $data, int $id = null)

@@ -1,15 +1,5 @@
 
-    @if ($errors->any())
-
-        <div class="alert alert-warning">
-            
-            @foreach ($errors->all() as $error)
-                <i class="fa fa-angle-right"></i> {{ $error }} <br>
-            @endforeach
-            
-        </div>
-
-    @endif
+    @include('acl::operation-message')
 
     <div class="row">
 
@@ -26,12 +16,11 @@
 
             <label>Description</label>
             <input name="description" type="text" value="{{ old('description', $model->description) }}"
-                   class="form-control" 
+                   class="form-control"
                    required>
             <small class="form-text text-muted">Uma descrição curta para o grupo</small>
         </div>
 
         <input type="hidden" name="system" value="no">
-        
-    </div>
 
+    </div>

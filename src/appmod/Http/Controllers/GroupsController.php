@@ -53,7 +53,7 @@ class GroupsController extends Controller
 
         $model = (new Services\GroupsService)->dataInsert($request->all());
         $route = config('acl.routes.groups.index');
-        return redirect()->route($route);
+        return redirect()->route($route)->with('success', 'Grupo criado com sucesso');
     }
 
     /**
@@ -82,7 +82,7 @@ class GroupsController extends Controller
         ]);
 
         $model = (new Services\GroupsService)->dataUpdate($request->all(), $id);
-        return back();
+        return back()->with('success', 'Grupo atualizado com sucesso');
     }
 
     /**

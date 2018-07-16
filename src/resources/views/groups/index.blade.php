@@ -27,6 +27,8 @@
 
         </div>
 
+        @include('acl::operation-message')
+
         @sg_table
 
             @foreach($collection as $item)

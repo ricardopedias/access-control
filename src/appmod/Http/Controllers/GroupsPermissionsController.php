@@ -29,6 +29,6 @@ class GroupsPermissionsController extends Controller
     {
         $model = (new Services\GroupsPermissionsService)->dataUpdate($request->all(), $id);
         $route = config('acl.routes.groups-permissions.edit');
-        return redirect()->route($route, $id);
+        return redirect()->route($route, $id)->with('success', 'Permissões atualizadas com sucesso');
     }
 }

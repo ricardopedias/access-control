@@ -54,7 +54,7 @@ class UsersController extends Controller
 
         $model = (new Services\UsersService)->dataInsert($request->all());
         $route = config('acl.routes.users.index');
-        return redirect()->route($route);
+        return redirect()->route($route)->with('success', "Usuário(a) '{$model->name}' foi criado com sucesso");
     }
 
     /**
@@ -84,7 +84,7 @@ class UsersController extends Controller
         ]);
 
         $model = (new Services\UsersService)->dataUpdate($request->all(), $id);
-        return back();
+        return back()->with('success', "Os dados de '{$model->name}' foram atualizados com sucesso");
     }
 
     /**

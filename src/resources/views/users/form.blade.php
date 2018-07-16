@@ -1,15 +1,5 @@
 
-    @if ($errors->any())
-
-        <div class="alert alert-warning">
-
-            @foreach ($errors->all() as $error)
-                <i class="fa fa-angle-right"></i> {{ $error }} <br>
-            @endforeach
-
-        </div>
-
-    @endif
+    @include('acl::operation-message')
 
     <div class="row">
 
