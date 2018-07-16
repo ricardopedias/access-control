@@ -35,9 +35,12 @@ class UserPassword extends Command
             $model = \Acl\Models\AclUser::where('email', $user)->first();
         }
 
-        $model->password == bcrypt($password);
-        $model->save();
-
-        $this->info("A senha do usuário foi atualizada ID $model->id : $model->name <$model->email>");
+        $model->password = bcrypt($password);
+        $result = $model->save();
+        if ($result === true) {
+            $this->info("A senha do usuário foi atualizada ID $model->id : $model->name <$model->email>");
+        } else {
+            $this->error("A senha do não pôde ser alterada ID $model->id : $model->name <$model->email>");
+        }
     }
 }
