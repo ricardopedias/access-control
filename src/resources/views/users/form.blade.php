@@ -12,6 +12,8 @@
             <small class="form-text text-muted">O nome legível do usuário</small>
         </div>
 
+        <div class="d-sm-none w-100"></div>
+
         <div class="col form-group">
 
             <label>Permissões</label>
@@ -25,6 +27,8 @@
 
         </div>
 
+        <div class="d-md-block d-lg-none w-100"></div>
+
         <div class="col form-group">
 
             <label>Email</label>
@@ -33,6 +37,8 @@
                    required>
             <small class="form-text text-muted">O endereço eletrônico</small>
         </div>
+
+        <div class="d-sm-none w-100"></div>
 
         <div class="col form-group">
 

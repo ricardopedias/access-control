@@ -12,6 +12,8 @@
             <small class="form-text text-muted">O nome legível do usuário</small>
         </div>
 
+        <div class="d-sm-none w-100"></div>
+
         <div class="col form-group">
 
             <label>Description</label>

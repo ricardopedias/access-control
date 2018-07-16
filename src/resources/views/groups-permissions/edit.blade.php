@@ -98,7 +98,7 @@
 
             <div class="row">
 
-                <div class="col text-right">
+                <div class="col d-flex justify-content-center justify-content-sm-end">
 
                     @acl_submit_lg('groups-permissions.update', 'Aplicar Permissões')
 

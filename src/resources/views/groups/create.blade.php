@@ -17,7 +17,7 @@
 
             <div class="row">
 
-                <div class="col">
+                <div class="col d-flex justify-content-center justify-content-sm-end">
 
                     @acl_submit_lg('groups.create', 'Novo Grupo')
 

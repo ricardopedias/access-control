@@ -4,7 +4,7 @@
         <a href="javascript:void(0)" class="acl-submit btn btn-info disabled {{ $size != 'none' ? "btn-{$size}" : '' }}"
            title="Você não tem permissão para '{{ $label }}'">
             <i class="{{ $icon or 'fas fa-save' }}"></i>
-            <span class="d-none d-lg-inline">{{ $label }}</span>
+            {{ $label }}
         </a>
 
         <script>
@@ -34,7 +34,7 @@
         <button type="submit" class="btn btn-info {{ $size != 'none' ? "btn-{$size}" : '' }}"
            title="{{ $label }}">
             <i class="{{ $icon or 'fas fa-save' }}"></i>
-            <span class="d-none d-lg-inline">{{ $label }}</span>
+            {{ $label }}
         </button>
 
     @endif
