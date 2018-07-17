@@ -14,7 +14,7 @@
 
     <body class="p-5">
 
-        <h1>{{ $title or 'Acl' }}</h1>
+        <h1 class="text-center text-md-left">{{ $title or 'Acl' }}</h1>
 
         {!! $slot !!}
 
