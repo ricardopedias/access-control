@@ -38,13 +38,25 @@
 
                             <th>Áreas de Acesso</th>
 
-                            <th class="text-center" style="background:rgba(0,0,0,0.05)"><i class="fa fa-eye"></i> Ver</th>
+                            <th class="text-center" style="background:rgba(0,0,0,0.05)">
+                                <i class="fa fa-eye"></i>
+                                <span class="d-none d-md-inline">Ver</span>
+                            </th>
 
-                            <th class="text-center"><i class="fa fa-plus-circle"></i> Criar</th>
+                            <th class="text-center">
+                                <i class="fa fa-plus-circle"></i>
+                                <span class="d-none d-md-inline">Criar</span>
+                            </th>
 
-                            <th class="text-center" style="background:rgba(0,0,0,0.05)"><i class="fa fa-edit"></i> Editar</th>
+                            <th class="text-center" style="background:rgba(0,0,0,0.05)">
+                                <i class="fa fa-edit"></i>
+                                <span class="d-none d-md-inline">Editar</span>
+                            </th>
 
-                            <th class="text-center"><i class="fa fa-times-circle"></i> Excluir</th>
+                            <th class="text-center">
+                                <i class="fa fa-times-circle"></i>
+                                <span class="d-none d-md-inline">Excluir</span>
+                            </th>
 
                         </thead>
 
@@ -68,9 +80,9 @@
                                         @endphp
 
                                         @if($loop->iteration%2 == 0)
-                                        <td class="text-center">
+                                        <td class="text-center align-middle">
                                         @else
-                                        <td class="text-center" style="background:rgba(0,0,0,0.05)">
+                                        <td class="text-center align-middle" style="background:rgba(0,0,0,0.05)">
                                         @endif
 
                                             @if($perm_value != null)
