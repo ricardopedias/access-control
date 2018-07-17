@@ -13,7 +13,7 @@ class UsersPermissionsService implements EditPermissionsContract
     {
         return view($view)->with([
             'user'         => ($user = (new AclUsersRepository)->read($id)),
-            'structure'    => $this->getStructure($user->id),
+            'structure'    => $this->getStructure($user->id, true),
             'route_index'  => config('acl.routes.users.index'),
             'route_user'   => config('acl.routes.users.edit'),
             'route_update' => config('acl.routes.users-permissions.update'),
@@ -79,20 +79,22 @@ class UsersPermissionsService implements EditPermissionsContract
                     'delete' => $item->delete,
                 ];
             }
-        } elseif($allows_null == true) {
-            return null;
         }
 
         $structure = [];
 
         $all_abilities = (new RolesService)->getStructure();
         foreach ($all_abilities as $role => $item) {
-
+            // Todas as habilidades disponiveis
+            // no arquivo de coniguração ('permissions' => 'create,read,update,delete')
             foreach ($item['permissions'] as $ability => $nullable) {
                 if ($nullable !== null) {
                     $structure[$role]['label'] = $all_abilities[$role]['label'];
                     $structure[$role]['permissions'][$ability] = isset($permissions[$role])
                         ? $permissions[$role][$ability] : 'no';
+                } elseif($allows_null == true) {
+                    // Nulos disponiveis para o formulário
+                    $structure[$role]['permissions'][$ability] = null;
                 }
             }
         }
