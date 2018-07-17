@@ -218,11 +218,19 @@ class UsersService implements CrudContract
         }
 
         $model_status = (new AclUsersStatusRepository)->findByID($model->id);
-        $model_status->fill([
-            'access_panel' => ($data['access_panel'] ?? 'no'),
-            'status'       => ($data['status'] ?? 'inactive')
-        ]);
-        $model_status->save();
+        if ($model_status !== null) {
+            $model_status->fill([
+                'access_panel' => ($data['access_panel'] ?? 'no'),
+                'status'       => ($data['status'] ?? 'inactive')
+            ]);
+            $model_status->save();
+        } else {
+            $model_status = (new AclUsersStatusRepository)->create([
+                'user_id'      => $model->id,
+                'access_panel' => ($data['access_panel'] ?? 'no'),
+                'status'       => ($data['status'] ?? 'inactive')
+            ]);
+        }
 
         // Atualiza os dados do usuário
         $model->fill($data);
