@@ -99,7 +99,6 @@ class UsersPermissionsServiceTest extends IModelTestCase
         $abilities = config('acl.roles');
 
         $structure = (new UsersPermissionsService)->getStructure($user->id);
-
         foreach($abilities as $role => $data) {
 
             $this->assertArrayHasKey($role, $structure);
@@ -125,16 +124,10 @@ class UsersPermissionsServiceTest extends IModelTestCase
         }
     }
 
-    public function testGetStructure_Null()
-    {
-        $user = self::createUser();
-        $structure = (new UsersPermissionsService)->getStructure($user->id, true);
-        $this->assertNull($structure);
-    }
-
     public function testGetStructure_UserPermissions()
     {
-        $role = \Acl\Models\AclRole::where('slug', 'users')->first();
+        $role = self::createRole('users'); // contém 'create,read,update,delete'
+        //$role = \Acl\Models\AclRole::where('slug', 'users')->first();
         $user = self::createUser();
         self::createUserPermissions($role->id, $user->id, true, true, true, true);
 
@@ -171,10 +164,58 @@ class UsersPermissionsServiceTest extends IModelTestCase
                 }
             }
 
-            // Os cruds restantes não forem setados!!
+            // Os cruds restantes NÃO FORAM setados!!
             foreach($crud_all as $perm => $nulled) {
                 $this->assertArrayHasKey('permissions', $structure[$role]);
                 $this->assertArrayNotHasKey($perm, $structure[$role]['permissions']);
+            }
+        }
+    }
+
+    public function testGetStructure_UserPermissionsAllowsNull()
+    {
+        $role = self::createRole('users-permissions'); // contem apenas 'create,read,update'
+        //$role = \Acl\Models\AclRole::where('slug', 'users')->first();
+        $user = self::createUser();
+        self::createUserPermissions($role->id, $user->id, true, true, true, false);
+
+        $abilities = config('acl.roles');
+
+        $structure = (new UsersPermissionsService)->getStructure($user->id, true); // ativa os nulos
+        foreach($abilities as $role => $data) {
+
+            $label = $data['label'];
+            $permissions = trim(str_replace(' ', '', $data['permissions']), ',');
+            $crud_setted = explode(',', $data['permissions']);
+            $crud_all = array_flip(['create', 'read', 'update', 'delete']);
+
+            $this->assertArrayHasKey($role, $structure);
+            $this->assertArrayHasKey('permissions', $structure[$role]);
+
+            if ($role == 'users-permissions') {
+                foreach($crud_setted as $perm) {
+                    $this->assertArrayHasKey('permissions', $structure[$role]);
+                    $this->assertArrayHasKey($perm, $structure[$role]['permissions']);
+                    $this->assertNotNull($structure[$role]['permissions'][$perm]);
+                    $this->assertEquals('yes', $structure[$role]['permissions'][$perm]);
+                    unset($crud_all[$perm]);
+                }
+            } else {
+                $crud_all = array_flip(['create', 'read', 'update', 'delete']);
+                foreach($crud_setted as $perm) {
+                    $this->assertArrayHasKey('permissions', $structure[$role]);
+                    $this->assertArrayHasKey($perm, $structure[$role]['permissions']);
+                    $this->assertNotNull($structure[$role]['permissions'][$perm]);
+                    $this->assertEquals('no', $structure[$role]['permissions'][$perm]);
+                    unset($crud_all[$perm]);
+                }
+            }
+
+            // Os cruds restantes FORAM setados como nulos!!
+            foreach($crud_all as $perm => $nulled) {
+                $this->assertArrayHasKey('permissions', $structure[$role]);
+                $this->assertArrayHasKey($perm, $structure[$role]['permissions']);
+                $this->assertNull($structure[$role]['permissions'][$perm]);
             }
         }
     }

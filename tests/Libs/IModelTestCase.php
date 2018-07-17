@@ -86,10 +86,10 @@ class IModelTestCase extends TestCase
         ]);
     }
 
-    protected static function createRole()
+    protected static function createRole($name = null)
     {
         $faker = \Faker\Factory::create();
-        $name = $faker->name;
+        $name = $name==null ? $faker->name : $name;
         return Models\AclRole::create([
             'name'        => $name,
             'slug'        => Str::slug($name),

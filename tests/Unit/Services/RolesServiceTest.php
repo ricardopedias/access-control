@@ -25,6 +25,8 @@ class RolesServiceTest extends IModelTestCase
             $crud_all = array_flip(['create', 'read', 'update', 'delete']);
             $crud_setted = explode(',', $data['permissions']);
             foreach($crud_setted as $perm) {
+                // Devem existir as quatro habilidades, mesmo que
+                // não estejam setadas nas habilidades
                 $this->assertArrayHasKey('permissions', $structure[$role]);
                 $this->assertArrayHasKey($perm, $structure[$role]['permissions']);
                 $this->assertNotNull($structure[$role]['permissions'][$perm]);
