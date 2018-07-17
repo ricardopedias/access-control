@@ -64,22 +64,30 @@
 
                             <th>Áreas de Acesso</th>
 
-                            <th class="text-center" style="background:rgba(0,0,0,0.05)">
-                                <i class="fa fa-eye"></i>
-                                <span class="d-none d-md-inline">Ver</span>
-                            </th>
-
-                            <th class="text-center">
+                            <th class="text-center" title="Clique para selecionar"
+                                style="cursor: pointer;"
+                                onclick="checkUncheck('check-create')">
                                 <i class="fa fa-plus-circle"></i>
                                 <span class="d-none d-md-inline">Criar</span>
                             </th>
 
-                            <th class="text-center" style="background:rgba(0,0,0,0.05)">
+                            <th class="text-center" title="Clique para selecionar"
+                                style="background:rgba(0,0,0,0.05); cursor: pointer;"
+                                onclick="checkUncheck('check-read')">
+                                <i class="fa fa-eye"></i>
+                                <span class="d-none d-md-inline">Ver</span>
+                            </th>
+
+                            <th class="text-center" title="Clique para selecionar"
+                                style="background:rgba(0,0,0,0.05); cursor: pointer;"
+                                onclick="checkUncheck('check-update')">
                                 <i class="fa fa-edit"></i>
                                 <span class="d-none d-md-inline">Editar</span>
                             </th>
 
-                            <th class="text-center">
+                            <th class="text-center" title="Clique para selecionar"
+                                style="cursor: pointer;"
+                                onclick="checkUncheck('check-delete')">
                                 <i class="fa fa-times-circle"></i>
                                 <span class="d-none d-md-inline">Excluir</span>
                             </th>
@@ -113,7 +121,7 @@
 
                                             @if($perm_value != null)
 
-                                                <input type="checkbox" name="{{ $perm_name }}" class="check-toggle"
+                                                <input type="checkbox" name="{{ $perm_name }}" class="check-toggle check-{{ $perm }}"
                                                        data-on-text="Sim" data-off-text="Não"
                                                        value="yes" {{ old_check($perm_name, 'yes', $perm_value) }}>
 
@@ -145,6 +153,27 @@
             </div>
 
         </form>
+
+        <script>
+            function checkUncheck(perm)
+            {
+                var all_checked = true;
+                $('.' + perm).each(function() {
+                    if ($(this).prop("checked") == false) {
+                        all_checked = false;
+                    }
+                });
+
+                $('.' + perm).each(function() {
+
+                    if(all_checked==true) {
+                        $(this).prop("checked", false);
+                    } else {
+                        $(this).prop("checked", true);
+                    }
+                });
+            }
+        </script>
 
     @end_acl_content
 
