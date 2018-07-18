@@ -65,14 +65,14 @@
                             <th>Áreas de Acesso</th>
 
                             <th class="text-center" title="Clique para selecionar"
-                                style="cursor: pointer;"
+                                style="background:rgba(0,0,0,0.05); cursor: pointer;"
                                 onclick="checkUncheck('check-create')">
                                 <i class="fa fa-plus-circle"></i>
                                 <span class="d-none d-md-inline">Criar</span>
                             </th>
 
                             <th class="text-center" title="Clique para selecionar"
-                                style="background:rgba(0,0,0,0.05); cursor: pointer;"
+                                style="cursor: pointer;"
                                 onclick="checkUncheck('check-read')">
                                 <i class="fa fa-eye"></i>
                                 <span class="d-none d-md-inline">Ver</span>
