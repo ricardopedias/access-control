@@ -7,6 +7,8 @@
 
 *By [Ricardo Pereira Dias &copy;](https://github.com/rpdesignerfly)*
 
+> Este pacote esta em fase de desenvolvimento. Use esta biblioteca por sua conta e risco!
+
 Access Control é um gerenciador de listas de acesso (Access Control List) com CRUD's personalizáveis para setagem de permissões para Usuários e Grupos. De forma fácil e flexível o Access Control provê ferramentas para customizar os CRUD's e realizar verificações com base nas credenciais do usuário logado.
 
 ![Permissões de acesso](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-permissions.png?raw=true)
