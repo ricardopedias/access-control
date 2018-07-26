@@ -2,6 +2,8 @@
 namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Acl\Http\Requests\StoreGroupPost;
+use Acl\Http\Requests\UpdateGroupPost;
 use Acl\Services;
 
 class GroupsController extends Controller
@@ -39,15 +41,11 @@ class GroupsController extends Controller
     /**
      * Armazena no banco de dados o novo registro criado.
      *
-     * @param  \Illuminate\Http\Request $form
+     * @param  \Acl\Http\Requests\StoreGroupPost $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGroupPost $request)
     {
-        $request->validate([
-            'name' => 'required|max:100|unique:acl_groups,name',
-        ]);
-
         $model = (new Services\GroupsService)->dataInsert($request->all());
         $route = config('acl.routes.groups.index');
         return redirect()->route($route)->with('success', 'Grupo criado com sucesso');
@@ -67,16 +65,12 @@ class GroupsController extends Controller
     /**
      * Atualiza o registro especificado no banco de dados.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Acl\Http\Requests\UpdateGroupPost $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateGroupPost $request, $id)
     {
-        $request->validate([
-            'name' => "required|max:100|unique:acl_groups,name,{$id}"
-        ]);
-
         $model = (new Services\GroupsService)->dataUpdate($request->all(), $id);
         return back()->with('success', 'Grupo atualizado com sucesso');
     }
@@ -84,7 +78,7 @@ class GroupsController extends Controller
     /**
      * Remove o registro especificado do banco de dados.
      *
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -97,7 +91,7 @@ class GroupsController extends Controller
     /**
      * Restaura o registro especificado, removendo-o da lixeira.
      *
-     * @param Request $form
+     * @param \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */

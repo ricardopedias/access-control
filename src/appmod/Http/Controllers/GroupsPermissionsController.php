@@ -9,6 +9,7 @@ class GroupsPermissionsController extends Controller
     /**
      * Exibe o formulário de configuração das permissões de acesso.
      *
+     * @param \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */

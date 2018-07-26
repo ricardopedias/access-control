@@ -2,6 +2,8 @@
 namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Acl\Http\Requests\StoreUserPost;
+use Acl\Http\Requests\UpdateUserPost;
 use Acl\Services;
 
 class UsersController extends Controller
@@ -38,17 +40,11 @@ class UsersController extends Controller
     /**
      * Armazena no banco de dados o novo registro criado.
      *
-     * @param  \Illuminate\Http\Request $form
+     * @param  \Acl\Http\Requests\StoreUserPost $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserPost $request)
     {
-        $request->validate([
-            'name'         => 'required|max:100',
-            'email'        => 'required|unique:users|max:150',
-            'password'     => 'required',
-        ]);
-
         $model = (new Services\UsersService)->dataInsert($request->all());
         $route = config('acl.routes.users.index');
         return redirect()->route($route)->with('success', "Usuário(a) '{$model->name}' foi criado com sucesso");
@@ -68,17 +64,12 @@ class UsersController extends Controller
     /**
      * Atualiza os dados de um usuário existente.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Acl\Http\Requests\UpdateUserPost $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserPost $request, $id)
     {
-        $request->validate([
-            'name'         => 'required|max:100',
-            'email'        => "required|unique:users,email,{$id}|max:150"
-        ]);
-
         $model = (new Services\UsersService)->dataUpdate($request->all(), $id);
         return back()->with('success', "Os dados de '{$model->name}' foram atualizados com sucesso");
     }
@@ -86,7 +77,7 @@ class UsersController extends Controller
     /**
      * Remove o registro especificado do banco de dados.
      *
-     * @param Request $form
+     * @param \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -99,7 +90,7 @@ class UsersController extends Controller
     /**
      * Restaura o registro especificado, removendo-o da lixeira.
      *
-     * @param Request $form
+     * @param \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */

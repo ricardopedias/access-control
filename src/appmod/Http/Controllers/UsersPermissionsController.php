@@ -9,6 +9,7 @@ class UsersPermissionsController extends Controller
     /**
      * Exibe o formulário de configuração das permissões de acesso.
      *
+     * @param \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -20,13 +21,13 @@ class UsersPermissionsController extends Controller
     /**
      * Atualiza as permissões no banco de dados
      *
-     * @param  \Illuminate\Http\Request $form
+     * @param  \Illuminate\Http\Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $form, $id)
+    public function update(Request $request, $id)
     {
-        $model = (new Services\UsersPermissionsService)->dataUpdate($form->all(), $id);
+        $model = (new Services\UsersPermissionsService)->dataUpdate($request->all(), $id);
         $route = config('acl.routes.users-permissions.edit');
         return redirect()->route($route, $id)->with('success', 'Permissões atualizadas com sucesso');
     }
