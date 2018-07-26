@@ -5,7 +5,7 @@ use \Illuminate\Http\Request;
 
 interface EditPermissionsContract
 {
-    public function formEdit(string $view, $id, Request $request = null);
+    public function formEdit($id, Request $request = null);
 
     public function dataUpdate(array $data, int $id);
 

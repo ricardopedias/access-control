@@ -13,8 +13,7 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
-        $view = config('acl.views.users.index');
-        return (new Services\UsersService)->gridList($view, $request);
+        return (new Services\UsersService)->gridList($request);
     }
     /**
      * Exibe a lista de registros na lixeira.
@@ -23,8 +22,7 @@ class UsersController extends Controller
      */
     public function trash(Request $request)
     {
-        $view = config('acl.views.users.trash');
-        return (new Services\UsersService)->gridTrash($view, $request);
+        return (new Services\UsersService)->gridTrash($request);
     }
 
     /**
@@ -34,8 +32,7 @@ class UsersController extends Controller
      */
     public function create(Request $request)
     {
-        $view = config('acl.views.users.create');
-        return (new Services\UsersService)->formCreate($view);
+        return (new Services\UsersService)->formCreate($request);
     }
 
     /**
@@ -65,8 +62,7 @@ class UsersController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('acl.views.users.edit');
-        return (new Services\UsersService)->formEdit($view, $id);
+        return (new Services\UsersService)->formEdit($id, $request);
     }
 
     /**

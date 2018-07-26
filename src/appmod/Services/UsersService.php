@@ -10,7 +10,7 @@ use Acl\Models\AclUserPermission;
 use Acl\Models\AclUserStatus;
 use SortableGrid\Traits\HasSortableGrid;
 
-class UsersService implements CrudContract
+class UsersService implements CrudFrontContract, CrudBackContract
 {
     use HasSortableGrid;
 
@@ -51,7 +51,7 @@ class UsersService implements CrudContract
             ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
     }
 
-    public function gridList(string $view, Request $request = null)
+    public function gridList(Request $request = null)
     {
         $this->setInitials('users.id', 'desc', 10);
 
@@ -75,6 +75,7 @@ class UsersService implements CrudContract
         $provider = $this->getSearcheable();
         $this->setDataProvider($provider);
 
+        $view = config('acl.views.users.index');
         return $this->gridView($view)->with([
             'route_create'      => config('acl.routes.users.create'),
             'route_edit'        => config('acl.routes.users.edit'),
@@ -88,7 +89,7 @@ class UsersService implements CrudContract
         ]);
     }
 
-    public function gridTrash(string $view, Request $request = null)
+    public function gridTrash(Request $request = null)
     {
         $this->setInitials('users.id', 'desc', 10);
 
@@ -112,6 +113,7 @@ class UsersService implements CrudContract
         $provider = $this->getSearcheable()->onlyTrashed();
         $this->setDataProvider($provider);
 
+        $view = config('acl.views.users.trash');
         return $this->gridView($view)->with([
             'route_create'      => config('acl.routes.users.create'),
             'route_edit'        => config('acl.routes.users.edit'),
@@ -127,8 +129,9 @@ class UsersService implements CrudContract
         ]);
     }
 
-    public function formCreate(string $view, Request $request = null)
+    public function formCreate(Request $request = null)
     {
+        $view = config('acl.views.users.create');
         return view($view)->with([
             'model'           => (new AclUsersRepository)->read(),
             'model_status'    => (new AclUsersStatusRepository)->read(),
@@ -143,8 +146,9 @@ class UsersService implements CrudContract
         ]);
     }
 
-    public function formEdit(string $view, $id, Request $request = null)
+    public function formEdit($id, Request $request = null)
     {
+        $view = config('acl.views.users.edit');
         return view($view)->with([
             'model'             => ($user = (new AclUsersRepository)->read($id)),
             'model_status'      => (new AclUsersStatusRepository)->read($user->id),

@@ -14,8 +14,7 @@ class GroupsPermissionsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('acl.views.groups-permissions.edit');
-        return (new Services\GroupsPermissionsService)->formEdit($view, $id);
+        return (new Services\GroupsPermissionsService)->formEdit($id, $request);
     }
 
     /**

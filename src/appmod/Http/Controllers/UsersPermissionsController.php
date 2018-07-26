@@ -14,8 +14,7 @@ class UsersPermissionsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('acl.views.users-permissions.edit');
-        return (new Services\UsersPermissionsService)->formEdit($view, $id);
+        return (new Services\UsersPermissionsService)->formEdit($id, $request);
     }
 
     /**

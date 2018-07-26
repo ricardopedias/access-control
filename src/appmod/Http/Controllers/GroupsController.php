@@ -13,8 +13,7 @@ class GroupsController extends Controller
      */
     public function index(Request $request)
     {
-        $view = config('acl.views.groups.index');
-        return (new Services\GroupsService)->gridList($view);
+        return (new Services\GroupsService)->gridList($request);
     }
 
     /**
@@ -24,8 +23,7 @@ class GroupsController extends Controller
      */
     public function trash(Request $request)
     {
-        $view = config('acl.views.groups.trash');
-        return (new Services\GroupsService)->gridTrash($view);
+        return (new Services\GroupsService)->gridTrash($request);
     }
 
     /**
@@ -35,8 +33,7 @@ class GroupsController extends Controller
      */
     public function create(Request $request)
     {
-        $view = config('acl.views.groups.create');
-        return (new Services\GroupsService)->formCreate($view);
+        return (new Services\GroupsService)->formCreate($request);
     }
 
     /**
@@ -64,8 +61,7 @@ class GroupsController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $view = config('acl.views.groups.edit');
-        return (new Services\GroupsService)->formEdit($view, $id);
+        return (new Services\GroupsService)->formEdit($id, $request);
     }
 
     /**

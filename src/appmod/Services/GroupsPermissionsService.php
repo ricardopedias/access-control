@@ -9,8 +9,9 @@ use Acl\Models\AclGroupPermission;
 
 class GroupsPermissionsService implements EditPermissionsContract
 {
-    public function formEdit(string $view, $id, Request $request = null)
+    public function formEdit($id, Request $request = null)
     {
+        $view = config('acl.views.groups-permissions.edit');
         return view($view)->with([
             'group'        => ($group = (new AclGroupsRepository)->read($id)),
             'structure'    => $this->getStructure($group->id, true),

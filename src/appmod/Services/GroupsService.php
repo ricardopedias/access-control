@@ -8,11 +8,11 @@ use Acl\Models\AclUserGroup;
 use Acl\Models\AclUserPermission;
 use SortableGrid\Traits\HasSortableGrid;
 
-class GroupsService implements CrudContract
+class GroupsService implements CrudFrontContract, CrudBackContract
 {
     use HasSortableGrid;
 
-    public function gridList(string $view, Request $request = null)
+    public function gridList(Request $request = null)
     {
         $this->setInitials('id', 'desc', 10);
 
@@ -31,6 +31,7 @@ class GroupsService implements CrudContract
         $provider = (new AclGroupsRepository)->newQuery();
         $this->setDataProvider($provider);
 
+        $view = config('acl.views.groups.index');
         return $this->gridView($view)->with([
             'route_create'      => config('acl.routes.groups.create'),
             'route_edit'        => config('acl.routes.groups.edit'),
@@ -44,7 +45,7 @@ class GroupsService implements CrudContract
         ]);
     }
 
-    public function gridTrash(string $view, Request $request = null)
+    public function gridTrash(Request $request = null)
     {
         $this->setInitials('id', 'desc', 10);
 
@@ -63,6 +64,7 @@ class GroupsService implements CrudContract
         $provider = (new AclGroupsRepository)->newQuery()->onlyTrashed();
         $this->setDataProvider($provider);
 
+        $view = config('acl.views.groups.trash');
         return $this->gridView($view)->with([
             'route_create'      => config('acl.routes.groups.create'),
             'route_edit'        => config('acl.routes.groups.edit'),
@@ -78,8 +80,9 @@ class GroupsService implements CrudContract
         ]);
     }
 
-    public function formCreate(string $view, Request $request = null)
+    public function formCreate(Request $request = null)
     {
+        $view = config('acl.views.groups.create');
         return view($view)->with([
             'model'       => (new AclGroupsRepository)->read(),
             'title'       => 'Novo Grupo de Acesso',
@@ -93,8 +96,9 @@ class GroupsService implements CrudContract
         ]);
     }
 
-    public function formEdit(string $view, $id, Request $request = null)
+    public function formEdit($id, Request $request = null)
     {
+        $view = config('acl.views.groups.edit');
         return view($view)->with([
             'model'             => ($group = (new AclGroupsRepository)->read($id)),
             'title'             => 'Editar Grupo de Acesso',

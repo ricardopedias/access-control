@@ -9,8 +9,9 @@ use Acl\Models\AclUserPermission;
 
 class UsersPermissionsService implements EditPermissionsContract
 {
-    public function formEdit(string $view, $id, Request $request = null)
+    public function formEdit($id, Request $request = null)
     {
+        $view = config('acl.views.users-permissions.edit');
         return view($view)->with([
             'user'         => ($user = (new AclUsersRepository)->read($id)),
             'structure'    => $this->getStructure($user->id, true),
