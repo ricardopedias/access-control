@@ -32,7 +32,7 @@ $ cd /caminho/do/projeto/packages
 $mkdir -p plexi/access-control
 ```
 
-No diretório 'acl', faça um clone do repositório:
+No diretório 'access-control', faça um clone do repositório:
 
 ```bash
 $ cd /caminho/do/projeto/packages/plexi/access-control
