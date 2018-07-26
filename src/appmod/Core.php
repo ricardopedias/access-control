@@ -15,6 +15,29 @@ class Core
     /** @var array */
     protected static $policies = [];
 
+    /** @var boolean */
+    protected static $has_admin_panel = null;
+
+    public static function modPath($path)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        return dirname(__DIR__) . $ds . str_replace('\\', $ds, $path);
+    }
+
+    /**
+     * Verifica se o pacote admin-panel está em execução.
+     *
+     * @return boolean
+     */
+    public static function hasAdminPanel()
+    {
+        if (self::$has_admin_panel == null) {
+            self::$has_admin_panel = class_exists('Admin\Core');
+        }
+
+        return self::$has_admin_panel;
+    }
+
     /**
      * Devolve as informações das funções de acesso regotsradas.
      *
