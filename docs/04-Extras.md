@@ -1,8 +1,8 @@
-# 4. Extras
+# 4. Evoluindo o pacote
 
 Este guia explica como configurar este pacote em uma instalação limpa do Laravel com o objetivo de desenvolvê-lo, adicionar novas funcionalidades ou corrigir bugs. Leva-se em consideração que o programador esteja utilizando terminal Unix (Linux ou Unix/Mac). Programadores que estejam usando o Windows podem executar os mesmos comandos através de emuladores de terminal. Uma ótima alternativa para Windows é o [Git Bash](https://gitforwindows.org/), que acompanha o excelente [Git for Windows](https://gitforwindows.org/).
 
-## 4.1. Instalação do Laravel
+## 4.1. Instalação limpa do Laravel
 
 Para desenvolver o pacote, é necessário efetuar uma instalação limpa do Laravel. Abaixo seguem os comandos para isso:
 

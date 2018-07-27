@@ -40,7 +40,15 @@ Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly
     * [Preparando o banco de dados](docs/02-Installation.md#24-preparando-o-banco-de-dados)
     * [Testando a instalação](docs/02-Installation.md#25-testando-a-instalação)
 3. [Como Usar](docs/03-Usage.md)
-4. [Extras](docs/04-Extras.md)
+    * [Configurando](docs/03-Usage.md#31-configurando)
+    * [O usuário ROOT](docs/03-Usage.md#32-o-usuário-root)
+    * [Funções e habilidades](docs/03-Usage.md#33-funções-e-habilidades)
+    * [Diretivas especiais](docs/03-Usage.md#34-diretivas-especiais)
+    * [Personalizando](docs/03-Usage.md#35-personalizando)
+4. [Evoluindo o Pacote](docs/04-Extras.md)
+    * [Instalação limpa do Laravel](docs/04-Extras.md#41-instalação-limpa-do-laravel)
+    * [A estrutura de diretórios](docs/04-Extras.md#42-a-estrutura-de-diretórios)
+    * [Disponibilizando o pacote para o Laravel](docs/04-Extras.md#43-disponibilizando-o-pacote-para-o-laravel)
 5. [Arquitetura](docs/05-Architecture.md)
 
 ## Creditos

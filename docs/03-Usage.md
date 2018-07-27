@@ -90,9 +90,6 @@ Note que a função ***users*** possui as quatro habilidades (create,read,update
 
 ![CRUD com as habilidades](imgs/crud-roles-abilities.png?raw=true)
 
-
-## 3.4. Usando as funções e habilidades
-
 Cada função adicionada na seção **roles** do arquivo `config/acl.php` é usada para verificar as permissões de acesso de um usuário. Esta verificação é feita através de helpers que podem ser invocados em rotinas PHP ou em arquivos de template, diretamente nas visões do blade.
 
 ![CRUD com as funções e habilidades](imgs/crud-roles-functions-abilities.png?raw=true)
@@ -109,7 +106,6 @@ if (\Auth::user()->can('users.update') == true) {
 
 **Nos templates do Blade**, de forma semelhante, as verificações condicionais podem ser efetuadas pela diretiva ***@can***:
 
-
 ```html
 @can('users.update')
     <h1>Parabéns, você pode editar!!</h1>
@@ -118,13 +114,13 @@ if (\Auth::user()->can('users.update') == true) {
 @endif
 ```
 
-## 3.5. Diretivas especiais
+## 3.4. Diretivas especiais
 
 Além da diretiva @can, o Access Control possui diretivas especias para controlar o acesso de várias formas dentro de templates Blade. Existem botões de acesso e delimitadores para restrição de conteúdo.
 
 Tudo implementado usando o framework [Bootstrap 4](https://getbootstrap.com/) para oferecer maior flexibilidade e conveniência, possibilitando a personalização visual dos elementos.
 
-### 3.5.1. Botões de Ação
+### 3.4.1. Botões de Ação
 
 São botões simples, que contém um determinando link que é disponilizado apenas se o usuário logado possuir acesso. Por exemplo:
 
@@ -146,7 +142,7 @@ Existem variantes deste botão, para tamanhos diferentes, onde o sufixo ***_sm**
 @acl_action_lg('users.update', '/admin/users/1/edit', 'Editar Usuário')
 ```
 
-### 3.5.2. Submições de Formulário
+### 3.4.2. Submições de Formulário
 
 São botões especiais, que só funcionam dentro de formulários. Por exemplo:
 
@@ -174,7 +170,7 @@ Da mesma forma que os botões de ação, existem variantes para tamanhos diferen
 @acl_submit_lg('users.create', 'Gravar Dados')
 ```
 
-### 3.5.3. Invólucro de conteúdo
+### 3.4.3. Invólucro de conteúdo
 
 Restrição de conteúdo também pode ser adicionada dentro de templates, restringindo uma parte especifica do layout, através do invólucro de conteúdo, como no exemplo abaixo:
 
@@ -204,11 +200,11 @@ No exemplo acima, ***users.read*** pede ao Access Control para verificar se a fu
 ![Restrição de conteúdo](imgs/content-access.png?raw=true)
 
 
-## 3.6. Personalizando
+## 3.5. Personalizando
 
 No Access Control, praticamente tudo pode ser personalizado. Deste controladores até os layouts e templates do Blade podem ser facilmente manipulados, permitindo flexibilidade e liberdade na utilização das funcionalidades em qualquer projeto feito com Laravel.
 
-### 3.6.1. Personalizando Botões
+### 3.5.1. Personalizando Botões
 
 Para **Personalizar Botões**, mudando suas aparências, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo:
 
@@ -230,7 +226,7 @@ Para renderizar um **botão de submissão de formulário** com uma visão person
 @acl_submit('users.create', 'Gravar Novo Usuário', 'acl.buttons.botao-de-criacao')
 ```
 
-### 3.6.2. Personalizando CRUD's
+### 3.5.2. Personalizando CRUD's
 
 Para **Personalizar Formulários e Grids**, mudando a aparência dos CRUD's de gerenciamento de usuários, grupos e permissões, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo:
 
@@ -268,7 +264,7 @@ return [
 
 > **Nota**: As views publicadas, por se tratarem de cópias das views internas do Acl, possuem chamadas para o pacote 'acl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'acl::' para 'acl.cruds', ou para outra localização de sua preferência.
 
-### 3.6.3. Personalizando funções e habilidades
+### 3.5.3. Personalizando funções e habilidades
 
 Novas funções e habilidades podem ser adicionadas na seção **roles** do arquivo `config/acl.php`. Cada função deve possuir a sua chave em ***slug case*** (ex: minha-funcao). Como valores desta chave, devem existir dois parâmetros (label e permissions):
 
@@ -294,7 +290,7 @@ return [
 
 ```
 
-### 3.6.4. Personalizando rotas
+### 3.5.4. Personalizando rotas
 
 As rotas padrões possuem as urls com o prefixo 'acl' seguido da rota básica (*acl/users* ou *acl/users-permissions*). Isso pode ser facilmente mudado, setando urls personalizadas na seção **routes** do arquivo `config/acl.php`:
 
@@ -315,7 +311,7 @@ return [
 
 ```
 
-### 3.6.5. Personalizando controladores
+### 3.5.5. Personalizando controladores
 
 Os controladores também podem ser personalizados, setando-os adequadamente na seção **controllers** do arquivo `config/acl.php`:
 
