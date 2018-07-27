@@ -1,49 +1,48 @@
 # 3. Como Usar
 
-## 1. Ativando as configurações
+## 3.1. Configurando
 
-A primeira coisa a se fazer é efetuar a configuração básica do "Access Control" setando os parâmetros desejados no arquivo de configuração. Para ter acesso a este arquivo, é preciso publicá-lo usando o **artisan**:
+Para usar o Access Control, a primeira coisa a ser feita é configurá-lo. Para isso será necessário **publicar** o arquivo de configuração a fim de permitir a sua personalização. Isso é feito através do **artisan**:
 
 ```bash
 php artisan vendor:publish --tag=acl-config
 ```
 
-Após executar este comando, o arquivo `config/acl.php` poderá ser encontrado no seu projeto do Laravel.
+Após a execução da operação de publicação, o arquivo `config/acl.php` poderá ser encontrado no seu projeto do Laravel.
 
+## 3.2. O usuário ROOT
 
-## 2. Os CRUD's e o usuário ROOT
+O Access Control já vem implementado com um gerenciador visual de usuários, grupos e permissões de acesso.
 
-O "Access Control" possui todas as funcionalidades necessárias para se gerenciar o que cada usuário do sistema pode ou não pode acessar. São ferramentas de verificação e também CRUD's para configurar visualmente os usuários e grupos disponíveis.
+Por padrão, os CRUD's podem ser acessados visitando o URL */acl/users*, onde uma lista de usuários será exibida como ponto de partida. É possível criar e excluir usuários e grupos, bem como setar suas respectivas permissões.
 
-Por padrão, os CRUD's podem ser acessados no URL */acl/users*, onde uma lista de usuários será exibida como ponto de partida. É possível criar e excluir usuários e grupos, bem como setar suas respectivas permissões.
+![Permissões de acesso](imgs/crud-permissions.png?raw=true)
 
-Inicialmente, nenhum usuário existente possuirá permissões para acessar o URL */acl/users*. Por isso, é necessário setar o ID do usuário ROOT na configuração. Este é um usuário especial que sempre terá acesso total ao sistema:
+Inicialmente, nenhum usuário existente possuirá permissões para acessar o URL */acl/users*. Por isso, é necessário setar o ID do usuário ROOT na configuração. O usuário ROOT é um usuário especial que sempre terá acesso total ao sistema:
 
 ```php
-
 return [
 
-    'root_user' => 1, // <--- Usuário com id "1" será o ROOT
+    'root_user' => 1, /* Usuário com id "1" será o ROOT */
 
     ...
+]
 ```
 
-O usuário ROOT possui acesso irrestrito, independente das permissões atribuídas a ele. 
-Uma vez configurado o usuário ROOT, basta setar as permissões adequadas aos outros usuários do sistema e, 
-se necessário, remover o ID de ROOT para que o usuário em questão volte ao seu 'estado normal'.
+O usuário ROOT possui acesso irrestrito, independente das permissões atribuídas a ele. Uma vez configurado o usuário ROOT, basta setar as permissões adequadas aos outros usuários do sistema e, se necessário, remover o ID de ROOT da configuração para que o usuário em questão volte ao seu 'estado normal'.
 
-## 3. Os CRUD's, as funções e as habilidades
+## 3.3. Funções e habilidades
 
-Por padrão, existem 4 funções com suas respectivas habilidades. O nome de uma função é declarado nas chaves alocadas na seção **roles** do arquivo `config/acl.php`.
+Na instalação padrão do Access Control, existem 4 funções pré-configuradas com suas respectivas habilidades.
 
-Funções (Roles)      | Habilidades
+Funções (roles)      | Habilidades (permissions)
 ---------------------|-----------------------------
 users                | create, read, update, delete
 users-permissions    | create, read, update
 groups               | create, read, update, delete
 groups-permissions   | create, read, update
 
-No arquivo `config/acl.php` elas estão declaradas assim:
+O nome de uma função é declarado nas chaves alocadas na seção **roles** do arquivo `config/acl.php`. Abaixo, observe como as funções e habilidades acima foram especificadas:
 
 ```php
 
@@ -71,11 +70,11 @@ No arquivo `config/acl.php` elas estão declaradas assim:
     ]
 ```
 
-Nos CRUD's de permissões elas são desenhadas assim:
+As habilidades especificadas para cada função determinam sua exibição na tela de configuração de permissões de acesso, onde as habilidades disponíveis são desenhadas assim:
 
-![CRUD com as funções](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles.png?raw=true)
+![CRUD com as funções](imgs/crud-roles.png?raw=true)
 
-Usando como exemplo a função 'user-permissions', pode-se constatar que:
+Usando como exemplo a função ***user-permissions***, pode-se constatar que:
 
 ```php
 'users-permissions' => [
@@ -84,71 +83,62 @@ Usando como exemplo a função 'user-permissions', pode-se constatar que:
  ],
 ```
 
-* O parâmetro "label" define o nome a ser exibido na coluna "Área de Acesso";
-* O parâmetro "permissions" define quais habilidades estarão disponíveis para a configuração desta função.
+* O parâmetro **label** define o nome a ser exibido na coluna "Área de Acesso";
+* O parâmetro **permissions** define quais habilidades estarão disponíveis para a configuração desta função.
 
-Note que a função "users" possui as quatro habilidades, mas a função "users-permissions" somente três para selecionar.
+Note que a função ***users*** possui as quatro habilidades (create,read,update e delete), mas a função ***users-permissions*** somente três para selecionar.
 
-![CRUD com as habilidades](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles-abilities.png?raw=true)
-
-
-## 4. Usando as funções e habilidades
-
-Cada função adicionada na seção **roles** do arquivo `config/acl.php` é usada para verificar as permissões de acesso de um usuário. Esta verificação é feita através de helpers que podem ser invocados em rotinas PHP ou em arquivos de template, diretamente nas visões do blade. 
-
-![CRUD com as funções e habilidades](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/crud-roles-functions-abilities.png?raw=true)
+![CRUD com as habilidades](imgs/crud-roles-abilities.png?raw=true)
 
 
-### No ambiente do PHP
+## 3.4. Usando as funções e habilidades
 
-Dentro de rotinas PHP é possível verificar as permissões de acesso, usando o médodo ***can*** do facade ***Auth*** do Laravel: 
+Cada função adicionada na seção **roles** do arquivo `config/acl.php` é usada para verificar as permissões de acesso de um usuário. Esta verificação é feita através de helpers que podem ser invocados em rotinas PHP ou em arquivos de template, diretamente nas visões do blade.
+
+![CRUD com as funções e habilidades](imgs/crud-roles-functions-abilities.png?raw=true)
+
+**No código PHP** é possível verificar as permissões de acesso, usando o médodo ***can*** do facade ***Auth*** do Laravel:
 
 ```php
 if (\Auth::user()->can('users.update') == true) {
     echo 'Parabéns, você pode editar!!';
-}
-else {
+} else {
     echo 'Desculpe, você não pode editar!!';
 }
 ```
 
-### Nos templates do Blade
-
-De forma semelhante, as verificações condicionais podem ser efetuadas pela diretiva ***@can***, presente nos templates do Blade:
+**Nos templates do Blade**, de forma semelhante, as verificações condicionais podem ser efetuadas pela diretiva ***@can***:
 
 
 ```html
 @can('users.update')
-
     <h1>Parabéns, você pode editar!!</h1>
-
 @else
-
     <h1>Desculpe, você não pode editar!!</h1>
-
 @endif
 ```
 
-## 5. Diretivas especiais
+## 3.5. Diretivas especiais
 
-Além da diretiva @can, o "Access Control" possui diretivas especias para controlar o acesso de várias maneiras dentro de templates Blade.
+Além da diretiva @can, o Access Control possui diretivas especias para controlar o acesso de várias formas dentro de templates Blade. Existem botões de acesso e delimitadores para restrição de conteúdo.
 
-São botões de acesso e delimitadores para restrição de conteúdo. Tudo é implementado usando o framework [Bootstrap 4](https://getbootstrap.com/).
+Tudo implementado usando o framework [Bootstrap 4](https://getbootstrap.com/) para oferecer maior flexibilidade e conveniência, possibilitando a personalização visual dos elementos.
 
-### 5.1. Botões de Ação
+### 3.5.1. Botões de Ação
 
-São botões simples, que contém um determinando link. Por exemplo:
+São botões simples, que contém um determinando link que é disponilizado apenas se o usuário logado possuir acesso. Por exemplo:
 
 ```html
 @acl_action('users.update', '/admin/users/1/edit', 'Editar Usuário')
 ```
-No exemplo acima, ***users.update*** diz ao Acl para verificar se a função ***users*** possui acesso à habilidade ***update***.
-Caso seja positivo, um botão será gerado com o texto 'Editar Usuário' e conterá o link para '/admin/users/1/edit'. 
-Caso seja negativo, um botão será gerado sem o link e com aparência esmaecida, indicando que o usuário não tem direito de acesso.
+No exemplo acima, ***users.update*** pede ao Access Control para verificar se a função ***users*** possui acesso à habilidade ***update***.
+
+* Caso seja positivo, um botão será gerado com o texto *Editar Usuário* e conterá o link para '/admin/users/1/edit';
+* Caso seja negativo, um botão será gerado sem o link e com ***aparência esmaecida***, indicando que o usuário não tem direito de acesso.
 
 Existem variantes deste botão, para tamanhos diferentes, onde o sufixo ***_sm*** signifca um botão pequeno e o sufixo ***_lg***, um botão grande.
 
-![Botões de ação](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/action-buttons.png?raw=true)
+![Botões de ação](imgs/action-buttons.png?raw=true)
 
 ```html
 @acl_action('users.update', '/admin/users/1/edit', 'Editar Usuário')
@@ -156,9 +146,7 @@ Existem variantes deste botão, para tamanhos diferentes, onde o sufixo ***_sm**
 @acl_action_lg('users.update', '/admin/users/1/edit', 'Editar Usuário')
 ```
 
-Os botões usam um template padrão, baseado no [Bootstrap 4](https://getbootstrap.com/). 
-
-### 5.2. Botões de Submissão de Formulário
+### 3.5.2. Submições de Formulário
 
 São botões especiais, que só funcionam dentro de formulários. Por exemplo:
 
@@ -167,27 +155,28 @@ São botões especiais, que só funcionam dentro de formulários. Por exemplo:
 
     <input type="text" name="username">
 
-    @acl_submit('users.create', 'Gravar Novo Usuário') 
-    
+    @acl_submit('users.create', 'Gravar Novo Usuário')
+
 </form>
 ```
-No exemplo acima, ***users.create*** verifica se a função ***users*** possui acesso à habilidade ***create***.
-Caso seja positivo, o formulário será liberado para submissão e um botão será gerado com o texto 'Gravar Novo Usuário'. 
-Caso seja negativo, o formulário será bloqueado para submissão e um botão será gerado com aparência esmaecida, indicando que o usuário não tem direito de acesso.
+No exemplo acima, ***users.create*** pede ao Access Control para verificar se a função ***users*** possui acesso à habilidade ***create***.
+
+* Caso seja positivo, o formulário será liberado para submissão e um botão será gerado com o texto *Gravar Novo Usuário*;
+* Caso seja negativo, o ***formulário será bloqueado*** para submissão e um botão será gerado com ***aparência esmaecida***, indicando que o usuário não tem direito de acesso.
 
 Da mesma forma que os botões de ação, existem variantes para tamanhos diferentes, onde o sufixo ***_sm*** significa um botão pequeno e o sufixo ***_lg***, um botão grande.
 
-![Botões de submissão](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/submit-buttons.png?raw=true)
+![Botões de submissão](imgs/submit-buttons.png?raw=true)
 
 ```html
-@acl_submit('users.create', 'Gravar Dados') 
-@acl_submit_sm('users.create', 'Gravar Dados') 
-@acl_submit_lg('users.create', 'Gravar Dados') 
+@acl_submit('users.create', 'Gravar Dados')
+@acl_submit_sm('users.create', 'Gravar Dados')
+@acl_submit_lg('users.create', 'Gravar Dados')
 ```
 
-### 5.3. Restrição de conteúdo
+### 3.5.3. Invólucro de conteúdo
 
-Também é possível restringir uma parte especifica de um layout, usando o invólucro de conteúdo, como no exemplo abaixo:
+Restrição de conteúdo também pode ser adicionada dentro de templates, restringindo uma parte especifica do layout, através do invólucro de conteúdo, como no exemplo abaixo:
 
 ```html
 <div>
@@ -199,35 +188,35 @@ Também é possível restringir uma parte especifica de um layout, usando o inv�
         </p>
 
         <p>
-        Aparece apenas para usuários que tem permissão para leitura!
+        Este texto está aparecendo porque você tem permissão para vê-lo!
         </p>
 
     @end_acl_content
-    
+
 </div>
 ```
 
-No exemplo acima, ***users.read*** verifica se a função ***users*** possui acesso à habilidade ***read***.
+No exemplo acima, ***users.read*** pede ao Access Control para verificar se a função ***users*** possui acesso à habilidade ***read***.
 
-* Caso seja positivo, o conteúdo será renderizado normalmente no template. 
+* Caso seja positivo, o conteúdo será renderizado normalmente no template.
 * Caso seja negativo, uma mensagem de **Acesso Negado** será exibida para o usuário.
 
-![Restrição de conteúdo](https://github.com/rpdesignerfly/access-control/blob/master/docs/imgs/content-access.png?raw=true)
+![Restrição de conteúdo](imgs/content-access.png?raw=true)
 
 
-## 6. Personalizando Templates
+## 3.6. Personalizando
 
 No Access Control, praticamente tudo pode ser personalizado. Deste controladores até os layouts e templates do Blade podem ser facilmente manipulados, permitindo flexibilidade e liberdade na utilização das funcionalidades em qualquer projeto feito com Laravel.
 
-## 6.1. Personalizando Botões
+### 3.6.1. Personalizando Botões
 
-Para personalizar a aparência dos botões, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo. As visões personalizáveis serão geradas no diretório 'resources/views/acl/buttons':
+Para **Personalizar Botões**, mudando suas aparências, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo:
 
 ```bash
 php artisan vendor:publish --tag=acl-buttons
 ```
 
-Não é necessário que as visões estejam nesta estrutura específica de diretórios (*resources/views/acl/buttons*). Pode-se mudar a localização para se adequar ao projeto.
+As visões personalizáveis serão geradas no diretório 'resources/views/acl/buttons'. Não é necessário que as visões estejam nesta estrutura específica de diretórios. Pode-se mudar a localização para se adequar ao projeto.
 
 Para renderizar um **botão de ação** com uma visão personalizada, basta especificar a localização dela como quarto parâmetro da diretiva **@acl_action**:
 
@@ -238,21 +227,20 @@ Para renderizar um **botão de ação** com uma visão personalizada, basta espe
 Para renderizar um **botão de submissão de formulário** com uma visão personalizada, basta especificar a localização dela no terceiro parâmetro da diretiva **@acl_submit**:
 
 ```html
-@acl_submit('users.create', 'Gravar Novo Usuário', 'acl.buttons.botao-de-criacao') 
+@acl_submit('users.create', 'Gravar Novo Usuário', 'acl.buttons.botao-de-criacao')
 ```
 
-### 6.2. Personalizando Formulários e Grids
+### 3.6.2. Personalizando CRUD's
 
-Para personalizar a aparência dos CRUD's de gerenciamento de usuários, grupos e permissões, e poder adequá-los ao seu projeto, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo. As visões personalizáveis serão geradas no diretório 'resources/views/acl/cruds':
+Para **Personalizar Formulários e Grids**, mudando a aparência dos CRUD's de gerenciamento de usuários, grupos e permissões, basta publicar uma cópia dos templates padrões usando o **artisan** com o comando abaixo:
 
 ```bash
 php artisan vendor:publish --tag=acl-cruds
 ```
 
-> **Nota**:
-> As views publicadas, por se tratarem de cópias das views internas do Acl, possuem chamadas para o pacote 'acl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'acl::' para 'acl.cruds', ou para outra localização de sua preferência.
+As visões personalizáveis serão geradas no diretório 'resources/views/acl/cruds'. Assim como os botões, não é necessário que as visões estejam nesta estrutura específica de diretórios (*resources/views/acl/cruds*). Pode-se mudar a localização para se adequar ao projeto.
 
-Assim como os botões, não é necessário que as visões estejam nesta estrutura específica de diretórios (*resources/views/acl/cruds*). Pode-se mudar a localização para se adequar ao projeto. Isso é feito na seção **views** no arquivo `config/acl.php`.
+Para declarar ao Access Control que ele deve usar estas novas views, é preciso configurá-las na seção **views** do arquivo `config/acl.php`.
 
 
 ```php
@@ -263,9 +251,9 @@ return [
     'views' => [
 
         'users' => [
-            'index'  => 'acl.cruds.index',   // <-- view personalizada
-            'create' => 'acl::users.create', // <-- view do pacote acl (::)
-            'edit'   => 'acl::users.edit',   // <-- view do pacote acl (::)
+            'index'  => 'acl.cruds.index',   /* view local personalizada */
+            'create' => 'acl::users.create', /* view do pacote acl (::) */
+            'edit'   => 'acl::users.edit',   /* view do pacote acl (::) */
         ],
 
         ...
@@ -274,12 +262,13 @@ return [
 
     ...
 
+]
+
 ```
 
-## 7. Personalizando rotinas
+> **Nota**: As views publicadas, por se tratarem de cópias das views internas do Acl, possuem chamadas para o pacote 'acl::'. Para usar as mesmas views e componentes de forma local, mude as invocações 'acl::' para 'acl.cruds', ou para outra localização de sua preferência.
 
-
-## 7.1. Personalizando funções e habilidades
+### 3.6.3. Personalizando funções e habilidades
 
 Novas funções e habilidades podem ser adicionadas na seção **roles** do arquivo `config/acl.php`. Cada função deve possuir a sua chave em ***slug case*** (ex: minha-funcao). Como valores desta chave, devem existir dois parâmetros (label e permissions):
 
@@ -295,11 +284,17 @@ return [
             'permissions' => 'create,read,update,delete', // <-- As habilidades configuráveis
         ],
 
+        ...
+
+    ]
+
     ...
+
+]
 
 ```
 
-### 7.2. Personalizando rotas
+### 3.6.4. Personalizando rotas
 
 As rotas padrões possuem as urls com o prefixo 'acl' seguido da rota básica (*acl/users* ou *acl/users-permissions*). Isso pode ser facilmente mudado, setando urls personalizadas na seção **routes** do arquivo `config/acl.php`:
 
@@ -309,18 +304,18 @@ return [
     ...
 
     'routes'     => [
-        'users'              => 'meu-painel/usuarios', // <-- rota personalizada
+        'users'              => 'meu-painel/usuarios', /* rota personalizada */
         'users-permissions'  => 'acl/users-permissions',
         'groups'             => 'acl/groups',
-        'groups-permissions' => 'acl/groups-permissions', 
+        'groups-permissions' => 'acl/groups-permissions',
     ],
 
     ...
+]
 
 ```
 
-
-### 7.3. Personalizando controladores
+### 3.6.5. Personalizando controladores
 
 Os controladores também podem ser personalizados, setando-os adequadamente na seção **controllers** do arquivo `config/acl.php`:
 
@@ -331,25 +326,25 @@ return [
     ...
 
     'controllers'     => [
-        'users'              => 'App\Http\Controllers\MeuUsersController', // <-- controlador personalizado
+        'users'              => 'App\Http\Controllers\MeuUsersController', /* controlador personalizado */
         'users-permissions'  => 'Acl\Http\Controllers\UsersPermissionsController',
         'groups'             => 'Acl\Http\Controllers\GroupsController',
         'groups-permissions' => 'Acl\Http\Controllers\GroupsPermissionsController',
     ],
 
     ...
-
+]
 ```
 
-Isso permite mudar ou expandir as funcionalidades de um determinado controlador, possibilitando a sobrecarga ou abstação do controlador original do Acl:
+Isso permite mudar ou expandir as funcionalidades de um determinado controlador, possibilitando a sobrecarga ou abstação do controlador original do Access Control:
 
 ```php
 class MeuUsersController extends \Acl\Http\Controllers\UsersController
 {
     public function store(Request $form)
     {
-        // Faz a validação de uma informação adicional
-        // proveniente de uma view personalizada
+        // Faz a validação de um campo adicional personalizado
+        // no banco de dados e proveniente de uma view personalizada
         $form->validate([
             'blog_id' => 'required|int',
         ]);
@@ -367,3 +362,4 @@ class MeuUsersController extends \Acl\Http\Controllers\UsersController
 2. [Instalação](02-Installation.md)
 3. [Como Usar](03-Usage.md)
 4. [Extras](04-Extras.md)
+5. [Arquitetura](docs/05-Architecture.md)

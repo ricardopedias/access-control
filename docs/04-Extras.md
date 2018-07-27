@@ -1,10 +1,10 @@
 # 4. Extras
 
-## Para desenvolver o pacote:
+Este guia explica como configurar este pacote em uma instalação limpa do Laravel com o objetivo de desenvolvê-lo, adicionar novas funcionalidades ou corrigir bugs. Leva-se em consideração que o programador esteja utilizando terminal Unix (Linux ou Unix/Mac). Programadores que estejam usando o Windows podem executar os mesmos comandos através de emuladores de terminal. Uma ótima alternativa para Windows é o [Git Bash](https://gitforwindows.org/), que acompanha o excelente [Git for Windows](https://gitforwindows.org/).
 
-### 1. Instalação limpa do Laravel:
+## 4.1. Instalação do Laravel
 
-A primeira coisa a ser feita é criar uma instalação limpa do Laravel:
+Para desenvolver o pacote, é necessário efetuar uma instalação limpa do Laravel. Abaixo seguem os comandos para isso:
 
 ```bash
 $ composer create-project --prefer-dist laravel/laravel /caminho/do/projeto
@@ -15,36 +15,28 @@ $ chmod 777 -Rf /caminho/do/projeto/bootstrap/cache
 $ chmod 777 -Rf /caminho/do/projeto/storage
 ```
 
-### 2. Diretório de desenvolvimento
+## 4.2. A estrutura de diretórios
 
-Na raiz do projeto Laravel, crie o diretório 'packages'. Este diretório será usado para desenvolver pacotes:
-
-```bash
-$ mkdir /caminho/do/projeto/packages
-```
-
-### 3. Obtendo o pacote para desenvolvimento
-
-No novo diretório de pacotes, é preciso criar a estrutura do pacote 'acl'. O formato deve ser '[vendor]/[pacote]', ou seja, a estrutura do pacote ficará assim '/plexi/access-control':
+Na raiz do projeto Laravel, crie o diretório **packages** com o subdiretório **plexi**. Esta estrutura será usada para desenvolver pacotes:
 
 ```bash
-$ cd /caminho/do/projeto/packages
-$mkdir -p plexi/access-control
+$ mkdir -p /caminho/do/projeto/packages/plexi
 ```
 
-No diretório 'access-control', faça um clone do repositório:
+No diretório de packages, a estrutura deve comtemplar o formato '[vendor]/[pacote]', ou seja, os pacotes deverão estruturar-se como '/plexi/access-control', '/plexi/sortable-grid', etc.
+
+No diretório 'plexi', faça um clone do repositório:
 
 ```bash
-$ cd /caminho/do/projeto/packages/plexi/access-control
-$ git clone https://github.com/rpdesignerfly/acl.git .
+$ cd /caminho/do/projeto/packages/plexi
+$ git clone https://github.com/rpdesignerfly/access-control.git
 ```
 
-### 4. Configurando o Laravel para usar o pacote
+## 4.3. Disponibilizando o pacote para o Laravel
 
-No arquivo "composer.json", abaixo da seção 'config', adicione 'minimum-stability' como 'dev' e o repositório apontando para o diretório './packages/plexi/access-control/'. 
+No arquivo **composer.json**, abaixo da seção 'config', adicione 'minimum-stability' como 'dev' e o repositório apontando para o diretório **./packages/plexi/access-control/**.
 
-> **Atenção:** 
-> Não esqueça da barra (/) no final:
+> **Atenção:** Não esqueça da barra (/) no final:
 
 ```json
 {
@@ -66,28 +58,11 @@ No arquivo "composer.json", abaixo da seção 'config', adicione 'minimum-stabil
 }
 ```
 
-Com o repositório configurado, use normalmente o comando para instalação:
+Com o repositório configurado, use normalmente o composer para instalação:
 
 ```bash
 $ cd /caminho/do/projeto
 $ composer require plexi/access-control
-```
-
-
-
-Em seguida, basta executar a instalação ou atualização do composer para que o pacote seja 
-adicionado ao autoloader do composer:
-
-```bash
-$ cd /caminho/do/projeto
-$ composer install
-```
-
-ou
-
-```bash
-$ cd /caminho/do/projeto
-$ composer update
 ```
 
 Para mais informações, leia:
@@ -101,3 +76,4 @@ Para mais informações, leia:
 2. [Instalação](02-Installation.md)
 3. [Como Usar](03-Usage.md)
 4. [Extras](04-Extras.md)
+5. [Arquitetura](docs/05-Architecture.md)
