@@ -1,7 +1,7 @@
 # Access Control
 
 ![PHP Version](https://img.shields.io/packagist/php-v/plexi/access-control.svg)
-![Laravel](https://img.shields.io/badge/laravel->=5.5.0-red.svg?style=flat)
+![Laravel](https://img.shields.io/badge/laravel->=5.6.0-red.svg?style=flat)
 ![Packagist](https://img.shields.io/packagist/v/plexi/access-control.svg)
 ![Downloads](https://img.shields.io/packagist/dm/plexi/access-control.svg)
 

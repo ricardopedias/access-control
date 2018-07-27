@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Repositories;
 
 use Acl\Models\AclGroup;
@@ -18,7 +26,7 @@ class AclGroupsRepository extends BaseRepository
      *
      * @return Model
      */
-    public function findByUserID(int $user_id, bool $failable = false)
+    public function findByUserID($user_id, bool $failable = false)
     {
         $builder = $this->newQuery()->select(['acl_groups.*'])
             ->join('acl_users_groups', 'acl_groups.id', '=', 'acl_users_groups.group_id')

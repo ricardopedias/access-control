@@ -1,19 +1,17 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
 
 use Illuminate\Contracts\Auth\Access\Gate;
 
-/**
- * Para Mais informações sobre a criação de diretivas:
- *
- * https://laravel.com/docs/5.5/blade#extending-blade
- * https://scotch.io/tutorials/all-about-writing-custom-blade-directives
- */
-
-// Em modo de desenvolvimento, as views são sempre apagadas
-if (env('APP_DEBUG') || env('APP_ENV') === 'local') {
-    // php artisan view:clear
-    \Artisan::call('view:clear');
-}
+// Para Mais informações sobre a criação de diretivas:
+// https://laravel.com/docs/5.5/blade#extending-blade
+// https://scotch.io/tutorials/all-about-writing-custom-blade-directives
 
     /*
     |--------------------------------------------------------------------------

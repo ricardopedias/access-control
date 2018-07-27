@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -70,7 +78,7 @@ class UsersController extends Controller
      */
     public function update(UpdateUserPost $request, $id)
     {
-        $model = (new Services\UsersService)->dataUpdate($request->all(), $id);
+        $model = (new Services\UsersService)->dataUpdate($id, $request->all());
         return back()->with('success', "Os dados de '{$model->name}' foram atualizados com sucesso");
     }
 
@@ -83,7 +91,7 @@ class UsersController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $deleted = (new Services\UsersService)->dataDelete($request->all(), $id);
+        $deleted = (new Services\UsersService)->dataDelete($id, $request->all());
         return response()->json(['deleted' => $deleted]);
     }
 
@@ -96,7 +104,7 @@ class UsersController extends Controller
      */
     public function restore(Request $request, $id)
     {
-        $restored = (new Services\UsersService)->dataRestore($request->all(), $id);
+        $restored = (new Services\UsersService)->dataRestore($id, $request->all());
         return response()->json(['restored' => $restored]);
     }
 }

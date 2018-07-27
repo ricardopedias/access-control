@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Services;
 
 use Illuminate\Http\Request;
@@ -27,7 +35,7 @@ class UsersPermissionsService implements EditPermissionsContract
         ]);
     }
 
-    public function dataUpdate(array $data, int $id)
+    public function dataUpdate($id, array $data)
     {
         $results = [];
         foreach ($data['permissions'] as $slug => $perms) {
@@ -65,7 +73,7 @@ class UsersPermissionsService implements EditPermissionsContract
      * @param  bool $allows_null
      * @return array|null
      */
-    public function getStructure(int $id, $allows_null = false)
+    public function getStructure($id, $allows_null = false)
     {
         $permissions = [];
 
@@ -111,7 +119,7 @@ class UsersPermissionsService implements EditPermissionsContract
      * @param  string $role_slug
      * @return Collection
      */
-    public function getPermissionsByUserID(int $user_id, string $role_slug)
+    public function getPermissionsByUserID($user_id, string $role_slug)
     {
         if (session('user.abilities') == null) {
 

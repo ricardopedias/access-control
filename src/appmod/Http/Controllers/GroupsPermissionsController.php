@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -27,7 +35,7 @@ class GroupsPermissionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $model = (new Services\GroupsPermissionsService)->dataUpdate($request->all(), $id);
+        $model = (new Services\GroupsPermissionsService)->dataUpdate($id, $request->all());
         $route = config('acl.routes.groups-permissions.edit');
         return redirect()->route($route, $id)->with('success', 'Permissões atualizadas com sucesso');
     }

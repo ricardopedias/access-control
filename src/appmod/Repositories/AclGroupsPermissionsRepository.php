@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Repositories;
 
 use Acl\Models\AclGroupPermission;
@@ -18,7 +26,7 @@ class AclGroupsPermissionsRepository extends BaseRepository
      * @param  bool $paginate
      * @return EloquentCollection|Paginator
      */
-    public function collectByGroupID(int $group_id, $take = 0, bool $paginate = false)
+    public function collectByGroupID($group_id, $take = 0, bool $paginate = false)
     {
         return $this->collectBy('group_id', $group_id, $take, $paginate);
     }

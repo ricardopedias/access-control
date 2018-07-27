@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Repositories;
 
 use Illuminate\Database\Eloquent\Builder as EloquentQueryBuilder;
@@ -89,7 +97,7 @@ abstract class BaseRepository
     *
     * @return Model
     */
-    public function findByID(int $id, bool $failable = false)
+    public function findByID($id, bool $failable = false)
     {
         $query = $this->newQuery();
         if($this->soft_deletes == true) {

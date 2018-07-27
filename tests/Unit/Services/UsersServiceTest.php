@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Tests\Unit\Services;
 
 use Tests\TestCase;
@@ -15,6 +23,10 @@ class UsersServiceTest extends IModelTestCase
 
     public function testGetSearcheable()
     {
+        // Um usuário é criado por padrão no setup do teste
+        $table = (new \Acl\Models\AclUser)->getTable();
+        $default = \DB::table($table)->count();
+
         $group_one = self::createGroup();
         $group_two = self::createGroup();
         $inserteds = [];
@@ -27,12 +39,14 @@ class UsersServiceTest extends IModelTestCase
 
         $collection = (new UsersService)->getSearcheable()->get();
         // Usuário inicial + 10 adicionados neste teste
-        $this->assertCount(1 + 10, $collection);
+        $this->assertCount($default + 10, $collection);
 
         foreach ($collection as $item) {
             $this->assertInstanceOf(\Acl\Models\AclUser::class, $item);
         }
     }
+
+    // Criação de usuários
 
     public function testCreateFull()
     {
@@ -45,6 +59,7 @@ class UsersServiceTest extends IModelTestCase
             'group_id' => $group->id
         ];
         $model = (new UsersService)->dataInsert($data);
+        $this->assertInstanceOf(\Acl\Models\AclUser::class, $model);
 
         $saved = (new AclUsersRepository)->read($model->id);
         $this->assertEquals($data['name'], $saved->name);
@@ -154,6 +169,133 @@ class UsersServiceTest extends IModelTestCase
         $this->assertEquals($group->updatet_at, $group_saved->updatet_at);
         $this->assertEquals($group->created_at, $group_saved->created_at);
     }
+
+    // Atualização de usuários
+
+    /*
+    public function testEditFull()
+    {
+        $group = self::createGroup();
+
+        $data = [
+            'name'     => self::faker()->name,
+            'email'    => self::faker()->unique()->safeEmail,
+            'password' => 'secret',
+            'group_id' => $group->id
+        ];
+        $model = (new UsersService)->dataInsert($data);
+
+        $saved = (new AclUsersRepository)->read($model->id);
+        $this->assertEquals($data['name'], $saved->name);
+        $this->assertEquals($data['email'], $saved->email);
+        $this->assertNotNull($saved->password);
+        $this->assertTrue(Hash::check('secret', $saved->password));
+
+        $group_saved = (new AclGroupsRepository)->findByUserID($model->id);
+        $this->assertEquals($group->id, $group_saved->id);
+        $this->assertEquals($group->name, $group_saved->name);
+        $this->assertEquals($group->description, $group_saved->description);
+        $this->assertEquals($group->system, $group_saved->system);
+        $this->assertEquals($group->updatet_at, $group_saved->updatet_at);
+        $this->assertEquals($group->created_at, $group_saved->created_at);
+    }
+
+    public function testEdit_WithoutGroup()
+    {
+        $data = [
+            'name'     => self::faker()->name,
+            'email'    => self::faker()->unique()->safeEmail,
+            'password' => 'secret',
+            //'group_id' => $group->id
+        ];
+        $model = (new UsersService)->dataInsert($data);
+
+        $saved = (new AclUsersRepository)->read($model->id);
+        $this->assertEquals($data['name'], $saved->name);
+        $this->assertEquals($data['email'], $saved->email);
+        $this->assertNotNull($saved->password);
+        $this->assertTrue(Hash::check('secret', $saved->password));
+
+        $group_saved = (new AclGroupsRepository)->findByUserID($model->id);
+        $this->assertNull($group_saved);
+    }
+
+    public function testEditFull_GroupNull()
+    {
+        $data = [
+            'name'     => self::faker()->name,
+            'email'    => self::faker()->unique()->safeEmail,
+            'password' => 'secret',
+            'group_id' => null
+        ];
+        $model = (new UsersService)->dataInsert($data);
+
+        $saved = (new AclUsersRepository)->read($model->id);
+        $this->assertEquals($data['name'], $saved->name);
+        $this->assertEquals($data['email'], $saved->email);
+        $this->assertNotNull($saved->password);
+        $this->assertTrue(Hash::check('secret', $saved->password));
+
+        $group_saved = (new AclGroupsRepository)->findByUserID($model->id);
+        $this->assertNull($group_saved);
+    }
+
+    public function testEditFull_WithoutPassword()
+    {
+        $group = self::createGroup();
+
+        $data = [
+            'name'       => self::faker()->name,
+            'email'      => self::faker()->unique()->safeEmail,
+            //'password' => 'secret',
+            'group_id'   => $group->id
+        ];
+        $model = (new UsersService)->dataInsert($data);
+
+        $saved = (new AclUsersRepository)->read($model->id);
+        $this->assertEquals($data['name'], $saved->name);
+        $this->assertEquals($data['email'], $saved->email);
+        $this->assertNotNull($saved->password); // um password qualquer foi usado
+        $this->assertFalse(Hash::check('secret', $saved->password));
+
+        $group_saved = (new AclGroupsRepository)->findByUserID($model->id);
+        $this->assertEquals($group->id, $group_saved->id);
+        $this->assertEquals($group->name, $group_saved->name);
+        $this->assertEquals($group->description, $group_saved->description);
+        $this->assertEquals($group->system, $group_saved->system);
+        $this->assertEquals($group->updatet_at, $group_saved->updatet_at);
+        $this->assertEquals($group->created_at, $group_saved->created_at);
+    }
+
+    public function testEditFull_PasswordNull()
+    {
+        $group = self::createGroup();
+
+        $data = [
+            'name'     => self::faker()->name,
+            'email'    => self::faker()->unique()->safeEmail,
+            'password' => null,
+            'group_id' => $group->id
+        ];
+        $model = (new UsersService)->dataInsert($data);
+
+        $saved = (new AclUsersRepository)->read($model->id);
+        $this->assertEquals($data['name'], $saved->name);
+        $this->assertEquals($data['email'], $saved->email);
+        $this->assertNotNull($saved->password); // um password qualquer foi usado
+        $this->assertFalse(Hash::check('secret', $saved->password));
+
+        $group_saved = (new AclGroupsRepository)->findByUserID($model->id);
+        $this->assertEquals($group->id, $group_saved->id);
+        $this->assertEquals($group->name, $group_saved->name);
+        $this->assertEquals($group->description, $group_saved->description);
+        $this->assertEquals($group->system, $group_saved->system);
+        $this->assertEquals($group->updatet_at, $group_saved->updatet_at);
+        $this->assertEquals($group->created_at, $group_saved->created_at);
+    }
+    */
+
+    // Permissões do usuário
 
     public function testRootUserCan()
     {

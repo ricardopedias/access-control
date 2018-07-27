@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -71,7 +79,7 @@ class GroupsController extends Controller
      */
     public function update(UpdateGroupPost $request, $id)
     {
-        $model = (new Services\GroupsService)->dataUpdate($request->all(), $id);
+        $model = (new Services\GroupsService)->dataUpdate($id, $request->all());
         return back()->with('success', 'Grupo atualizado com sucesso');
     }
 
@@ -84,7 +92,7 @@ class GroupsController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $deleted = (new Services\GroupsService)->dataDelete($request->all(), $id);
+        $deleted = (new Services\GroupsService)->dataDelete($id, $request->all());
         return response()->json(['deleted' => $deleted]);
     }
 
@@ -97,7 +105,7 @@ class GroupsController extends Controller
      */
     public function restore(Request $request, $id)
     {
-        $restored = (new Services\GroupsService)->dataRestore($request->all(), $id);
+        $restored = (new Services\GroupsService)->dataRestore($id, $request->all());
         return response()->json(['restored' => $restored]);
     }
 }

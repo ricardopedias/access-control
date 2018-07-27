@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Tests\Unit\Repositories;
 
 use Tests\TestCase;
@@ -26,7 +34,7 @@ class GroupsPermissionsServiceTest extends IModelTestCase
                 'groups-permissions' => ['exists' => '1'],
             ]
         ];
-        $updated = (new GroupsPermissionsService)->dataUpdate($data, $group->id);
+        $updated = (new GroupsPermissionsService)->dataUpdate($group->id, $data);
 
         $this->assertTrue($updated);
 
@@ -69,7 +77,7 @@ class GroupsPermissionsServiceTest extends IModelTestCase
                 'groups-permissions' => ['exists' => '1'],
             ]
         ];
-        $updated = (new GroupsPermissionsService)->dataUpdate($data, $group->id);
+        $updated = (new GroupsPermissionsService)->dataUpdate($group->id, $data);
 
         $this->assertTrue($updated);
 

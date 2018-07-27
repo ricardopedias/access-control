@@ -1,4 +1,12 @@
 <?php
+/**
+ * @see       https://github.com/rpdesignerfly/access-control
+ * @copyright Copyright (c) 2018 Ricardo Pereira Dias (https://rpdesignerfly.github.io)
+ * @license   https://github.com/rpdesignerfly/access-control/blob/master/license.md
+ */
+
+declare(strict_types=1);
+
 namespace Acl\Services;
 
 use Illuminate\Http\Request;
@@ -13,43 +21,6 @@ use SortableGrid\Traits\HasSortableGrid;
 class UsersService implements CrudFrontContract, CrudBackContract
 {
     use HasSortableGrid;
-
-    public function getSearcheable()
-    {
-        $columns = [];
-
-        // \App\User
-        // Adiciona o prefixo 'users' nos campos do modelo
-        $fillable_user = (new AclUsersRepository)->newModel()->getFillableColumns();
-        foreach($fillable_user as $field) {
-            $columns["users.{$field}"] = "users.{$field}";
-        }
-
-        // Se os campos especiais não forem 'fillable'
-        if (!isset($columns['users.id'])) {
-            $columns[] = 'users.id';
-        }
-        if (!isset($columns['users.created_at'])) {
-            $columns[] = 'users.created_at';
-        }
-        if (!isset($columns['users.updated_at'])) {
-            $columns[] = 'users.updated_at';
-        }
-
-        // \Acl\Models\AclUser
-        // O campo com o grupo de acesso
-        $fillable_group = (new AclGroupsRepository)->newModel()->getFillableColumns();
-        foreach($fillable_group as $field) {
-            $columns[] = "acl_groups.{$field} as group_{$field}";
-        }
-        $columns[] = "acl_groups.created_at as group_created_at";
-        $columns[] = "acl_groups.updated_at as group_updated_at";
-
-        // Faz o select devolvendo os campos de \App\User + \Acl\Models\AclGroup
-        return (new AclUsersRepository)->newQuery()->select($columns)
-            ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
-            ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
-    }
 
     public function gridList(Request $request = null)
     {
@@ -129,6 +100,43 @@ class UsersService implements CrudFrontContract, CrudBackContract
         ]);
     }
 
+    public function getSearcheable()
+    {
+        $columns = [];
+
+        // \App\User
+        // Adiciona o prefixo 'users' nos campos do modelo
+        $fillable_user = (new AclUsersRepository)->newModel()->getFillableColumns();
+        foreach($fillable_user as $field) {
+            $columns["users.{$field}"] = "users.{$field}";
+        }
+
+        // Se os campos especiais não forem 'fillable'
+        if (!isset($columns['users.id'])) {
+            $columns[] = 'users.id';
+        }
+        if (!isset($columns['users.created_at'])) {
+            $columns[] = 'users.created_at';
+        }
+        if (!isset($columns['users.updated_at'])) {
+            $columns[] = 'users.updated_at';
+        }
+
+        // \Acl\Models\AclUser
+        // O campo com o grupo de acesso
+        $fillable_group = (new AclGroupsRepository)->newModel()->getFillableColumns();
+        foreach($fillable_group as $field) {
+            $columns[] = "acl_groups.{$field} as group_{$field}";
+        }
+        $columns[] = "acl_groups.created_at as group_created_at";
+        $columns[] = "acl_groups.updated_at as group_updated_at";
+
+        // Faz o select devolvendo os campos de \App\User + \Acl\Models\AclGroup
+        return (new AclUsersRepository)->newQuery()->select($columns)
+            ->leftJoin('acl_users_groups', 'users.id', '=', 'acl_users_groups.user_id')
+            ->leftJoin('acl_groups', 'acl_users_groups.group_id', '=', 'acl_groups.id');
+    }
+
     public function formCreate(Request $request = null)
     {
         $view = config('acl.views.users.create');
@@ -190,7 +198,7 @@ class UsersService implements CrudFrontContract, CrudBackContract
         return $model;
     }
 
-    public function dataUpdate(array $data, int $id)
+    public function dataUpdate($id, array $data)
     {
         $model = (new AclUsersRepository)->findByID($id);
 
@@ -243,7 +251,7 @@ class UsersService implements CrudFrontContract, CrudBackContract
         return $model;
     }
 
-    public function dataDelete(array $data, int $id = null)
+    public function dataDelete($id, array $data = null)
     {
         if (isset($data['mode']) && $data['mode'] == 'soft') {
             $deleted = (new AclUsersRepository)->delete($id);
@@ -253,7 +261,7 @@ class UsersService implements CrudFrontContract, CrudBackContract
         return $deleted;
     }
 
-    public function dataRestore(array $data, int $id = null)
+    public function dataRestore($id, array $data = null)
     {
         $restored = (new AclUsersRepository)->restore($id);
         return $restored;
@@ -267,7 +275,7 @@ class UsersService implements CrudFrontContract, CrudBackContract
      * @param  callable $callback
      * @return bool
      */
-    public function userCan(int $user_id, string $role, string $permission, $callback = null) : bool
+    public function userCan($user_id, string $role, string $permission, $callback = null) : bool
     {
         // Usuário permamentemente liberado
         $root_user = config('acl.root_user');
