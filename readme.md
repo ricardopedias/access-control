@@ -49,7 +49,7 @@ Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly
     * [Instalação limpa do Laravel](docs/04-Extras.md#41-instalação-limpa-do-laravel)
     * [A estrutura de diretórios](docs/04-Extras.md#42-a-estrutura-de-diretórios)
     * [Disponibilizando o pacote para o Laravel](docs/04-Extras.md#43-disponibilizando-o-pacote-para-o-laravel)
-5. [Arquitetura](docs/05-Architecture.md)
+
 
 ## Creditos
 
