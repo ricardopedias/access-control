@@ -358,4 +358,3 @@ class MeuUsersController extends \Acl\Http\Controllers\UsersController
 2. [Instalação](02-Installation.md)
 3. [Como Usar](03-Usage.md)
 4. [Extras](04-Extras.md)
-5. [Arquitetura](docs/05-Architecture.md)

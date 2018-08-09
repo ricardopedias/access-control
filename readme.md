@@ -5,7 +5,7 @@
 ![Packagist](https://img.shields.io/packagist/v/plexi/access-control.svg)
 ![Downloads](https://img.shields.io/packagist/dm/plexi/access-control.svg)
 
-*By [Ricardo Pereira Dias &copy;](https://github.com/rpdesignerfly)*
+*By [Ricardo Pereira Dias &copy;](https://rpdesignerfly.github.io)*
 
 > Este pacote esta em fase de desenvolvimento. Use esta biblioteca por sua conta e risco!
 
@@ -53,4 +53,4 @@ Sinta-se à vontade para conferir os [releases](https://github.com/rpdesignerfly
 
 ## Creditos
 
-- [Ricardo Pereira Dias](https://github.com/rpdesignerfly)
+- [Ricardo Pereira Dias](https://rpdesignerfly.github.io)

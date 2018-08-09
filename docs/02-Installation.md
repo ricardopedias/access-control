@@ -2,7 +2,7 @@
 
 ## 2.1. Requisitos do usuário
 
-Este guia leva em consideração que os usuários estejam utilizando terminal Unix (Linux ou Unix/Mac). Usuários que esteja usando Windows podem executar os mesmos comandos através de emuladores de terminal. Uma ótima alternativa para Windows é o [Git Bash](https://gitforwindows.org/), que acompanha o excelente [Git for Windows](https://gitforwindows.org/).
+Este guia leva em consideração que os usuários estejam utilizando terminal Unix (Linux ou Unix/Mac). Usuários que estejam usando Windows podem executar os mesmos comandos através de emuladores de terminal. Uma ótima alternativa para Windows é o [Git Bash](https://gitforwindows.org/), que acompanha o excelente [Git for Windows](https://gitforwindows.org/).
 
 ## 2.2. Requisitos do servidor
 
@@ -102,4 +102,3 @@ http://www.meuprojeto.com.br/acl/users
 2. [Instalação](02-Installation.md)
 3. [Como Usar](03-Usage.md)
 4. [Extras](04-Extras.md)
-5. [Arquitetura](docs/05-Architecture.md)

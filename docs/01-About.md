@@ -1,6 +1,7 @@
 # 1. Access Control
 
 ## 1.1. Sobre o Access Control
+
 O Access Control é uma biblioteca, desenvolvida para ser usada com o Laravel Framework, com o objetivo de prover as funcionalidades necessárias para o controle de acesso ([ACL](https://pt.wikipedia.org/wiki/Lista_de_controle_de_acesso)) dentro de qualquer projeto.
 
 Ela surgiu da necessidade de modularizar estas funcionalidades, facilitando a implementação das mesmas em novos projetos desenvolvidos com Laravel.
@@ -51,4 +52,3 @@ Explicando melhor:
 2. [Instalação](02-Installation.md)
 3. [Como Usar](03-Usage.md)
 4. [Extras](04-Extras.md)
-5. [Arquitetura](docs/05-Architecture.md)
